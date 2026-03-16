@@ -7,6 +7,10 @@ def startCrawler():
     response = request("https://store.steampowered.com/search/?sort_by=Released_DESC&supportedlang=brazilian%2Cenglish&tags=1662&os=win&filter=popularnew&ndl=1")
     gameList = getGameList(response)
 
+    for game in gameList:
+        print(game.getURL())
+
+
 def request(url):
 
     return requests.get(url)
