@@ -1,36 +1,44 @@
 import requests
 from bs4 import BeautifulSoup
+from Game import Game
 
 def startCrawler():
-    
-    url = "https://liquipedia.net/counterstrike/ESL/Pro_League/Season_23/Online_Stage"
-    headers = {
-        "Accept-Language": "pt-BR,pt;q=0.9,en;q=0.8"
-    }
-    
-    contentResponse = request(url, headers)
-    filtered = analyzeRequest(contentResponse)
-    
-    #print(filtered)
 
-def request(url, headers):
-    
-    return requests.get(url, headers=headers).content
+    response = request("https://store.steampowered.com/search/?sort_by=Released_DESC&supportedlang=brazilian%2Cenglish&tags=1662&os=win&filter=popularnew&ndl=1")
+    gameList = getGameList(response)
 
-def analyzeRequest(content):
+def request(url):
 
-    soup = BeautifulSoup(content, "html.parser")
+    return requests.get(url)
 
-    tables = soup.find_all('table', class_="wikitable wikitable-bordered wikitable-striped swisstable")
+def getGameList(response):
     
-    for table in tables:
-        table.select("span.data-highlightingclass")
-        print(table)
-        return
-    
-            
-    
+    gameList = []
+    soup = BeautifulSoup(response.content, "html.parser")
 
-    return tables
+    games = soup.find_all("a", class_="search_result_row")
+
+    for game in games:
+
+        id = game.get("data-ds-appid")
+        price = None
+        title = game.find("span",class_="title").get_text(strip=True)
+        release = game.find("div", class_="search_released").get_text(strip=True)
+        originalPrice = game.find("div", class_="discount_original_price")
+        finalPrice = game.find("div", class_="discount_final_price")
+        
+        if originalPrice:
+            price = originalPrice.get_text(strip=True)
+            finalPrice = finalPrice.get_text(strip=True)
+        else:
+            price = finalPrice.get_text(strip=True)
+            finalPrice = None
+
+        currentGame = Game(id,title,release,price,finalPrice)
+
+        gameList.append(currentGame)
+    
+    return gameList
+        
 
 startCrawler()
