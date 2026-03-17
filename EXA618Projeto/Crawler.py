@@ -6,10 +6,11 @@ import re
 
 def startCrawler():
 
-    response = request("https://store.steampowered.com/explore/new/")
-    listGames = setGameList(response)
+    mainUrl = "https://store.steampowered.com/explore/new/"
+    response = request(mainUrl)
+    listGames = getGames(response)
     listHTML = getArrayHTMLs (listGames)
-    listGameDetailed = setGameDetailList(listHTML,listGames)
+    listGameDetailed = setGameDetailList(listHTML, listGames)
     
     for game in listGameDetailed:
     
@@ -23,7 +24,7 @@ def startCrawler():
         print(f"Description: {game.description}")
         print(f"Total Reviews: {game.totalReviews}")
         print(f"Score Review: {game.scoreReview}")
-        print(f"URL: {game.getURL()}")
+        print(f"URL: {game.url}")
     
 
 def request(url):
@@ -33,79 +34,112 @@ def request(url):
         "Accept-Language": "pt-BR,pt;q=0.9,en;q=0.8",
     }
     cookies = {
-        "birthtime": "568022401",  # timestamp UNIX >18 anos
-        "mature_content": "1",      # marca como permitido conteúdo adulto
+        "birthtime": "568022401",  
+        "mature_content": "1",     
         "wants_mature_content": "1"
     }
     return requests.get(url, headers=headers, cookies=cookies)
 
-def setGameList(response):
+def getGames(response):
     
-    gameList = []
+    listGames = []
     soup = BeautifulSoup(response.content, "html.parser")
 
     games = soup.find_all("a", class_="tab_item")
 
     for game in games:
 
-        id = game.get("data-ds-appid")
-        price = None
-        title = game.find("div",class_="tab_item_name").get_text()
-        originalPrice = game.find("div", class_="discount_original_price")
-        finalPrice = game.find("div", class_="discount_final_price")
-        
-        if originalPrice:
-            price = originalPrice.get_text(strip=True)
-            finalPrice = finalPrice.get_text(strip=True)
-        else:
-            price = finalPrice.get_text(strip=True)
-            finalPrice = None
+        listGames.append(Game(game.get("data-ds-appid")))
+       
+    return listGames
 
-        currentGame = Game(id,title,price,finalPrice)
-
-        gameList.append(currentGame)
-    
-    return gameList
-
-def getArrayHTMLs (list):
-    
-    listHTML = [] 
+def getArrayHTMLs (listGames):
     
     with ThreadPoolExecutor(max_workers=5) as executor:
-        results = list(executor.map(func, iterable))
+        results = list(
+            executor.map(lambda game: request(game.url), listGames)
+        )
+        
+    return results
     
-    for i in list:
-        
-        html = request(i.getURL())
-        listHTML.append(html.content)
-        
-    return listHTML
-
-def getHTMLGameDetail(game):
-
 def setGameDetailList(listHTML, listGames):
-    
-    for i in range(len(listHTML)):
-       
-        soup = BeautifulSoup(listHTML[i], "html.parser")
-        
+
+    for i, response in enumerate(listHTML):
+
+        soup = BeautifulSoup(response.content, "html.parser")
+
         boxGame = soup.find("div", class_="glance_ctn")
-        release = boxGame.find("div", class_="date")
-        if release:
-            listGames[i].date_release = release.get_text()
-        description = boxGame.find("div", class_="game_description_snippet")
-        if description:
-            listGames[i].description = description.get_text(strip=True)
-        totalReviews = boxGame.find("meta", itemprop="reviewCount")
-        if totalReviews:
-            listGames[i].totalReviews = totalReviews.get("content")
-        developerDiv = boxGame.find("a", href= re.compile(r'^https://store\.steampowered\.com/search/\?developer='))
-        if developerDiv:
-            listGames[i].developer = developerDiv.get_text(strip=True)
-        publisherDiv = boxGame.find("a", href= re.compile(r'^https://store\.steampowered\.com/search/\?publisher='))
-        if publisherDiv:
-            listGames[i].publisher = publisherDiv.get_text(strip=True)
-        
+
+        title_tag = soup.find("div", id="appHubAppName")
+        title = title_tag.get_text(strip=True) if title_tag else None
+
+        if boxGame:
+            release_tag = boxGame.find("div", class_="date")
+            date_release = release_tag.get_text(strip=True) if release_tag else None
+        else:
+            date_release = None
+
+        if boxGame:
+            description_tag = boxGame.find("div", class_="game_description_snippet")
+            description = description_tag.get_text(strip=True) if description_tag else None
+        else:
+            description = None
+
+        if boxGame:
+            review_tag = boxGame.find("meta", itemprop="reviewCount")
+            totalReviews = review_tag.get("content") if review_tag else None
+        else:
+            totalReviews = None
+
+        if boxGame:
+            developer_tags = boxGame.find_all(
+                "a",
+                href=re.compile(r'store\.steampowered\.com/(developer/|search/\?developer=)')
+            )
+
+            developer = list(dict.fromkeys(
+                tag.get_text(strip=True) for tag in developer_tags
+            )) if developer_tags else None
+        else:
+            developer = None
+
+        if boxGame:
+            publisher_tags = boxGame.find_all(
+                "a",
+                href=re.compile(r'store\.steampowered\.com/(publisher/|search/\?publisher=)')
+            )
+
+            publisher = list(dict.fromkeys(
+                tag.get_text(strip=True) for tag in publisher_tags
+            )) if publisher_tags else None
+        else:
+            publisher = None
+
+        priceDiv = soup.find("div", class_="discount_prices")
+
+        if priceDiv:
+            original_div = priceDiv.find("div", class_="discount_original_price")
+            final_div = priceDiv.find("div", class_="discount_final_price")
+
+            originalPrice = original_div.get_text(strip=True) if original_div else None
+            discountPrice = final_div.get_text(strip=True) if final_div else None
+
+        else:
+            normal_price_div = soup.find("div", class_="game_purchase_price")
+            originalPrice = normal_price_div.get_text(strip=True) if normal_price_div else None
+            discountPrice = None
+
+        game = listGames[i]
+
+        game.title = title
+        game.date_release = date_release
+        game.price = originalPrice
+        game.discountPrice = discountPrice
+        game.developer = developer
+        game.publisher = publisher
+        game.description = description
+        game.totalReviews = totalReviews
+
     return listGames
 
         

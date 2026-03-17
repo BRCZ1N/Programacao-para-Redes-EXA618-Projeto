@@ -1,15 +1,16 @@
 class Game:
-    def __init__(self, id, title, price, discountPrice):
+    def __init__(self, id):
         self.id = id
-        self.title = title
+        self.title = None
         self.date_release = None
-        self.price = price
-        self.discountPrice = discountPrice
-        self.developer = ""
-        self.publisher = ""
-        self.description = ""
-        self.totalReviews = 0
-        self.scoreReview = 0
+        self.price = None
+        self.discountPrice = None
+        self.developer = None
+        self.publisher = None
+        self.description = None
+        self.totalReviews = None
+        self.scoreReview = None
+        self.url = self.getURL()
         
     def getURL(self):
         return  f"https://store.steampowered.com/app/"+self.id
