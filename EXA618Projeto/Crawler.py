@@ -143,7 +143,6 @@ def setGameDetail(listHTML, listGames):
 
     return listGames
     
-
 def exportToCSV(listGameDetailed):
 
     df = pd.DataFrame([vars(game) for game in listGameDetailed])
