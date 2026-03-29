@@ -34,23 +34,23 @@ def extractLinksFromHome(response):
     listGames = []
     soup = BeautifulSoup(response.content, "html.parser")
 
-    tabs_content = soup.find("div", class_="home_tabs_content")
+    tabsContent = soup.find("div", class_="home_tabs_content")
 
     #tab_content_new_releases = tabs_content.find("div", id="tab_newreleases_content")
 
-    if tabs_content:
+    if tabsContent:
         
-        games = tabs_content.find_all("a", class_="tab_item")
+        games = tabsContent.find_all("a", class_="tab_item")
 
         for game in games:
         
             appID = game.get("data-ds-appid")
             priceDiv = game.find("div", class_="discount_prices")
-            original_div = priceDiv.find("div", class_="discount_original_price")
-            final_div = priceDiv.find("div", class_="discount_final_price")
-            if final_div and original_div:
-                originalPrice = original_div.get_text(strip=True) if original_div else None
-                discountPrice = final_div.get_text(strip=True) if final_div else None
+            originalDiv = priceDiv.find("div", class_="discount_original_price")
+            finalDiv = priceDiv.find("div", class_="discount_final_price")
+            if finalDiv and originalDiv:
+                originalPrice = originalDiv.get_text(strip=True) if originalDiv else None
+                discountPrice = finalDiv.get_text(strip=True) if finalDiv else None
                 newGame = Game(appID,originalPrice,discountPrice)
                 listGames.append(newGame)
            
@@ -79,43 +79,48 @@ def setGameDetail(listHTML, listGames):
         boxGame = soup.find("div", class_="glance_ctn")
 
         if boxGame:
-            title_tag = soup.find("div", id="appHubAppName")
-            if title_tag:
-                title = title_tag.get_text(strip=True)
+            titleTag = soup.find("div", id="appHubAppName")
+            if titleTag:
+                title = titleTag.get_text(strip=True)
             else: 
                 title = None
-            release_tag = boxGame.find("div", class_="date")
-            if release_tag:
-                date_release = release_tag.get_text(strip=True)
+            dateRelease = boxGame.find("div", class_="date")
+            if dateRelease:
+                dateRelease = dateRelease.get_text(strip=True)
             else: 
-                date_release = None
-            description_tag = boxGame.find("div", class_="game_description_snippet")
-            if description_tag:
-                description = description_tag.get_text(strip=True)
+                dateRelease = None
+            descriptionTag = boxGame.find("div", class_="game_description_snippet")
+            if descriptionTag:
+                description = descriptionTag.get_text(strip=True)
             else:
                 description = None
-            review_tag = boxGame.find("meta", itemprop="reviewCount")
-            if review_tag:
-                totalReviews = review_tag.get("content")
+            reviewTag = boxGame.find("meta", itemprop="reviewCount")
+            if reviewTag:
+                totalReviews = reviewTag.get("content")
             else:
-                totalReviews = None
-            developer_tags = boxGame.find_all(
+                totalReviews = 0
+            reviewRating = boxGame.find("meta", itemprop="ratingValue")
+            if reviewRating:
+                reviewRating = reviewRating.get("content")
+            else:
+                reviewRating = 0
+            developerTags = boxGame.find_all(
                 "a",
                 href=re.compile(r'store\.steampowered\.com/(curator/|developer/|search/\?developer=)')
             )
-            if developer_tags:
+            if developerTags:
                 developer = list(dict.fromkeys(
-                tag.get_text(strip=True) for tag in developer_tags
+                tag.get_text(strip=True) for tag in developerTags
             ))
             else: 
                 developer = None
-            publisher_tags = boxGame.find_all(
+            publisherTags = boxGame.find_all(
                 "a",
                 href=re.compile(r'store\.steampowered\.com/(curator/|publisher/|search/\?publisher=)')
             )
-            if publisher_tags:
+            if publisherTags:
                 publisher = list(dict.fromkeys(
-                tag.get_text(strip=True) for tag in publisher_tags
+                tag.get_text(strip=True) for tag in publisherTags
             )) 
             else: 
                 publisher = "No Publisher"
@@ -124,11 +129,12 @@ def setGameDetail(listHTML, listGames):
 
             game.title = title
             game.date_research = date.today().isoformat()
-            game.date_release = date_release
+            game.date_release = dateRelease
             game.developer = developer
             game.publisher = publisher
+            game.review_rating = reviewRating
             game.description = description
-            game.totalReviews = totalReviews
+            game.total_reviews = totalReviews
 
     return listGames
     

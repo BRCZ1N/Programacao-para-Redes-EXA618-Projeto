@@ -5,12 +5,12 @@ class Game:
         self.date_release = None
         self.date_research = None
         self.price = price
-        self.discountPrice = discountPrice
+        self.discount_price = discountPrice
         self.developer = None
         self.publisher = None
         self.description = None
-        self.totalReviews = None
-        self.scoreReview = None
+        self.total_reviews = None
+        self.review_rating = None
         self.url = self.getURL()
         
     def getURL(self):
