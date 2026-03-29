@@ -98,7 +98,7 @@ def setGameDetail(listHTML, listGames):
             if descriptionTag:
                 description = descriptionTag.get_text(strip=True)
             else:
-                description = None
+                description = "Sem descrição"
             reviewTag = boxGame.find("meta", itemprop="reviewCount")
             if reviewTag:
                 totalReviews = reviewTag.get("content")
@@ -128,7 +128,7 @@ def setGameDetail(listHTML, listGames):
                 tag.get_text(strip=True) for tag in publisherTags
             )) 
             else: 
-                publisher = "No Publisher"
+                publisher = "Sem distribuidora"
         
             game = listGames[i]
 
