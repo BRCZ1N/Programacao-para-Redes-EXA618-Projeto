@@ -29,10 +29,17 @@ def startCrawler():
     listGameDetailed = setGameDetail(listHTML, listGames)
     exportToCSV(listGameDetailed)
 
-    
+"""
+Função de acesso a página HTML 
+"""
 def fetchPage(url):
 
     return session.get(url, headers=headers, cookies=cookies)
+
+
+"""
+Função para extração dos links e dos preços da página home, isto é, buscao o jogo que está em promoção salvando logo o identificador para pegar os detalhes e o valor
+"""
 
 def extractLinksFromHome(response):
     
@@ -40,8 +47,6 @@ def extractLinksFromHome(response):
     soup = BeautifulSoup(response.content, "html.parser")
 
     tabsContent = soup.find("div", class_="home_tabs_content")
-
-    #tab_content_new_releases = tabs_content.find("div", id="tab_newreleases_content")
 
     if tabsContent:
         
@@ -58,14 +63,13 @@ def extractLinksFromHome(response):
                 discountPrice = finalDiv.get_text(strip=True) if finalDiv else None
                 newGame = Game(appID,originalPrice,discountPrice)
                 listGames.append(newGame)
-           
-            #Jogos sem desconto valores normais
-            #normal_price_div = soup.find("div", class_="game_purchase_price")
-            #originalPrice = normal_price_div.get_text(strip=True) if normal_price_div else None
-            #discountPrice = None
     
     return listGames
 
+
+"""
+Função para extrair os HTMLS de todas as páginas dos jogos encontrados na parte de exploração de lançamentos da Steam
+"""
 def getArrayHTMLs (listGames):
     
     with ThreadPoolExecutor(max_workers=5) as executor:
@@ -74,7 +78,10 @@ def getArrayHTMLs (listGames):
         )
         
     return results
-    
+
+"""
+Função que explora todas as URLs encontradas na página de lançamento dos jogos em promoção e pega os detalhes dos games
+"""
 def setGameDetail(listHTML, listGames):
 
     for i, response in enumerate(listHTML):
@@ -143,6 +150,9 @@ def setGameDetail(listHTML, listGames):
 
     return listGames
     
+"""
+Função para exportar toda a lista para o formato CSV
+"""
 def exportToCSV(listGameDetailed):
 
     df = pd.DataFrame([vars(game) for game in listGameDetailed])
