@@ -6,6 +6,20 @@ from concurrent.futures import ThreadPoolExecutor
 import re
 import pandas as pd
 
+session = requests.Session()
+
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+    "Accept-Language": "pt-BR,pt;q=0.9,en;q=0.8",
+}
+
+cookies = {
+    "birthtime": "568022401",
+    "mature_content": "1",
+    "wants_mature_content": "1"
+}
+
+
 def startCrawler():
 
     mainUrl = "https://store.steampowered.com/explore/new/"
@@ -18,16 +32,7 @@ def startCrawler():
     
 def fetchPage(url):
 
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36",
-        "Accept-Language": "pt-BR,pt;q=0.9,en;q=0.8",
-    }
-    cookies = {
-        "birthtime": "568022401",  
-        "mature_content": "1",     
-        "wants_mature_content": "1"
-    }
-    return requests.get(url, headers=headers, cookies=cookies)
+    return session.get(url, headers=headers, cookies=cookies)
 
 def extractLinksFromHome(response):
     
