@@ -1,10 +1,11 @@
 class Game:
-    def __init__(self, id):
+    def __init__(self, id, price, discountPrice):
         self.id = id
         self.title = None
         self.date_release = None
-        self.price = None
-        self.discountPrice = None
+        self.date_research = None
+        self.price = price
+        self.discountPrice = discountPrice
         self.developer = None
         self.publisher = None
         self.description = None
