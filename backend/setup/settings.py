@@ -41,9 +41,10 @@ INSTALLED_APPS = [
     'rest_framework',
     'games.apps.GamesConfig',
     'users.apps.UsersConfig',
+    'playlist.apps.PlaylistConfig'
 ]
 
-AUTH_USER_MODEL = 'users.User'
+#AUTH_USER_MODEL = 'users.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

@@ -17,14 +17,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from users.views import login,logout,register,user_detail,password_reset
-from games.views import home, generate_playlist, playlist_detail, playlist
+from games.views import home,generate_playlist,playlist_detail,playlist
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home),
-    path('playlists/generate/', generate_playlist),
-    path('playlists/', playlist),
-    path('playlists/<int:id>', playlist_detail),
+    path('playlist/generate/', generate_playlist),
+    path('playlist/', playlist),
+    path('playlist/<int:id>', playlist_detail),
     path('auth/login/', login),
     path('auth/logout/', logout),
     path('auth/register/', register),

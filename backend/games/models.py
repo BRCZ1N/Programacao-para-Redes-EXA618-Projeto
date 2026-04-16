@@ -1,3 +1,22 @@
 from django.db import models
+import uuid
 
-# Create your models here.
+class Game(models.Model):
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    steam_id = models.BigIntegerField(unique=True)
+    title = models.CharField(max_length=255)
+    date_release = models.DateField()
+    last_crawled_at = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    discount_price = models.DecimalField(max_digits=10, decimal_places=2)
+    developer = models.JSONField()
+    publisher = models.JSONField()
+    description = models.TextField()
+    total_reviews = models.IntegerField(default=0)
+    review_rating = models.IntegerField(default=0)
+    url_steam = models.URLField(blank=False, null=False)
+    url_image = models.URLField(blank=False, null=False)
+    active = models.BooleanField(default=True)
