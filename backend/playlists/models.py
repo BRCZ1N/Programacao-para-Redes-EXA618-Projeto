@@ -1,6 +1,5 @@
 from django.db import models
 from games.models import Game
-from users.models import User
 import uuid
 
 class Playlist(models.Model):
@@ -11,5 +10,5 @@ class Playlist(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     description = models.TextField()
     games = models.ManyToManyField(Game)
-    idUser = models.ForeignKey(User, on_delete=models.CASCADE)
+    idUser = models.ForeignKey('users.User', on_delete=models.CASCADE)
     active = models.BooleanField(default=True)

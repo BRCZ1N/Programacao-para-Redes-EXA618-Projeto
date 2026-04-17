@@ -19,8 +19,6 @@ def generate_playlist(request):
     min_review = request.data.get("min_review")
     min_rating = request.data.get("min_rating")
 
-    games = Game.objects.all()
-
     if markers:
         games = games.filter(markers=markers)
 
@@ -36,7 +34,7 @@ def generate_playlist(request):
     if min_rating:
         games = games.filter(review_rating__gte=min_rating)
         
-    games = games.order_by('?')[:5]
+    games = games.order_by('-review_rating', '-total_reviews')[:5]
 
     if not games:
         return Response({"error": "Nenhum jogo encontrado"}, status=400)
@@ -52,7 +50,10 @@ def playlist(request):
     
     if request.method == 'GET':
         
-        query = Playlist.objects.all().prefetch_related('games')
+        if not request.user.is_authenticated:
+            return Response({"error": "Login necessário"}, status=401)
+        
+        query = Playlist.objects.filter(user=request.user).prefetch_related('games')
     
         paginator = PageNumberPagination()
         paginator.page_size = 10

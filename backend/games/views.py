@@ -1,23 +1,21 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.pagination import PageNumberPagination
+from games.services.crawler_service import start_crawler
+from games.services.game_service import save_games
 from .models import Game
 from .serializer import GameSerializer
 
 @api_view(['GET'])
-def home(request):
-    return Response({"playlists": []})
+def game(request):
+    games = Game.objects.all()
+    serializer = GameSerializer(games, many=True)
+    return Response({"games": serializer.data})
 
-@api_view(['POST'])
-def generate_playlist(request):
-    return Response({"playlists": []})
+@api_view(["POST"])
+def crawl_games_view(request):
+    games = start_crawler()
+    save_games(games)
 
-@api_view(['POST', 'GET'])
-def playlist(request):
-    return Response({"playlists": []})
-
-@api_view(['GET', 'PUT', 'DELETE'])
-def playlist_detail(request):
-    return Response({"playlists": []})
-
+    return Response({"status": "ok"})
 

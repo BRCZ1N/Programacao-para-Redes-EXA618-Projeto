@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'games.apps.GamesConfig',
     'users.apps.UsersConfig',
-    'playlist.apps.PlaylistConfig'
+    'playlists.apps.PlaylistsConfig'
 ]
 
 #AUTH_USER_MODEL = 'users.User'
