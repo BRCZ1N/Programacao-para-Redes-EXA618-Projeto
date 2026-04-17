@@ -4,5 +4,6 @@ pandas
 numpy
 Django>=5.0,<5.1
 djangorestframework
+djangorestframework-simplejwt
 python-decouple
 black

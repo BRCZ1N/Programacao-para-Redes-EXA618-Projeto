@@ -11,9 +11,10 @@ class GamePreviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
         fields = [
-            'id',
+            'steam_id',
             'title',
             'discount_price',
+            'description',
             'price',
             'review_rating',
             'total_reviews',

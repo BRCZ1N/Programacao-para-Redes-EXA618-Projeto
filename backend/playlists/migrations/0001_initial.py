@@ -36,7 +36,7 @@ class Migration(migrations.Migration):
                 (
                     "idUser",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="users.user"
+                        on_delete=django.db.models.deletion.CASCADE, to="users.CustomUser"
                     ),
                 ),
             ],

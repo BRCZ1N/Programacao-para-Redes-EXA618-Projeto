@@ -1,6 +1,8 @@
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAuthenticated
 from .models import Playlist
 from games.models import Game
 from .serializer import PlaylistSerializer
@@ -46,12 +48,10 @@ def generate_playlist(request):
     })
 
 @api_view(['POST', 'GET'])
+@permission_classes([IsAuthenticated])
 def playlist(request):
     
     if request.method == 'GET':
-        
-        if not request.user.is_authenticated:
-            return Response({"error": "Login necessário"}, status=401)
         
         query = Playlist.objects.filter(user=request.user).prefetch_related('games')
     

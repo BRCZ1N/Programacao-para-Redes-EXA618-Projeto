@@ -10,5 +10,5 @@ class Playlist(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     description = models.TextField()
     games = models.ManyToManyField(Game)
-    idUser = models.ForeignKey('users.User', on_delete=models.CASCADE)
+    user = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE)
     active = models.BooleanField(default=True)
