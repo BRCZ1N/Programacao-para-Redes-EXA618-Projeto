@@ -4,12 +4,12 @@ from rest_framework.pagination import PageNumberPagination
 from games.services.crawler_service import start_crawler
 from games.services.game_service import save_games
 from users.permissions import IsSuperUser
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated
 from .models import Game
-from .serializer import GamePreviewSerializer
+from .serializers import GamePreviewSerializer
 
 @api_view(['GET'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def game(request):
     
     query = Game.objects.all()
@@ -25,7 +25,7 @@ def game(request):
 
 @api_view(["POST"])
 @permission_classes([IsSuperUser])  
-def crawl_games_view(request):
+def crawl_games(request):
     games = start_crawler()
     save_games(games)
 

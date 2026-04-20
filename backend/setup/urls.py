@@ -1,36 +1,27 @@
-"""
-URL configuration for setup project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
-from django.contrib import admin
 from django.urls import path
-#from users.views import login,logout,register,user_detail,password_reset
 from playlists.views import generate_playlist,playlist_detail,playlist
-from games.views import game, crawl_games_view
+from games.views import game,crawl_games
+from users.views import register_user,me,password_reset,delete_user
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 urlpatterns = [
-    #path('admin/', admin.site.urls),
     #path('', home),
-    path('crawler', crawl_games_view),
-    path('games', game),
-    path('playlist/generate/', generate_playlist),
-    path('playlist/', playlist),
-    path('playlist/<int:id>', playlist_detail),
-    #path('auth/login/', login),
-    #path('auth/logout/', logout),
-    #path('auth/register/', register),
-    #path('auth/password-reset/', password_reset),
-    #path('users/<int:id>/', user_detail),
+    path('api/crawler/', crawl_games),
+    path('api/games/', game),
+
+    path('api/playlist/generate', generate_playlist),
+    path('api/playlist/', playlist),
+    path('api/playlist/<int:id>/', playlist_detail),
+
+    path('api/user/register/', register_user),
+    path('api/user/delete/', delete_user),
+    path('api/user/me/', me),
+
+    path('api/auth/login/', TokenObtainPairView.as_view()),
+    path('api/auth/refresh/', TokenRefreshView.as_view()),
+  
+    path('api/password-reset', password_reset),
 ]

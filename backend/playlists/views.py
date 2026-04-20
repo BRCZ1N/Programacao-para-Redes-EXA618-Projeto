@@ -5,28 +5,28 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from .models import Playlist
 from games.models import Game
-from .serializer import PlaylistSerializer
-from games.serializer import GamePreviewSerializer
+from .serializers import PlaylistSerializer, PlaylistUpdateSerializer
+from games.serializers import GamePreviewSerializer
 
 @api_view(['GET'])
 def home(request):
     return Response({"playlists": []})
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def generate_playlist(request):
     
-    markers = request.data.get("genre")
+    tags = request.data.get("tags")
     min_rating = request.data.get("min_rating")
     min_value = request.data.get("min_value")
     min_review = request.data.get("min_review")
     min_rating = request.data.get("min_rating")
 
-    if markers:
-        games = games.filter(markers=markers)
+    games = Game.objects.all()
 
-    if min_rating:
-        games = games.filter(rating__gte=min_rating)
-        
+    if tags:
+        games = games.filter(tags__name=tags)
+
     if min_value:
         games = games.filter(discount_price__gte=min_value)
         
@@ -43,9 +43,7 @@ def generate_playlist(request):
     
     serializer = GamePreviewSerializer(games, many=True)
     
-    return Response({
-        "games": serializer.data
-    })
+    return Response(serializer.data, status=200)
 
 @api_view(['POST', 'GET'])
 @permission_classes([IsAuthenticated])
@@ -62,7 +60,7 @@ def playlist(request):
         
         serializer = PlaylistSerializer(result_page, many = True)
         
-        return paginator.get_paginated_response(serializer.data)
+        return Response(serializer.data, status=200)
         
     if request.method == 'POST':
         
@@ -70,15 +68,75 @@ def playlist(request):
         description = request.data.get("description")
         game_ids = request.data.get("games", [])
         
+        if not isinstance(game_ids, list):
+            return Response({"error": "games deve ser uma lista"}, status=400)
+
         games = Game.objects.filter(id__in=game_ids)
+
+        if games.count() != len(set(game_ids)): 
+            return Response({"error": "Alguns games não existem"}, status=400)
+
+        playlist = Playlist.objects.create(
+            user=request.user, 
+            title=title,
+            description=description
+        )
+
+        playlist.games.set(games)
+
+        return Response({"status": "Playlist criada com sucesso"}, status=201)
+    
+
+@api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
+def playlist_detail(request, id):
+    
+    if request.method == 'GET':
+        
+        playlist = Playlist.objects.prefetch_related('games').get(user=request.user,id=id)
+
+        if not playlist:
+
+            return Response({"status": "Playlist não encontrada"}, status=400)
+        
+        serializer = PlaylistSerializer(playlist)
+        return Response(serializer.data, status=201)
+        
+    if request.method == 'PUT':
+        
+        game_ids = request.data.get("games", [])
+        
+        games = Game.objects.filter(id__in=game_ids)
+
+        playlist = Playlist.objects.get(user=request.user,id=id)
+
+        if len(games) != len(game_ids):
+            return Response({"error": "Jogos inválidos"}, status=400)
+        
+        serializer = PlaylistUpdateSerializer(playlist,data=request.data,partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+
+        return Response({"status": "Playlist atualizada com sucesso"}, status=200)
+            
+
+    if serializer.is_valid():
+        serializer.save()
+
+        return Response({"status": "Playlist criada com sucesso"}, status=200)
+    
+    if request.method == 'DELETE':
+        
+        title = request.data.get("title")
+        
+        games = Playlist.objects.filter(id__in=game_ids)
 
         if len(games) != len(game_ids):
             return Response({"error": "Playlist inválida"}, status=400)
        
-        playlist = Playlist.objects.create(title=title or "", description=description or "")
+        playlist = Playlist.objects.delete(title=title or "", description=description or "")
         playlist.games.set(games)
-        
 
-@api_view(['GET', 'PUT', 'DELETE'])
-def playlist_detail(request):
-    return Response({"playlists": []})
+        return Response({"status": "Playlist criada com sucesso"}, status=201)
+        
