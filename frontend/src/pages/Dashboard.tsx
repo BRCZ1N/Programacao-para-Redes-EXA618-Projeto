@@ -19,12 +19,13 @@ export function Dashboard() {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="flex h-16 items-center px-4">
-          {/* Esse botão SÓ vai aparecer/funcionar direito se estiver aqui */}
+        {/* Este Header é o que "prende" o botão no topo no mobile */}
+        <header className="sticky top-0 z-10 flex h-16 items-center gap-2 border-b bg-background px-4">
           <SidebarTrigger />
         </header>
-        <main>
-          {/* Seu conteúdo */}
+
+        <main className="p-4">
+          {/* Seu conteúdo aqui */}
         </main>
       </SidebarInset>
     </SidebarProvider>
