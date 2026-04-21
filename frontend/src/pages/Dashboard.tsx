@@ -18,6 +18,15 @@ export function Dashboard() {
   return (
     <SidebarProvider>
       <AppSidebar />
+      <SidebarInset>
+        <header className="flex h-16 items-center px-4">
+          {/* Esse botão SÓ vai aparecer/funcionar direito se estiver aqui */}
+          <SidebarTrigger />
+        </header>
+        <main>
+          {/* Seu conteúdo */}
+        </main>
+      </SidebarInset>
     </SidebarProvider>
   )
 }
