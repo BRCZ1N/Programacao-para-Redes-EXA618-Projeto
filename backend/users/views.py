@@ -66,6 +66,7 @@ def me(request):
         return Response({"Erro": serializer.errors}, status=400)
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def password_reset(request):
 
     email = request.data.get("email")
@@ -88,7 +89,7 @@ def password_reset(request):
     send_mail(
         subject="Password reset",
         message=f"Use este link: {reset_link}",
-        from_email=config("EMAIL_SMTP"),
+        from_email=config("EMAIL_HOST_USER"),
         recipient_list=[user.email],
     )
 
