@@ -2,10 +2,7 @@ import { AppSidebar } from "../components/AppSidebar"
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
 } from "../components/ui/breadcrumb"
 import { Separator } from "../components/ui/separator"
 import {
@@ -13,20 +10,38 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "../components/ui/sidebar"
+import { Outlet, useLocation } from "react-router-dom"
+
+const routeLabels: Record<string, string> = {
+  "/dashboard/games": "Games",
+  "/dashboard/playlists": "Playlists",
+}
 
 export function Dashboard() {
+
+  const location = useLocation()
+
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset>
-        {/* Este Header é o que "prende" o botão no topo no mobile */}
-        <header className="sticky top-0 z-10 flex h-16 items-center gap-2 border-b bg-background px-4">
-          <SidebarTrigger />
-        </header>
 
-        <main className="p-4">
-          {/* Seu conteúdo aqui */}
-        </main>
+      <SidebarInset>
+        <header className="flex h-16 items-center gap-2 shadow-sm px-4">
+          <div className="flex items-center gap-2">
+            <SidebarTrigger className="self-center" />
+
+            <Separator orientation="vertical" className="self-center" />
+
+            <Breadcrumb className="self-center">
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  {routeLabels[location.pathname] ?? "Dashboard"}
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
+        </header>
+        <Outlet />
       </SidebarInset>
     </SidebarProvider>
   )
