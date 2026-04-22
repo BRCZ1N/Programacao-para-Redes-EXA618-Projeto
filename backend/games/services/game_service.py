@@ -2,6 +2,7 @@ from games.models import Game
 
 def save_games(game_dtos):
     for dto in game_dtos:
+        print(dto.id, type(dto.id))
         Game.objects.update_or_create(
             steam_id=dto.id,
             defaults={

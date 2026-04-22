@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Playlist
 from games.models import Game
 from .serializers import PlaylistSerializer, PlaylistUpdateSerializer
-from games.serializers import GamePreviewSerializer
+from games.serializers import GameDetailSerializer
 
 @api_view(['GET'])
 def home(request):
@@ -41,7 +41,7 @@ def generate_playlist(request):
     if not games:
         return Response({"error": "Nenhum jogo encontrado"}, status=400)
     
-    serializer = GamePreviewSerializer(games, many=True)
+    serializer = GameDetailSerializer(games, many=True)
     
     return Response(serializer.data, status=200)
 

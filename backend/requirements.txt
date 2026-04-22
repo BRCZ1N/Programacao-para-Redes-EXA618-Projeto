@@ -7,3 +7,4 @@ djangorestframework
 djangorestframework-simplejwt
 python-decouple
 black
+django-cors-headers

@@ -4,22 +4,31 @@ from rest_framework.pagination import PageNumberPagination
 from games.services.crawler_service import start_crawler
 from games.services.game_service import save_games
 from users.permissions import IsSuperUser
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Game
-from .serializers import GamePreviewSerializer
+from .serializers import GameDetailSerializer, GameGridSerializer
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def game(request):
-    
-    query = Game.objects.all()
-    
+def game_list(request):
+    query = Game.objects.all().order_by("id")
+
     paginator = PageNumberPagination()
-    paginator.page_size = 10
-        
+    paginator.page_size = 16
+
     result_page = paginator.paginate_queryset(query, request)
 
-    serializer = GamePreviewSerializer(result_page, many=True)
+    serializer = GameGridSerializer(result_page, many=True)
+    return paginator.get_paginated_response(serializer.data)
+
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def game_detail(request, pk):
+    game = Game.objects.get(id=pk)
+
+    serializer = GameDetailSerializer(game)
     return Response(serializer.data)
         
 

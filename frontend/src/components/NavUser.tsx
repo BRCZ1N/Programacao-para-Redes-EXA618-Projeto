@@ -1,6 +1,7 @@
 "use client";
 
 import { BadgeCheck, LogOut } from "lucide-react";
+
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
   DropdownMenu,
@@ -17,8 +18,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "./ui/sidebar";
-import { LogoutDialog } from "./LogoutDialog";
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function NavUser({
   user,
@@ -29,58 +29,72 @@ export function NavUser({
   };
 }) {
   const { isMobile } = useSidebar();
-  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+
+  function handleLogout() {
+    // aqui você limpa auth se tiver
+    // localStorage.removeItem("token")
+
+    navigate("/");
+  }
 
   return (
     <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <SidebarMenuButton size="lg">
+            <SidebarMenuButton
+              size="lg"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground md:h-8 md:p-0"
+            >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.avatar} />
-                <AvatarFallback>CN</AvatarFallback>
+                {/*<AvatarImage src={user.avatar} alt={user.name} />*/}
+                <AvatarFallback>
+                  {user.name
+                    ? user.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .slice(0, 2)
+                        .join("")
+                        .toUpperCase()
+                    : "U"}
+                </AvatarFallback>
               </Avatar>
-
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{user.name}</span>
               </div>
             </SidebarMenuButton>
           </DropdownMenuTrigger>
-
-          <DropdownMenuContent side={isMobile ? "bottom" : "right"} align="end">
-            <DropdownMenuLabel className="font-normal">
-              <div className="flex items-center gap-2">
+          <DropdownMenuContent
+            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+            side={isMobile ? "bottom" : "right"}
+            align="end"
+            sideOffset={4}
+          >
+            <DropdownMenuLabel className="p-0 font-normal">
+              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} />
-                  <AvatarFallback>CN</AvatarFallback>
+                  <AvatarImage src={user.avatar} alt={user.name} />
+                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
-
-                <div>
-                  <div className="font-medium">{user.name}</div>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-medium">{user.name}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
-
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <BadgeCheck className="h-4 w-4" />
+                <BadgeCheck />
                 Account
               </DropdownMenuItem>
             </DropdownMenuGroup>
-            <DropdownMenuItem
-              className="gap-2"
-              onClick={(e) => {
-                e.preventDefault();
-                setOpen(true);
-              }}
-            >
-              <LogOut className="h-4 w-4" />
-              Logout
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleLogout}>
+              <LogOut />
+              Log out
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        <LogoutDialog open={open} onOpenChange={setOpen} onConfirm={() => {}} />
       </SidebarMenuItem>
     </SidebarMenu>
   );

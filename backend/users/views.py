@@ -10,7 +10,10 @@ from decouple import config
 
 @api_view(['POST'])
 def logout(request):
-    return Response({"playlists": []})
+    res = Response({"ok": True})
+    res.delete_cookie("access")
+    res.delete_cookie("refresh")
+    return res
     
 @api_view(['POST'])
 @permission_classes([AllowAny])

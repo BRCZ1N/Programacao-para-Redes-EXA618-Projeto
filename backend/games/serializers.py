@@ -7,7 +7,7 @@ class GameSerializer(serializers.ModelSerializer):
         fields = '__all__'
         
         
-class GamePreviewSerializer(serializers.ModelSerializer):
+class GameDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
         fields = [
@@ -21,4 +21,13 @@ class GamePreviewSerializer(serializers.ModelSerializer):
             'total_reviews',
             'url_image',
             'url_steam'
+        ]
+
+class GameGridSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Game
+        fields = [
+            'id',
+            'title',
+            'url_image',
         ]
