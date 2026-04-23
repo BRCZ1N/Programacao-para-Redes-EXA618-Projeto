@@ -18,8 +18,9 @@ import { useState } from "react";
 
 type Props = React.ComponentProps<typeof Card> & {
   onSubmit: (data: {
-    firstName: string;
-    lastName: string;
+    username: string;
+    first_name: string;
+    last_name: string;
     email: string;
     password: string;
   }) => void;
@@ -27,9 +28,10 @@ type Props = React.ComponentProps<typeof Card> & {
 
 export function SignupForm({ onSubmit, ...props }: Props) {
   
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [first_name, setFirstName] = useState("");
+  const [last_name, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -38,8 +40,9 @@ export function SignupForm({ onSubmit, ...props }: Props) {
     onSubmit({
       email,
       password,
-      lastName,
-      firstName,
+      username,
+      last_name,
+      first_name,
     });
   }
 
@@ -55,21 +58,32 @@ export function SignupForm({ onSubmit, ...props }: Props) {
         <form onSubmit={handleSubmit}>
           <FieldGroup>
             <Field>
-              <FieldLabel htmlFor="firstName">Primeiro nome</FieldLabel>
+              <FieldLabel htmlFor="username">Nome de usuário</FieldLabel>
               <Input
-                id="firstName"
+                id="username"
                 type="text"
-                value={firstName}
+                value={username}
+                onChange={(e) => setUserName(e.target.value)}
+                required
+              />
+            </Field>
+            
+            <Field>
+              <FieldLabel htmlFor="first_name">Primeiro nome</FieldLabel>
+              <Input
+                id="first_name"
+                type="text"
+                value={first_name}
                 onChange={(e) => setFirstName(e.target.value)}
                 required
               />
             </Field>
             <Field>
-              <FieldLabel htmlFor="lastName">Último nome</FieldLabel>
+              <FieldLabel htmlFor="last_name">Último nome</FieldLabel>
               <Input
-                id="lastName"
+                id="last_name"
                 type="text"
-                value={lastName}
+                value={last_name}
                 onChange={(e) => setLastName(e.target.value)}
                 required
               />

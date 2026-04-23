@@ -1,4 +1,4 @@
 export type UserPerfil = {
-  name: string
+  username: string
   avatar: "/avatars/shadcn";
 };

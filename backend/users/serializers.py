@@ -4,11 +4,21 @@ from .models import CustomUser
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['username', 'email', 'password', 'first_name', 'last_name']
-        extra_kwargs = {'password': {'write_only': True}}
+        fields = ['email', 'password', 'first_name', 'last_name', 'username']
+        extra_kwargs = {
+            'password': {'write_only': True},
+            'email': {'required': True},
+        }
 
     def create(self, validated_data):
-        return CustomUser.objects.create_user(**validated_data)
+        password = validated_data.pop("password")
+
+        user = CustomUser(
+            **validated_data
+        )
+        user.set_password(password)
+        user.save()
+        return user
     
     
 class UserUpdateSerializer(serializers.ModelSerializer):

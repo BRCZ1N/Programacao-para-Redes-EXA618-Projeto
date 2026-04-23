@@ -21,11 +21,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import type { UserPerfil } from "../models/User";
 
-export function NavUser({
-  user,
-}: {
-  user: UserPerfil
-}) {
+export function NavUser({ user }: { user: UserPerfil }) {
   const { isMobile } = useSidebar();
   const navigate = useNavigate();
 
@@ -48,8 +44,8 @@ export function NavUser({
               <Avatar className="h-8 w-8 rounded-lg">
                 {/*<AvatarImage src={user.avatar} alt={user.name} />*/}
                 <AvatarFallback>
-                  {user.name
-                    ? user.name
+                  {user.username
+                    ? user.username
                         .split(" ")
                         .map((n) => n[0])
                         .slice(0, 2)
@@ -59,7 +55,7 @@ export function NavUser({
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.name}</span>
+                <span className="truncate font-medium">{user.username}</span>
               </div>
             </SidebarMenuButton>
           </DropdownMenuTrigger>
@@ -72,11 +68,20 @@ export function NavUser({
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  <AvatarImage src={user.avatar} alt={user.username} />
+                  <AvatarFallback>
+                    {user.username
+                      ? user.username
+                          .split(" ")
+                          .map((n) => n[0])
+                          .slice(0, 2)
+                          .join("")
+                          .toUpperCase()
+                      : "U"}
+                  </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.name}</span>
+                  <span className="truncate font-medium">{user.username}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
