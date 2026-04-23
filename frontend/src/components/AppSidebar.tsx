@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Library, Gamepad2 } from "lucide-react"
-import { useNavigate, useLocation } from "react-router-dom"
-import { NavUser } from "./NavUser"
+import * as React from "react";
+import { Library, Gamepad2 } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { NavUser } from "./NavUser";
 import {
   Sidebar,
   SidebarContent,
@@ -13,7 +13,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "./ui/sidebar"
+} from "./ui/sidebar";
+import { useEffect, useState } from "react";
+import type { UserPerfil } from "../models/User";
 
 const data = {
   user: {
@@ -33,15 +35,59 @@ const data = {
       url: "/dashboard/games",
     },
   ],
-}
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const navigate = useNavigate()
-  const location = useLocation()
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState<UserPerfil>();
+
+  async function loadUser() {
+    setIsLoading(true);
+
+    try {
+      let response = await fetch("http://localhost:8000/api/user/me/", {
+        method: "GET",
+        credentials: "include",
+      });
+
+      if (response.status === 401) {
+        const refreshResponse = await fetch(
+          "http://localhost:8000/api/auth/refresh/",
+          {
+            method: "POST",
+            credentials: "include",
+          },
+        );
+
+        if (refreshResponse.ok) {
+          response = await fetch("http://localhost:8000/api/user/me/", {
+            method: "GET",
+            credentials: "include",
+          });
+        }
+      }
+
+      if (response.ok) {
+        const user = await response.json();
+        setUser(user);
+      } else {
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.log("Erro:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    loadUser();
+  }, []);
 
   return (
     <Sidebar collapsible="icon" {...props}>
-      
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -78,9 +124,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
 
       <SidebarFooter>
-        <NavUser user={data.user} />
+        {user && <NavUser user={user} />}
       </SidebarFooter>
-
     </Sidebar>
-  )
+  );
 }

@@ -1,84 +1,106 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Playlist } from "../models/Playlist";
 import { PlaylistCard } from "../components/PlaylistCard";
-import { Skeleton } from "../components/ui/skeleton";
-import { PaginationGames } from "../components/PaginationGames";
 
 export function PlaylistGrid() {
   const [data, setData] = useState<Playlist[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const isFetchingRef = useRef(false);
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+  const [nextUrl, setNextUrl] = useState<string | null>(
+    "http://localhost:8000/api/playlist/",
+  );
 
-  useEffect(() => {
-    async function load() {
-      setIsLoading(true);
-      try {
-        let response = await fetch(
-          `http://localhost:8000/api/playlist/?page=${page}`,
+  async function loadMore() {
+    if (!nextUrl || isFetchingRef.current) return;
+
+    isFetchingRef.current = true;
+    setIsLoading(true);
+
+    try {
+      let response = await fetch(nextUrl, {
+        method: "GET",
+        credentials: "include",
+      });
+
+      if (response.status === 401) {
+        const refreshResponse = await fetch(
+          "http://localhost:8000/api/auth/refresh/",
           {
-            method: "GET",
+            method: "POST",
             credentials: "include",
           },
         );
 
-        if (response.status === 401) {
-          const refreshResponse = await fetch(
-            "http://localhost:8000/api/auth/refresh/",
-            {
-              method: "POST",
-              credentials: "include",
-            },
+        if (refreshResponse.ok) {
+          response = await fetch(nextUrl, {
+            method: "GET",
+            credentials: "include",
+          });
+        }
+      }
+
+      if (response.ok) {
+        const json = await response.json();
+
+        setData((prev) => {
+          const newItems = json.results.filter(
+            (item: any) => !prev.some((p) => p.id === item.id),
           );
 
-          if (refreshResponse.ok) {
-            response = await fetch(
-              `http://localhost:8000/api/playlist/?page=${page}`,
-              {
-                method: "GET",
-                credentials: "include",
-              },
-            );
+          if (newItems.length === 0) {
+            setNextUrl(null);
+            return prev;
           }
-        }
 
-        if (response.ok) {
-          const data = await response.json();
-          setData(data.results);
-          setTotalPages(data.totalPages);
-          setPage(data.page);
-          setIsLoading(false);
-        }
-      } catch (error) {
-        console.log("Erro na requisição:", error);
+          return [...prev, ...newItems];
+        });
+
+        setNextUrl(json.next);
       }
+    } catch (error) {
+      console.log("Erro:", error);
+    } finally {
+      isFetchingRef.current = false;
+      setIsLoading(false);
     }
-
-    load();
+  }
+  useEffect(() => {
+    loadMore();
   }, []);
 
+  useEffect(() => {
+    if (!nextUrl) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          loadMore();
+        }
+      },
+      { rootMargin: "200px" },
+    );
+
+    const current = loadMoreRef.current;
+
+    if (current) observer.observe(current);
+
+    return () => {
+      if (current) observer.unobserve(current);
+    };
+  }, [nextUrl]);
+
   return (
-    <div>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 p-4">
-        {isLoading
-          ? Array.from({ length: 16 }).map((_, i) => (
-              <Skeleton key={i} className="h-40 w-full rounded-xl" />
-            ))
-          : (data ?? []).map((item) => (
-              <PlaylistCard
-                key={item.id}
-                games={item.games}
-                title={item.title} // se tiver nome
-              />
-            ))}
-      </div>
-      <div className="flex gap-3 p-4 flex-1">
-        <PaginationGames
-          page={page}
-          setPage={setPage}
-          totalPages={totalPages}
-        />
-      </div>
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
+      {data.map((item) => (
+        <PlaylistCard key={item.id} games={item.games} />
+      ))}
+
+      <div ref={loadMoreRef} />
+
+      {isLoading && (
+        <div className="col-span-full text-center py-4">Carregando...</div>
+      )}
     </div>
   );
 }

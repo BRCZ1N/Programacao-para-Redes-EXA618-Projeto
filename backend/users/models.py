@@ -23,7 +23,7 @@ class CustomUserManager(BaseUserManager):
 
 class CustomUser(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    username = models.CharField(max_length=200, null=True, blank= True)
+    username = models.CharField(max_length=200, null=True, blank= False)
     email = models.EmailField(unique=True)
     is_trusty = models.BooleanField(default=False)
     

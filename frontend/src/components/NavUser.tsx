@@ -19,14 +19,12 @@ import {
   useSidebar,
 } from "./ui/sidebar";
 import { useNavigate } from "react-router-dom";
+import type { UserPerfil } from "../models/User";
 
 export function NavUser({
   user,
 }: {
-  user: {
-    name: string;
-    avatar: string;
-  };
+  user: UserPerfil
 }) {
   const { isMobile } = useSidebar();
   const navigate = useNavigate();
