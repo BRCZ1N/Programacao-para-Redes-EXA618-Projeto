@@ -18,14 +18,9 @@ import { useEffect, useState } from "react";
 import type { UserPerfil } from "../models/User";
 
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   navMain: [
     {
-      title: "Playlists",
+      title: "Biblioteca",
       icon: Library,
       url: "/dashboard/playlists",
     },

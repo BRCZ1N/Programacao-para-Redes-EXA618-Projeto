@@ -1,11 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import type { Playlist } from "../models/Playlist";
+import { EmptyDemo } from "../components/EmptyDemo";
 import { PlaylistCard } from "../components/PlaylistCard";
+import { FakePlaylistCard } from "../components/FakePlaylistCard";
+import { apiFetch } from "../fetcher/Fetcher";
+import { PlaylistDrawer } from "../components/PlaylistDrawer";
 
 export function PlaylistGrid() {
   const [data, setData] = useState<Playlist[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const isFetchingRef = useRef(false);
+  const [open, setOpen] = useState(false);
+  const [playlist, setPlaylist] = useState<Playlist>();
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
   const [nextUrl, setNextUrl] = useState<string | null>(
     "http://localhost:8000/api/playlist/",
@@ -65,6 +71,32 @@ export function PlaylistGrid() {
       setIsLoading(false);
     }
   }
+
+  async function handleGeneratePlaylist() {
+    try {
+      const response = await apiFetch("http://localhost:8000/api/playlist/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          mode: "auto",
+        }),
+      });
+
+      if (!response.ok) return;
+
+      const data: Playlist = await response.json();
+
+    
+      setPlaylist(data);
+      setOpen(true);
+
+      setData((prev) => [data, ...prev]);
+    } catch (error) {
+      console.log("Erro na requisição:", error);
+    }
+  }
   useEffect(() => {
     loadMore();
   }, []);
@@ -91,16 +123,31 @@ export function PlaylistGrid() {
   }, [nextUrl]);
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
-      {data.map((item) => (
-        <PlaylistCard key={item.id} games={item.games} />
-      ))}
+    <>
+      {data.length === 0 && !isLoading ? (
+        <EmptyDemo />
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
+          <FakePlaylistCard onClick={handleGeneratePlaylist} />
 
-      <div ref={loadMoreRef} />
+          {data.map((item) => (
+            <PlaylistCard key={item.id} games={item.games} />
+          ))}
 
-      {isLoading && (
-        <div className="col-span-full text-center py-4">Carregando...</div>
+          <div ref={loadMoreRef} />
+
+          {isLoading && (
+            <div className="col-span-full text-center py-4">Carregando...</div>
+          )}
+
+          <PlaylistDrawer
+            open={open}
+            onOpenChange={setOpen}
+            playlist={playlist}
+            onGenerateAgain={handleGeneratePlaylist}
+          />
+        </div>
       )}
-    </div>
+    </>
   );
 }

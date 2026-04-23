@@ -1,30 +1,62 @@
-import { Card, CardHeader, CardTitle, CardDescription } from "../components/ui/card"
+import { Card, CardActionArea, Box, Typography } from "@mui/material";
 
 type Game = {
-  id: string
-  title: string
-  url_image: string
-}
+  id: string;
+  title: string;
+  url_image: string;
+};
 
 export function GameCard({ game }: { game: Game }) {
   return (
-    <Card className="relative overflow-hidden pt-0 group">
-      <div className="absolute inset-0 z-10 bg-black/30" />
+    <Card
+      sx={{
+        position: "relative",
+        overflow: "hidden",
+        pt: 0,
+        "&:hover img": {
+          transform: "scale(1.05)",
+        },
+      }}
+    >
+      <CardActionArea>
 
-      <img
-        src={game.url_image}
-        className="relative z-0 h-40 w-full object-cover group-hover:scale-105 transition"
-      />
+        {/* IMAGEM */}
+        <Box
+          component="img"
+          src={game.url_image}
+          alt={game.title}
+          sx={{
+            height: 160,
+            width: "100%",
+            objectFit: "cover",
+            transition: "0.3s",
+            display: "block",
+          }}
+        />
 
-      <CardHeader className="relative z-20">
-        <CardTitle className="text-sm">{game.title}</CardTitle>
-         
-        {/* {game.description && (
-          <CardDescription className="text-xs">
-            {game.description}
-          </CardDescription>
-        )}*/}
-      </CardHeader>
+        {/* OVERLAY */}
+        <Box
+          sx={{
+            position: "absolute",
+            inset: 0,
+            backgroundColor: "rgba(0,0,0,0.3)",
+            zIndex: 1,
+          }}
+        />
+
+        {/* TEXTO */}
+        <Box
+          sx={{
+            position: "absolute",
+            bottom: 0,
+            zIndex: 2,
+            p: 2,
+          }}
+        >
+        
+        </Box>
+
+      </CardActionArea>
     </Card>
-  )
+  );
 }
