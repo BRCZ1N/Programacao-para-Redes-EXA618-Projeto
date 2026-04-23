@@ -14,13 +14,13 @@ def game_list(request):
     query = Game.objects.all().order_by("id")
 
     paginator = PageNumberPagination()
-    paginator.page_size = 16
+    paginator.page_size = 12
 
     result_page = paginator.paginate_queryset(query, request)
 
     serializer = GameGridSerializer(result_page, many=True)
-    return paginator.get_paginated_response(serializer.data)
 
+    return paginator.get_paginated_response(serializer.data)
 
 
 @api_view(['GET'])

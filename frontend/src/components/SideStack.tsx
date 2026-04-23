@@ -1,16 +1,12 @@
 import { Link } from "react-router-dom";
+import type {Game} from "../models/Game"
 
-type Game = {
-  id: string;
-  title: string;
-  imageUrl: string;
-};
 
 export function SideStack({ games }: { games: Game[] }) {
   return (
     <div className="relative w-full aspect-[4/3] sm:aspect-[3/2] md:aspect-[16/9]">
       {games.slice(0, 5).map((game, index) => {
-        const offset = index * 6
+        const offset = index * 15
         const scale = 1 - index * 0.04
 
         return (
@@ -24,7 +20,7 @@ export function SideStack({ games }: { games: Game[] }) {
             }}
           >
             <img
-              src={game.imageUrl}
+              src={game.url_image}
               className="h-full w-full object-cover"
             />
 

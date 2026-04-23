@@ -2,29 +2,25 @@ import { useEffect, useState } from "react";
 import { GameCard } from "../components/GameCard";
 import { PaginationGames } from "../components/PaginationGames";
 import { Skeleton } from "../components/ui/skeleton";
-
-type Game = {
-  id: string;
-  title: string;
-  url_image: string;
-};
+import type { Game } from "../models/Game";
 
 export function GamesGrid() {
-
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<Game[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-
     async function load() {
       setIsLoading(true);
       try {
-        let response = await fetch(`http://localhost:8000/api/games/?page=${page}`, {
-          method: "GET",
-          credentials: "include",
-        });
+        let response = await fetch(
+          `http://localhost:8000/api/games/?page=${page}`,
+          {
+            method: "GET",
+            credentials: "include",
+          },
+        );
 
         if (response.status === 401) {
           const refreshResponse = await fetch(
@@ -36,17 +32,21 @@ export function GamesGrid() {
           );
 
           if (refreshResponse.ok) {
-            response = await fetch("http://localhost:8000/api/games/", {
-              method: "GET",
-              credentials: "include",
-            });
+            response = await fetch(
+              `http://localhost:8000/api/games/?page=${page}`,
+              {
+                method: "GET",
+                credentials: "include",
+              },
+            );
           }
         }
 
         if (response.ok) {
           const data = await response.json();
           setData(data.results);
-          setTotalPages
+          setTotalPages(data.totalPages);
+          setPage(data.page);
           setIsLoading(false);
         }
       } catch (error) {
@@ -58,17 +58,21 @@ export function GamesGrid() {
   }, []);
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 p-4">
-      {isLoading
-        ? Array.from({ length: 16 }).map((_, i) => (
-            <Skeleton key={i} className="h-40 w-full rounded-xl" />
-          ))
-        : data.map((game) => <GameCard key={game.id} game={game} />)}
-      <PaginationGames
-        page={page}
-        setPage={setPage}
-        totalPages={totalPages}
+    <div>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 p-4">
+        {isLoading
+          ? Array.from({ length: 16 }).map((_, i) => (
+              <Skeleton key={i} className="h-40 w-full rounded-xl" />
+            ))
+          : (data ?? []).map((game) => <GameCard key={game.id} game={game} />)}
+      </div>
+      <div className="flex gap-3 p-4 flex-1">
+        <PaginationGames
+          page={page}
+          setPage={setPage}
+          totalPages={totalPages}
         />
-    </div>   
+      </div>
+    </div>
   );
 }

@@ -3,7 +3,7 @@ export function SideStackSkeleton() {
     <div className="relative w-full aspect-[4/3] animate-pulse">
       {Array.from({ length: 5 }).map((_, index) => {
         const offset = index * 6
-        const scale = 1 - index * 0.04
+        const scale = 1 - index * 10
 
         return (
           <div
