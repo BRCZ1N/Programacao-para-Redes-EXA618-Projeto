@@ -1,6 +1,6 @@
 "use client";
 
-import { BadgeCheck, LogOut } from "lucide-react";
+import { Settings, LogOut } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
@@ -20,16 +20,29 @@ import {
 } from "./ui/sidebar";
 import { useNavigate } from "react-router-dom";
 import type { UserPerfil } from "../models/User";
+import { DialogConfiguration } from "./ConfigurationDialog";
+import { useState } from "react";
 
 export function NavUser({ user }: { user: UserPerfil }) {
   const { isMobile } = useSidebar();
   const navigate = useNavigate();
+  const [openConfig, setOpenConfig] = useState(false);
 
-  function handleLogout() {
-    // aqui você limpa auth se tiver
-    // localStorage.removeItem("token")
+  async function handleLogout() {
+    try {
+      await fetch("http://localhost:8000/api/auth/logout/", {
+        method: "POST",
+        credentials: "include",
+      });
 
-    navigate("/");
+      navigate("/login");
+    } catch (error) {
+      console.log("Erro ao sair:", error);
+    }
+  }
+
+  function handleConfiguration() {
+    setOpenConfig(true);
   }
 
   return (
@@ -42,7 +55,6 @@ export function NavUser({ user }: { user: UserPerfil }) {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground md:h-8 md:p-0"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                {/*<AvatarImage src={user.avatar} alt={user.name} />*/}
                 <AvatarFallback>
                   {user.username
                     ? user.username
@@ -86,9 +98,9 @@ export function NavUser({ user }: { user: UserPerfil }) {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
+              <DropdownMenuItem onClick={handleConfiguration}>
+                <Settings />
+                Configurações
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
@@ -99,6 +111,7 @@ export function NavUser({ user }: { user: UserPerfil }) {
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
+      <DialogConfiguration open={openConfig} onOpenChange={setOpenConfig} />
     </SidebarMenu>
   );
 }

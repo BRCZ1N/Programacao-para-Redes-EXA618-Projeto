@@ -1,7 +1,7 @@
 from django.urls import path
 from playlists.views import playlist_detail,playlist
 from games.views import game_detail,game_list,crawl_games
-from users.views import register_user,me,password_reset,delete_user
+from users.views import register_user,me,password_reset,delete_user, logout, update_user
 from users.cookies import CookieTokenObtainPairView, CookieTokenRefreshView
 
 urlpatterns = [
@@ -16,9 +16,11 @@ urlpatterns = [
     path('api/user/register/', register_user),
     path('api/user/delete/', delete_user),
     path('api/user/me/', me),
+    path('api/user/update/', update_user),
 
     path('api/auth/login/', CookieTokenObtainPairView.as_view()),
     path('api/auth/refresh/', CookieTokenRefreshView.as_view()),
+    path('api/auth/logout/', logout),
   
     path('api/password-reset/', password_reset),
 ]

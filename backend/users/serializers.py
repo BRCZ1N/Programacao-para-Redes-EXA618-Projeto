@@ -1,4 +1,4 @@
-from rest_framework import serializers, validators
+from rest_framework import serializers
 from .models import CustomUser
 
 class RegisterSerializer(serializers.ModelSerializer):

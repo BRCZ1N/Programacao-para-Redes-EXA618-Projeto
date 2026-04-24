@@ -35,12 +35,9 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState<UserPerfil>();
 
   async function loadUser() {
-    setIsLoading(true);
-
     try {
       let response = await fetch("http://localhost:8000/api/user/me/", {
         method: "GET",
@@ -67,13 +64,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       if (response.ok) {
         const user = await response.json();
         setUser(user);
-      } else {
-        setIsLoading(false);
       }
     } catch (error) {
       console.log("Erro:", error);
-    } finally {
-      setIsLoading(false);
     }
   }
 
@@ -118,9 +111,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter>
-        {user && <NavUser user={user} />}
-      </SidebarFooter>
+      <SidebarFooter>{user && <NavUser user={user} />}</SidebarFooter>
     </Sidebar>
   );
 }

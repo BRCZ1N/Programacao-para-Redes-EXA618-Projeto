@@ -33,7 +33,7 @@ def game_detail(request, pk):
         
 
 @api_view(["POST"])
-@permission_classes([IsSuperUser])  
+@permission_classes([AllowAny])  
 def crawl_games(request):
     games = start_crawler()
     save_games(games)

@@ -95,6 +95,15 @@
   }
 }
 
+.scroll-hidden {
+  -ms-overflow-style: none; 
+  scrollbar-width: none; 
+}
+
+.scroll-hidden::-webkit-scrollbar {
+  display: none;
+}
+
 #docs {
   border-right: 1px solid var(--border);
 

@@ -3,8 +3,8 @@ import type { Playlist } from "../models/Playlist";
 import { EmptyDemo } from "../components/EmptyDemo";
 import { PlaylistCard } from "../components/PlaylistCard";
 import { FakePlaylistCard } from "../components/FakePlaylistCard";
-import { apiFetch } from "../fetcher/Fetcher";
 import { PlaylistDrawer } from "../components/PlaylistDrawer";
+import { DialogCreatePlaylist } from "../components/DialogPlaylistCreate";
 
 export function PlaylistGrid() {
   const [data, setData] = useState<Playlist[]>([]);
@@ -16,6 +16,7 @@ export function PlaylistGrid() {
   const [nextUrl, setNextUrl] = useState<string | null>(
     "http://localhost:8000/api/playlist/",
   );
+  const [openCreatePlaylist, setOpenCreatePlaylist] = useState(false);
 
   async function loadMore() {
     if (!nextUrl || isFetchingRef.current) return;
@@ -72,30 +73,8 @@ export function PlaylistGrid() {
     }
   }
 
-  async function handleGeneratePlaylist() {
-    try {
-      const response = await apiFetch("http://localhost:8000/api/playlist/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          mode: "auto",
-        }),
-      });
-
-      if (!response.ok) return;
-
-      const data: Playlist = await response.json();
-
-    
-      setPlaylist(data);
-      setOpen(true);
-
-      setData((prev) => [data, ...prev]);
-    } catch (error) {
-      console.log("Erro na requisição:", error);
-    }
+  function handleGeneratePlaylist() {
+    setOpenCreatePlaylist(true);
   }
   useEffect(() => {
     loadMore();
@@ -145,6 +124,11 @@ export function PlaylistGrid() {
             onOpenChange={setOpen}
             playlist={playlist}
             onGenerateAgain={handleGeneratePlaylist}
+          />
+
+          <DialogCreatePlaylist
+            open={openCreatePlaylist}
+            onOpenChange={setOpenCreatePlaylist}
           />
         </div>
       )}

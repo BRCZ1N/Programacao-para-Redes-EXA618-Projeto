@@ -3,18 +3,52 @@ from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.decorators import api_view, permission_classes
 from .serializers import RegisterSerializer, PerfilSerializer, UserUpdateSerializer, CustomUser
 from .models import CustomUser
-from django.contrib.auth import views as auth_views
 from django.core.mail import send_mail
 from .models import PasswordResetToken
 from decouple import config
 
 @api_view(['POST'])
 def logout(request):
-    res = Response({"ok": True})
+    res = Response({"status": "Usuário deslogado com sucesso"})
     res.delete_cookie("access")
     res.delete_cookie("refresh")
     return res
+
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def update_user(request):
+    user = request.user
+
+    username = request.data.get("username")
+    first_name = request.data.get("first_name")
+    last_name = request.data.get("last_name")
+    password = request.data.get("password")
+
+    if username is not None:
+        user.username = username
+
+    if first_name is not None:
+        user.first_name = first_name
+
+    if last_name is not None:
+        user.last_name = last_name
     
+    if password:
+        user.set_password(password)
+
+    user.save()
+
+    return Response({
+        "username": user.username,
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+        "email": user.email,
+    })
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register_user(request):

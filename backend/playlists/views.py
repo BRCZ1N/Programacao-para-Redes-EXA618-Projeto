@@ -31,57 +31,42 @@ def playlist(request):
         return paginator.get_paginated_response(serializer.data)
 
     if request.method == "POST":
-        mode = request.data.get("mode", "manual")
-
         title = request.data.get("title", "Nova playlist")
-        description = request.data.get("description", "")
-        game_ids = request.data.get("games", [])
+    description = request.data.get("description", "")
 
-        games = Game.objects.all()
+    tags = request.data.get("tags")
+    min_rating = request.data.get("min_rating")
+    min_value = request.data.get("min_value")
+    min_review = request.data.get("min_review")
 
-        if mode == "auto":
+    games = Game.objects.all()
 
-            tags = request.data.get("tags")
-            min_rating = request.data.get("min_rating")
-            min_value = request.data.get("min_value")
-            min_review = request.data.get("min_review")
+    if tags:
+        games = games.filter(tags__name=tags)
 
-            if tags:
-                games = games.filter(tags__name=tags)
+    if min_value:
+        games = games.filter(discount_price__gte=min_value)
 
-            if min_value:
-                games = games.filter(discount_price__gte=min_value)
+    if min_review:
+        games = games.filter(total_reviews__gte=min_review)
 
-            if min_review:
-                games = games.filter(total_reviews__gte=min_review)
+    if min_rating:
+        games = games.filter(review_rating__gte=min_rating)
 
-            if min_rating:
-                games = games.filter(review_rating__gte=min_rating)
+    games = games.order_by("-review_rating", "-total_reviews")[:5]
 
-            games = games.order_by("-review_rating", "-total_reviews")[:5]
+    if not games.exists():
+        return Response({"error": "Nenhum jogo encontrado"}, status=400)
 
-        else:
+    playlist = Playlist.objects.create(
+        user=request.user, title=title, description=description
+    )
 
-            if not isinstance(game_ids, list):
-                return Response({"error": "games deve ser uma lista"}, status=400)
+    playlist.games.set(games)
 
-            games = Game.objects.filter(id__in=game_ids)
+    serializer = PlaylistSerializer(playlist)
 
-            if games.count() != len(set(game_ids)):
-                return Response({"error": "Alguns games não existem"}, status=400)
-
-        if not games.exists():
-            return Response({"error": "Nenhum jogo encontrado"}, status=400)
-
-        playlist = Playlist.objects.create(
-            user=request.user, title=title, description=description
-        )
-
-        playlist.games.set(games)
-
-        serializer = PlaylistSerializer(playlist)
-
-        return Response(serializer.data, status=201)
+    return Response(serializer.data, status=201)
 
 
 @api_view(["GET", "PUT", "DELETE"])
