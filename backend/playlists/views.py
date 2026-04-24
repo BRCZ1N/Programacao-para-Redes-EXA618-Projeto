@@ -43,7 +43,7 @@ def playlist(request):
         games = Game.objects.all()
 
         if tags:
-            games = games.filter(tags__icontains="RPG")
+            games = games.filter(tags__contains=tags)
 
         if min_value:
             games = games.filter(discount_price__gte=min_value)
