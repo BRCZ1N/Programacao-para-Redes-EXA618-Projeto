@@ -61,7 +61,7 @@ def parse_homepage_games(response):
 
             appID = None
             if appID_raw:
-                appID = appID_raw.split(",")[0]  # pega só o primeiro ID    
+                appID = appID_raw.split(",")[0]    
             appID = game.get("data-ds-appid").split(",")[0]
             priceDiv = game.find("div", class_="discount_prices")
             originalDiv = priceDiv.find("div", class_="discount_original_price")

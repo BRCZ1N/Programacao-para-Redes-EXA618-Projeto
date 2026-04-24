@@ -35,15 +35,15 @@ def playlist(request):
         title = request.data.get("title", "Nova playlist")
         description = request.data.get("description", "")
 
-        tags = request.data.get("tags", [])
+        tag = request.data.get("tag", [])
         min_rating = request.data.get("min_rating")
         min_value = request.data.get("min_value")
         min_review = request.data.get("min_review")
 
         games = Game.objects.all()
 
-        if tags:
-            games = games.filter(tags__contains=tags)
+        if tag:
+            games = games.filter(tag__name__in=tag).distinct()
 
         if min_value:
             games = games.filter(discount_price__gte=min_value)

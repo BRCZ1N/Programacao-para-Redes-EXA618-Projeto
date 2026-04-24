@@ -5,7 +5,7 @@ import { X } from "lucide-react";
 
 type Props = {
   value: string[];
-  onChange: (tags: string[]) => void;
+  onChange: (tag: string[]) => void;
 };
 
 export function TagsInput({ value, onChange }: Props) {

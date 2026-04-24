@@ -11,7 +11,7 @@ def save_games(game_dtos):
                 "discount_price": dto.discount_price,
                 "description": dto.description,
                 "date_release": dto.date_release,
-                "tags": dto.tags,
+                "tag": dto.tags,
                 "developer": dto.developer,
                 "publisher": dto.publisher,
                 "total_reviews": dto.total_reviews,

@@ -2,7 +2,7 @@ import { SliderBlock } from "./SliderBlock";
 import { TagsInput } from "./TagsInput";
 
 type FormType = {
-  tags: string[];
+  tag: string[];
   rating: number[];
   price: number[];
   reviews: number[];
@@ -19,11 +19,11 @@ export function PlaylistFilters({ form, setForm }: Props) {
       <h3 className="text-sm font-medium">Filtros</h3>
 
       <TagsInput
-        value={form.tags}
-        onChange={(tags) =>
+        value={form.tag}
+        onChange={(tag) =>
           setForm((prev: any) => ({
             ...prev,
-            tags,
+            tag,
           }))
         }
       />

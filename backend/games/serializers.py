@@ -1,7 +1,14 @@
 from rest_framework import serializers
-from .models import Game
+from .models import Game,Tag
+
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ['name']
 
 class GameSerializer(serializers.ModelSerializer):
+    tag = TagSerializer(many=True)
     class Meta:
         model = Game
         fields = '__all__'

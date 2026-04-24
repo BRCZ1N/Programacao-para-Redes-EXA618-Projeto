@@ -13,7 +13,7 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
   const [form, setForm] = useState({
     title: "",
     description: "",
-    tags: [] as string[],
+    tag: [] as string[],
     rating: [5],
     price: [0],
     reviews: [0],
@@ -23,7 +23,7 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
   const payload = {
     title: form.title,
     description: form.description,
-    tags: form.tags,
+    tag: form.tag,
     min_rating: form.rating[0],
     min_value: form.price[0],
     min_review: form.reviews[0],
@@ -47,7 +47,7 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
     setForm({
       title: "",
       description: "",
-      tags: [],
+      tag: [],
       rating: [5],
       price: [0],
       reviews: [0],
