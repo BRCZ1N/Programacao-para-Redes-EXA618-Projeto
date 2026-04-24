@@ -1,9 +1,9 @@
-from games.models import Game
+from games.models import Game, Tag
 
 def save_games(game_dtos):
     for dto in game_dtos:
-        print(dto.id, type(dto.id))
-        Game.objects.update_or_create(
+
+        game, created = Game.objects.update_or_create(
             steam_id=dto.id,
             defaults={
                 "title": dto.title,
@@ -11,7 +11,6 @@ def save_games(game_dtos):
                 "discount_price": dto.discount_price,
                 "description": dto.description,
                 "date_release": dto.date_release,
-                "tag": dto.tags,
                 "developer": dto.developer,
                 "publisher": dto.publisher,
                 "total_reviews": dto.total_reviews,
@@ -20,3 +19,11 @@ def save_games(game_dtos):
                 "url_image": dto.url_image,
             }
         )
+        if dto.tag:
+            tags_list = []
+
+            for name in dto.tag:
+                tag_obj, _ = Tag.objects.get_or_create(name=name)
+                tags_list.append(tag_obj)
+
+            game.tag.set(tags_list)

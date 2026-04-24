@@ -178,7 +178,7 @@ def parser_game_item_html(response, currentItem):
             currentItem.review_rating = reviewRating
             currentItem.description = description
             currentItem.total_reviews = totalReviews
-            currentItem.tags = tags
+            currentItem.tag = tags
             currentItem.url_image = url_image
             currentItem.developer = developer
             currentItem.publisher = publisher

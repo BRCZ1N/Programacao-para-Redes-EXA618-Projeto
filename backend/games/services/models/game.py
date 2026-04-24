@@ -8,7 +8,7 @@ class GameDTO:
         self.discount_price = discountPrice
         self.developer = None
         self.publisher = None
-        self.tags = None
+        self.tag = []
         self.description = None
         self.total_reviews = None
         self.review_rating = None
