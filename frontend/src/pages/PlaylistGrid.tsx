@@ -10,13 +10,17 @@ export function PlaylistGrid() {
   const [data, setData] = useState<Playlist[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const isFetchingRef = useRef(false);
+
   const [open, setOpen] = useState(false);
-  const [playlist, setPlaylist] = useState<Playlist>();
-  const loadMoreRef = useRef<HTMLDivElement | null>(null);
-  const [nextUrl, setNextUrl] = useState<string | null>(
-    "http://localhost:8000/api/playlist/",
-  );
+  const [playlist, setPlaylist] = useState<Playlist | null>(null);
+
   const [openCreatePlaylist, setOpenCreatePlaylist] = useState(false);
+
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+
+  const [nextUrl, setNextUrl] = useState<string | null>(
+    "http://localhost:8000/api/playlist/"
+  );
 
   async function loadMore() {
     if (!nextUrl || isFetchingRef.current) return;
@@ -36,7 +40,7 @@ export function PlaylistGrid() {
           {
             method: "POST",
             credentials: "include",
-          },
+          }
         );
 
         if (refreshResponse.ok) {
@@ -52,7 +56,7 @@ export function PlaylistGrid() {
 
         setData((prev) => {
           const newItems = json.results.filter(
-            (item: any) => !prev.some((p) => p.id === item.id),
+            (item: any) => !prev.some((p) => p.id === item.id)
           );
 
           if (newItems.length === 0) {
@@ -76,6 +80,13 @@ export function PlaylistGrid() {
   function handleGeneratePlaylist() {
     setOpenCreatePlaylist(true);
   }
+
+ 
+  function handleCreatedPlaylist(newPlaylist: Playlist) {
+    setPlaylist(newPlaylist); 
+    setOpen(true); 
+  }
+
   useEffect(() => {
     loadMore();
   }, []);
@@ -89,7 +100,7 @@ export function PlaylistGrid() {
           loadMore();
         }
       },
-      { rootMargin: "200px" },
+      { rootMargin: "200px" }
     );
 
     const current = loadMoreRef.current;
@@ -116,7 +127,9 @@ export function PlaylistGrid() {
           <div ref={loadMoreRef} />
 
           {isLoading && (
-            <div className="col-span-full text-center py-4">Carregando...</div>
+            <div className="col-span-full text-center py-4">
+              Carregando...
+            </div>
           )}
 
           <PlaylistDrawer
@@ -129,6 +142,7 @@ export function PlaylistGrid() {
           <DialogCreatePlaylist
             open={openCreatePlaylist}
             onOpenChange={setOpenCreatePlaylist}
+            onCreated={handleCreatedPlaylist}
           />
         </div>
       )}

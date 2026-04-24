@@ -1,4 +1,4 @@
-import { Card, CardActionArea, Box, Typography } from "@mui/material";
+import { Card, CardActionArea, Box} from "@mui/material";
 
 type Game = {
   id: string;
