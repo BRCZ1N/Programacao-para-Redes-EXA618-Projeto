@@ -1,10 +1,14 @@
-import { LoginForm } from "../components/LoginForm";
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { Dialog, DialogContent } from "./ui/dialog";
+import { LoginForm } from "./LoginForm";
 
-export function Login() {
-  const navigate = useNavigate();
-
+export function DialogLogin({
+  open,
+  onOpenChange,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
   const [error, setError] = useState("");
 
   async function handleLogin(data: { email: string; password: string }) {
@@ -17,20 +21,21 @@ export function Login() {
       });
 
       if (response.ok) {
-        navigate("/dashboard");
+        onOpenChange(false); 
+        window.location.href = "/dashboard"; 
       } else {
         setError("Email ou senha inválidos");
       }
     } catch (error) {
-      console.log("Erro na requisição:", error);
+      console.log("Erro:", error);
     }
   }
 
   return (
-    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
-      <div className="w-full max-w-sm">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md p-6 border-0 shadow-none">
         <LoginForm onSubmit={handleLogin} error={error} />
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

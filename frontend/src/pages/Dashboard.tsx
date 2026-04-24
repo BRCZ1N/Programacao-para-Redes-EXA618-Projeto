@@ -33,7 +33,7 @@ export function Dashboard() {
             <Breadcrumb className="self-center">
               <BreadcrumbList>
                 <BreadcrumbItem>
-                  {routeLabels[location.pathname] ?? "Dashboard"}
+                  {routeLabels[location.pathname] ?? "/dashboard/playlists"}
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>

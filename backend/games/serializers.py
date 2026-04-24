@@ -38,3 +38,15 @@ class GameGridSerializer(serializers.ModelSerializer):
             'title',
             'url_image',
         ]
+
+class GameViewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Game
+        fields = [
+            'title',
+            'discount_price',
+            'review_rating',
+            'total_reviews',
+            'url_image',
+            'url_steam'
+        ]

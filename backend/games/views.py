@@ -6,7 +6,7 @@ from games.services.game_service import save_games
 from users.permissions import IsSuperUser
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Game
-from .serializers import GameDetailSerializer, GameGridSerializer, GameSerializer
+from .serializers import GameDetailSerializer, GameGridSerializer, GameViewSerializer
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -18,9 +18,35 @@ def game_list(request):
 
     result_page = paginator.paginate_queryset(query, request)
 
-    serializer = GameSerializer(result_page, many=True)
+    serializer = GameGridSerializer(result_page, many=True)
 
     return paginator.get_paginated_response(serializer.data)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def game_featured(request):
+
+    type_ = request.query_params.get("type", "trending")
+
+    query = Game.objects.all()
+
+    if type_ == "trending":
+        query = query.order_by("-total_reviews")
+
+    elif type_ == "top":
+        query = query.order_by("-review_rating")
+
+    elif type_ == "new":
+        query = query.order_by("-date_release")
+
+    elif type_ == "discount":
+        query = query.filter(discount_price__isnull=False)
+
+    games = query[:12]
+
+    serializer = GameViewSerializer(games, many=True)
+    return Response(serializer.data)
 
 
 @api_view(['GET'])

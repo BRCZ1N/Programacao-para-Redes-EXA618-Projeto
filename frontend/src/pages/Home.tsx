@@ -1,9 +1,12 @@
+import { GameCarousel } from "../components/GameCarousel";
+import { Header } from "../components/Header";
 export function Home() {
   return (
-    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
-      <div className="w-full max-w-sm">
-        
-      </div>
-    </div>
-  )
+    <main className="space-y-10 p-6">
+      <Header />
+      <GameCarousel title="Trending" type="trending" />
+      <GameCarousel title="Novos jogos" type="new" />
+      <GameCarousel title="Mais bem avaliados" type="top" />
+    </main>
+  );
 }

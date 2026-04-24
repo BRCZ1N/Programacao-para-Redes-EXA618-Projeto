@@ -47,7 +47,7 @@ export function SignupForm({ onSubmit, ...props }: Props) {
   }
 
   return (
-    <Card {...props}>
+    <Card className="ring-0"{...props}>
       <CardHeader>
         <CardTitle>Crie uma conta</CardTitle>
         <CardDescription>
