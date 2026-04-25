@@ -1,4 +1,4 @@
-import { Card, CardActionArea, Box} from "@mui/material";
+import { Card, Box } from "@mui/material";
 
 type Game = {
   id: string;
@@ -18,15 +18,12 @@ export function GameCard({ game }: { game: Game }) {
         },
       }}
     >
-      <CardActionArea>
-
-        {/* IMAGEM */}
         <Box
           component="img"
           src={game.url_image}
           alt={game.title}
           sx={{
-            height: 160,
+            height: "100%",
             width: "100%",
             objectFit: "cover",
             transition: "0.3s",
@@ -34,7 +31,6 @@ export function GameCard({ game }: { game: Game }) {
           }}
         />
 
-        {/* OVERLAY */}
         <Box
           sx={{
             position: "absolute",
@@ -44,7 +40,6 @@ export function GameCard({ game }: { game: Game }) {
           }}
         />
 
-        {/* TEXTO */}
         <Box
           sx={{
             position: "absolute",
@@ -52,11 +47,7 @@ export function GameCard({ game }: { game: Game }) {
             zIndex: 2,
             p: 2,
           }}
-        >
-        
-        </Box>
-
-      </CardActionArea>
+        ></Box>
     </Card>
   );
 }

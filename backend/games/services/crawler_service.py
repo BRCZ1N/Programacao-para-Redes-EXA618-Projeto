@@ -37,7 +37,7 @@ Função de acesso a página HTML
 """
 def fetch_page(url):
 
-    return session.get(url, headers=headers, cookies=cookies)
+    return session.get(url, headers=headers, cookies=cookies, timeout=10)
 
 
 """

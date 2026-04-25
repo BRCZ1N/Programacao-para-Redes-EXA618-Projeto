@@ -10,35 +10,32 @@ export function Header() {
 
   return (
     <>
-      <header className="w-full border-b bg-background">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <header className="w-full border-b border-slate-800 bg-slate-950">
+        <div className="max-w-6xl mx-auto px-8 h-16 flex items-center justify-between">
 
-          {/* LOGO */}
-          <div className="font-bold text-lg">
-            GameStore
+          <div className="font-black text-xl text-white">
+            PlaylistDiscovery
           </div>
 
-          {/* AUTH */}
-          <div className="flex items-center gap-2 ">
+          <div className="flex items-center gap-3">
             <button
               onClick={() => setLoginOpen(true)}
-              className="text-sm px-3 py-1 rounded hover:bg-muted transition"
+              className="text-sm px-4 py-2 text-slate-300 hover:text-white rounded-lg hover:bg-slate-800 transition-colors duration-300"
             >
               Login
             </button>
 
             <button
               onClick={() => setRegisterOpen(true)}
-              className="text-sm px-3 py-1 rounded hover:bg-muted transition"
+              className="text-sm px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-300 font-semibold"
             >
-              Register
+              Registro
             </button>
           </div>
 
         </div>
       </header>
 
-      {/* MODAL */}
       <DialogLogin open={loginOpen} onOpenChange={setLoginOpen} />
       <DialogSignup open={registerOpen} onOpenChange={setRegisterOpen} />
     </>

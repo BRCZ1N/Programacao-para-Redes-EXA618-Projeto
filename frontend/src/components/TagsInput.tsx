@@ -27,7 +27,6 @@ export function TagsInput({ value, onChange }: Props) {
   return (
     <div className="space-y-3">
 
-      {/* INPUT + BOTÃO */}
       <div className="flex gap-2">
         <Input
           placeholder="Digite uma tag (ex: RPG)"
@@ -40,7 +39,6 @@ export function TagsInput({ value, onChange }: Props) {
         </Button>
       </div>
 
-      {/* CHIPS */}
       <div className="flex flex-wrap gap-2">
         {value.map((tag) => (
           <div

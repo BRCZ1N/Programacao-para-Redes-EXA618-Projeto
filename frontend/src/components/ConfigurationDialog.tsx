@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { Dialog, DialogContent } from "../components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "../components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 import type { UserPerfil } from "../models/User";
@@ -57,12 +62,15 @@ export function DialogConfiguration({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-3xl p-0 overflow-hidden max-h-[90vh]">
+      <DialogContent className="sm:max-w-3xl p-0 overflow-hidden max-h-[90vh] bg-slate-950 border border-slate-800 [&>button]:text-slate-400 [&>button]:hover:text-white [&>button]:hover:bg-slate-900/60 [&>button]:rounded-md [&>button]:transition">
+        <DialogTitle />
+        <DialogDescription />
+
         <div className="flex flex-col sm:flex-row h-full">
-          <div className="sm:w-56 w-full p-3 flex flex-col gap-3 border-r shrink-0">
+          <div className="sm:w-56 w-full p-3 flex flex-col gap-3 border-r border-slate-800 bg-slate-950">
             {user && (
-              <div className="flex items-center gap-2 px-2 py-2">
-                <Avatar className="h-8 w-8 rounded-lg">
+              <div className="flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-slate-900/60 transition">
+                <Avatar className="h-8 w-8 rounded-lg overflow-hidden bg-slate-900">
                   <AvatarImage src={user.avatar} alt={user.username} />
                   <AvatarFallback>
                     {user.username
@@ -74,7 +82,7 @@ export function DialogConfiguration({
                   </AvatarFallback>
                 </Avatar>
 
-                <span className="text-sm font-medium truncate">
+                <span className="text-sm font-medium text-slate-200 truncate">
                   {user.username}
                 </span>
               </div>
@@ -85,8 +93,8 @@ export function DialogConfiguration({
                 onClick={() => setTab("account")}
                 className={`w-full px-3 py-2 rounded-md text-sm flex items-center gap-2 transition ${
                   tab === "account"
-                    ? "bg-muted font-medium"
-                    : "hover:bg-muted/50"
+                    ? "bg-blue-600/20 text-blue-400 border border-blue-500/30"
+                    : "text-slate-400 hover:bg-slate-900/60 hover:text-white"
                 }`}
               >
                 <UserRound className="h-4 w-4" />
@@ -95,12 +103,19 @@ export function DialogConfiguration({
             </div>
           </div>
 
-          <div className="flex-1 min-h-0 overflow-hidden">
-            <div className="h-full overflow-y-auto p-5 space-y-4">
+          <div className="flex-1 min-h-0 overflow-hidden bg-slate-950">
+            <div className="h-full overflow-y-auto p-5 space-y-4 text-slate-200">
               {tab === "account" && (
                 <div className="space-y-3">
-                  <h2 className="text-sm font-medium">Conta</h2>
-                  <PerfilData/>
+                  <div className="space-y-1">
+                    <h2 className="text-sm font-semibold text-white">Perfil</h2>
+
+                    <p className="text-xs text-slate-500">
+                      Gerencie suas informações pessoais da conta
+                    </p>
+                  </div>
+
+                  <PerfilData />
                 </div>
               )}
             </div>

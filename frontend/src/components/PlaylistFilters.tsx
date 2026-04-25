@@ -28,7 +28,6 @@ export function PlaylistFilters({ form, setForm }: Props) {
         }
       />
 
-      {/* RATING */}
       <SliderBlock
         label="Rating mínimo"
         value={form.rating}
@@ -39,7 +38,6 @@ export function PlaylistFilters({ form, setForm }: Props) {
         max={10}
       />
 
-      {/* PREÇO */}
       <SliderBlock
         label="Preço mínimo"
         value={form.price}
@@ -51,8 +49,6 @@ export function PlaylistFilters({ form, setForm }: Props) {
         step={1}
         prefix="R$"
       />
-
-      {/* REVIEWS */}
       <SliderBlock
         label="Reviews mínimo"
         value={form.reviews}

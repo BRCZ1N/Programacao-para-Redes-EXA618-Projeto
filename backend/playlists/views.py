@@ -9,12 +9,7 @@ from .serializers import PlaylistSerializer, PlaylistUpdateSerializer
 from games.serializers import GameDetailSerializer
 
 
-@api_view(["GET"])
-def home(request):
-    return Response({"playlists": []})
-
-
-@api_view(["GET", "POST"])
+@api_view(["GET", "POST", "DELETE"])
 @permission_classes([IsAuthenticated])
 def playlist(request):
 
@@ -31,7 +26,7 @@ def playlist(request):
         return paginator.get_paginated_response(serializer.data)
 
     if request.method == "POST":
-        
+
         title = request.data.get("title", "Nova playlist")
         description = request.data.get("description", "")
 
@@ -68,6 +63,18 @@ def playlist(request):
         serializer = PlaylistSerializer(playlist)
 
         return Response(serializer.data, status=201)
+    
+    if request.method == "DELETE":
+
+        ids = request.data.get("ids")
+        playlists = Playlist.objects.filter(id__in=ids, user=request.user)
+
+        if playlists.count() != len(ids):
+            return Response({"error": "Alguma playlist inválida"}, status=400)
+
+        playlists.delete()
+
+        return Response({"status": "Playlists deletadas com sucesso"}, status=204)
 
 
 @api_view(["GET", "PUT", "DELETE"])
@@ -110,18 +117,3 @@ def playlist_detail(request, id):
 
         return Response({"status": "Playlist criada com sucesso"}, status=200)
 
-    if request.method == "DELETE":
-
-        title = request.data.get("title")
-
-        games = Playlist.objects.filter(id__in=game_ids)
-
-        if len(games) != len(game_ids):
-            return Response({"error": "Playlist inválida"}, status=400)
-
-        playlist = Playlist.objects.delete(
-            title=title or "", description=description or ""
-        )
-        playlist.games.set(games)
-
-        return Response({"status": "Playlist criada com sucesso"}, status=201)

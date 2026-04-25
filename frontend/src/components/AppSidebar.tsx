@@ -32,7 +32,7 @@ const data = {
   ],
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
   const navigate = useNavigate();
   const location = useLocation();
   const [user, setUser] = useState<UserPerfil>();
@@ -62,8 +62,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       }
 
       if (response.ok) {
-        const user = await response.json();
-        setUser(user);
+        setUser(await response.json());
       }
     } catch (error) {
       console.log("Erro:", error);
@@ -75,43 +74,102 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   }, []);
 
   return (
-    <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
+    <Sidebar
+      collapsible="icon"
+      className="bg-slate-950 border-r border-slate-800/70"
+      {...props}
+    >
+      {/* HEADER */}
+      <SidebarHeader
+        className="
+    border-b border-slate-800/70
+    bg-slate-900/30
+    py-5
+
+    transition-colors
+    hover:bg-white/5
+  "
+      >
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="#" className="flex items-center gap-3">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground shrink-0" />
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">Acme Inc</span>
+              <a href="/" className="flex items-center gap-3">
+                {/* LOGO */}
+                <div
+                  className="
+              flex aspect-square size-9 items-center justify-center
+              rounded-xl bg-blue-600 text-white font-black
+              shadow-md shadow-blue-500/20
+              shrink-0
+              transition-none
+            "
+                >
+                  PD
+                </div>
+
+                {/* TEXTO */}
+                <div className="flex flex-col group-data-[state=collapsed]:hidden">
+                  <span className="font-bold text-white">
+                    PlaylistDiscovery
+                  </span>
+                  <span className="text-xs text-slate-400">Game Library</span>
                 </div>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-
-      <SidebarContent>
+      {/* CONTENT */}
+      <SidebarContent className="py-4 bg-slate-950">
         <SidebarGroup>
-          <SidebarMenu>
-            {data.navMain.map((item) => (
-              <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton
-                  tooltip={item.title}
-                  isActive={location.pathname === item.url}
-                  onClick={() => navigate(item.url)}
-                  className="gap-3"
-                >
-                  <item.icon className="shrink-0" />
-                  <span>{item.title}</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
+          <SidebarMenu className="space-y-1">
+            {data.navMain.map((item) => {
+              const isActive = location.pathname === item.url;
+
+              return (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton
+                    isActive={isActive}
+                    onClick={() => navigate(item.url)}
+                    className="
+                      flex items-center gap-3 px-3 py-2 rounded-xl
+                      text-slate-400
+                      transition-none
+
+                      data-[active=true]:bg-blue-600/20
+                      data-[active=true]:text-white
+                      data-[active=true]:border
+                      data-[active=true]:border-blue-500/40
+
+                      group-data-[state=collapsed]:justify-center
+                    "
+                  >
+                    <item.icon className="w-5 h-5 shrink-0 text-slate-400" />
+
+                    <span className="font-medium group-data-[state=collapsed]:hidden">
+                      {item.title}
+                    </span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              );
+            })}
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter>{user && <NavUser user={user} />}</SidebarFooter>
+      {/* FOOTER */}
+      <SidebarFooter
+        className="
+    border-t border-slate-800/70
+    bg-slate-900/30
+    p-3
+
+    transition-colors
+    hover:bg-white/5
+  "
+      >
+        {user && <NavUser user={user} />}
+      </SidebarFooter>
     </Sidebar>
   );
 }

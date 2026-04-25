@@ -19,8 +19,7 @@ export function PerfilData() {
     last_name: "",
     password: "",
   });
-
-  // 🔥 LOAD USER
+  
   async function loadUser() {
     try {
       let response = await fetch("http://localhost:8000/api/user/me/", {
