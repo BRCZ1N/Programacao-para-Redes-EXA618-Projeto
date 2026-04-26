@@ -1,175 +1,222 @@
 "use client";
 
-import * as React from "react";
-import { Library, Gamepad2 } from "lucide-react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { NavUser } from "./NavUser";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "./ui/sidebar";
-import { useEffect, useState } from "react";
-import type { UserPerfil } from "../models/User";
+import { Search, Plus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState, useCallback, useRef } from "react";
+import type { Playlist } from "../models/Playlist";
 
-const data = {
-  navMain: [
-    {
-      title: "Biblioteca",
-      icon: Library,
-      url: "/dashboard/playlists",
-    },
-    {
-      title: "Games",
-      icon: Gamepad2,
-      url: "/dashboard/games",
-    },
-  ],
+const theme = {
+  bg: "#000000",
+  surface: "#121212",
+  surfaceHover: "#1A1A1A",
+  border: "#2A2A2A",
+  text: "#FFFFFF",
+  muted: "#B3B3B3",
+  accent: "#1DB954",
 };
 
-export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const [user, setUser] = useState<UserPerfil>();
 
-  async function loadUser() {
+  const [playlists, setPlaylists] = useState<Playlist[]>([]);
+  const [search, setSearch] = useState("");
+
+  const [nextUrl, setNextUrl] = useState<string | null>(
+    "http://localhost:8000/api/playlist/"
+  );
+
+  const isFetchingRef = useRef(false);
+
+  const normalize = (text: string) =>
+    text
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .trim();
+
+  const filteredPlaylists = playlists
+    .map((p) => {
+      const title = normalize(p.title);
+      const query = normalize(search);
+
+      if (!query) return { playlist: p, score: 1 };
+
+      let score = 0;
+      if (title.startsWith(query)) score += 100;
+      if (title.includes(query)) score += 50;
+
+      return { playlist: p, score };
+    })
+    .filter((i) => i.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .map((i) => i.playlist);
+
+  const loadPlaylists = useCallback(async () => {
+    if (!nextUrl || isFetchingRef.current) return;
+
+    isFetchingRef.current = true;
+
     try {
-      let response = await fetch("http://localhost:8000/api/user/me/", {
-        method: "GET",
+      const res = await fetch(nextUrl, {
         credentials: "include",
       });
 
-      if (response.status === 401) {
-        const refreshResponse = await fetch(
-          "http://localhost:8000/api/auth/refresh/",
-          {
-            method: "POST",
-            credentials: "include",
-          },
-        );
+      const json = await res.json();
 
-        if (refreshResponse.ok) {
-          response = await fetch("http://localhost:8000/api/user/me/", {
-            method: "GET",
-            credentials: "include",
-          });
-        }
-      }
+      setPlaylists((prev) => {
+        const ids = new Set(prev.map((p) => p.id));
+        const newItems = json.results.filter((p: Playlist) => !ids.has(p.id));
+        return [...prev, ...newItems];
+      });
 
-      if (response.ok) {
-        setUser(await response.json());
-      }
-    } catch (error) {
-      console.log("Erro:", error);
+      setNextUrl(json.next);
+    } finally {
+      isFetchingRef.current = false;
     }
-  }
+  }, [nextUrl]);
 
   useEffect(() => {
-    loadUser();
+    loadPlaylists();
   }, []);
 
   return (
-    <Sidebar
-      collapsible="icon"
-      className="bg-slate-950 border-r border-slate-800/70"
-      {...props}
+    <aside
+      style={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        background: theme.bg,
+        color: theme.text,
+        borderRight: `1px solid ${theme.border}`,
+      }}
     >
-      {/* HEADER */}
-      <SidebarHeader
-        className="
-    border-b border-slate-800/70
-    bg-slate-900/30
-    py-5
-
-    transition-colors
-    hover:bg-white/5
-  "
+      <div
+        style={{
+          padding: 12,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
       >
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
-              <a href="/" className="flex items-center gap-3">
-                {/* LOGO */}
-                <div
-                  className="
-              flex aspect-square size-9 items-center justify-center
-              rounded-xl bg-blue-600 text-white font-black
-              shadow-md shadow-blue-500/20
-              shrink-0
-              transition-none
-            "
-                >
-                  PD
-                </div>
+        <button
+          style={{
+            color: theme.muted,
+            background: "transparent",
+            border: "none",
+            fontSize: 18,
+            cursor: "pointer",
+          }}
+        >
+          ☰
+        </button>
 
-                {/* TEXTO */}
-                <div className="flex flex-col group-data-[state=collapsed]:hidden">
-                  <span className="font-bold text-white">
-                    PlaylistDiscovery
-                  </span>
-                  <span className="text-xs text-slate-400">Game Library</span>
-                </div>
-              </a>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarHeader>
-      {/* CONTENT */}
-      <SidebarContent className="py-4 bg-slate-950">
-        <SidebarGroup>
-          <SidebarMenu className="space-y-1">
-            {data.navMain.map((item) => {
-              const isActive = location.pathname === item.url;
+        <button
+          onClick={() => navigate("/dashboard/create")}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            padding: "6px 10px",
+            borderRadius: 8,
+            background: "transparent",
+            border: `1px solid ${theme.border}`,
+            color: theme.text,
+            fontSize: 12,
+            cursor: "pointer",
+          }}
+        >
+          <Plus size={14} />
+          Criar
+        </button>
+      </div>
 
-              return (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    isActive={isActive}
-                    onClick={() => navigate(item.url)}
-                    className="
-                      flex items-center gap-3 px-3 py-2 rounded-xl
-                      text-slate-400
-                      transition-none
+      <div style={{ padding: 12 }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            background: theme.surface,
+            padding: "8px 10px",
+            borderRadius: 8,
+            border: `1px solid ${theme.border}`,
+          }}
+        >
+          <Search size={16} color={theme.muted} />
 
-                      data-[active=true]:bg-blue-600/20
-                      data-[active=true]:text-white
-                      data-[active=true]:border
-                      data-[active=true]:border-blue-500/40
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Buscar playlist..."
+            style={{
+              background: "transparent",
+              border: "none",
+              outline: "none",
+              color: theme.text,
+              width: "100%",
+              fontSize: 13,
+            }}
+          />
+        </div>
+      </div>
 
-                      group-data-[state=collapsed]:justify-center
-                    "
-                  >
-                    <item.icon className="w-5 h-5 shrink-0 text-slate-400" />
+      <div style={{ flex: 1, overflowY: "auto", padding: 8 }}>
+        {filteredPlaylists.map((item) => (
+          <div
+            key={item.id}
+            onClick={() => navigate(`/dashboard/playlist/${item.id}`)}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              padding: "8px 10px",
+              borderRadius: 8,
+              cursor: "pointer",
+              transition: "0.15s",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.background = theme.surfaceHover)
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.background = "transparent")
+            }
+          >
+            <div
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: 6,
+                overflow: "hidden",
+                background: theme.surface,
+                flexShrink: 0,
+              }}
+            >
+              {item.games?.[0]?.url_image && (
+                <img
+                  src={item.games[0].url_image}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  }}
+                />
+              )}
+            </div>
 
-                    <span className="font-medium group-data-[state=collapsed]:hidden">
-                      {item.title}
-                    </span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              );
-            })}
-          </SidebarMenu>
-        </SidebarGroup>
-      </SidebarContent>
-
-      {/* FOOTER */}
-      <SidebarFooter
-        className="
-    border-t border-slate-800/70
-    bg-slate-900/30
-    p-3
-
-    transition-colors
-    hover:bg-white/5
-  "
-      >
-        {user && <NavUser user={user} />}
-      </SidebarFooter>
-    </Sidebar>
+            <span
+              style={{
+                fontSize: 13,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                color: theme.text,
+              }}
+            >
+              {item.title}
+            </span>
+          </div>
+        ))}
+      </div>
+    </aside>
   );
 }

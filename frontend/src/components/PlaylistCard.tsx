@@ -27,14 +27,13 @@ export function PlaylistCard({
         transition hover:border-slate-600 hover:bg-slate-900/60
       "
     >
-      {/* overlay seleção */}
+   
       <div
         className={`absolute inset-0 z-10 transition-all ${
           selected ? "bg-blue-500/10" : "bg-transparent"
         }`}
       />
 
-      {/* checkbox */}
       <div
         className="absolute top-2 left-2 z-20 opacity-80 group-hover:opacity-100 transition"
         onClick={(e) => e.stopPropagation()}
@@ -55,7 +54,7 @@ export function PlaylistCard({
         />
       </div>
 
-      {/* imagens */}
+   
       <div className="grid grid-cols-2 w-full h-40 overflow-hidden">
         {games.slice(0, 4).map((game, index) => (
           <img
@@ -67,7 +66,7 @@ export function PlaylistCard({
         ))}
       </div>
 
-      {/* footer */}
+
       <div className="p-3 relative z-20">
         <p className="text-sm font-medium text-slate-200">
           {title ?? "Playlist"}

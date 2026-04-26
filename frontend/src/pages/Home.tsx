@@ -2,63 +2,167 @@ import { GameCarousel } from "../components/GameCarousel";
 import { Header } from "../components/Header";
 import { Flame, Sparkles, Trophy } from "lucide-react";
 
+const theme = {
+  bg: "#000000",
+  text: "#FFFFFF",
+  muted: "#B3B3B3",
+  surface: "#121212",
+  accent: "#1DB954",
+};
+
 export function Home() {
   return (
-    <main className="min-h-screen bg-slate-950">
+    <main
+      style={{
+        minHeight: "100vh",
+        background: theme.bg,
+        color: theme.text,
+      }}
+    >
       <Header />
-      
-      <section className="px-8 py-16">
-        <div className="max-w-5xl mx-auto space-y-6">
-          <div className="space-y-4">
-            <h1 className="text-5xl md:text-6xl font-black leading-tight text-white">
-              Monte suas playlists com os melhores jogos
-            </h1>
 
-            <p className="text-lg text-slate-400 max-w-2xl leading-relaxed">
-              Explore jogos em alta, lançamentos e os mais bem avaliados para
-              adicionar às suas playlists personalizadas. Descubra novos títulos e
-              organize sua biblioteca do seu jeito.
-            </p>
-          </div>
 
-          <button className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors duration-300">
+      <section
+        style={{
+          padding: "80px 24px",
+        }}
+      >
+        <div
+          style={{
+            maxWidth: 900,
+            margin: "0 auto",
+            display: "flex",
+            flexDirection: "column",
+            gap: 20,
+          }}
+        >
+          <h1
+            style={{
+              fontSize: 52,
+              fontWeight: 900,
+              lineHeight: 1.1,
+              letterSpacing: "-1px",
+            }}
+          >
+            Monte suas playlists com os melhores jogos
+          </h1>
+
+          <p
+            style={{
+              fontSize: 16,
+              color: theme.muted,
+              maxWidth: 600,
+              lineHeight: 1.6,
+            }}
+          >
+            Explore jogos em alta, lançamentos e os mais bem avaliados para
+            adicionar às suas playlists personalizadas. Descubra novos títulos e
+            organize sua biblioteca do seu jeito.
+          </p>
+
+          <button
+            style={{
+              width: 180,
+              padding: "12px 16px",
+              borderRadius: 999,
+              background: theme.text,
+              color: "#000",
+              fontWeight: 700,
+              border: "none",
+              cursor: "pointer",
+              transition: "0.2s",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.transform = "scale(1.03)")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.transform = "scale(1)")
+            }
+          >
             Começar agora
           </button>
         </div>
       </section>
 
-      <section className="px-8 py-12 space-y-6">
-        <div className="flex flex-col items-center justify-center space-y-4">
-          <div className="flex items-center gap-3">
-            <Flame className="w-5 h-5 text-orange-500" />
-            <h2 className="text-xl font-bold text-white">Jogos em alta</h2>
-          </div>
-          <p className="text-slate-500 text-sm">Os jogos mais populares agora</p>
-        </div>
+      <Section
+        icon={<Flame size={18} color="#ff7a00" />}
+        title="Jogos em alta"
+        subtitle="Os jogos mais populares agora"
+      >
         <GameCarousel title="" type="trending" />
-      </section>
+      </Section>
 
-      <section className="px-8 py-12 space-y-6">
-        <div className="flex flex-col items-center justify-center space-y-4">
-          <div className="flex items-center gap-3">
-            <Sparkles className="w-5 h-5 text-blue-400" />
-            <h2 className="text-xl font-bold text-white">Lançamentos recentes</h2>
-          </div>
-          <p className="text-slate-500 text-sm">Novos jogos lançados recentemente</p>
-        </div>
+      <Section
+        icon={<Sparkles size={18} color="#3B82F6" />}
+        title="Lançamentos recentes"
+        subtitle="Novos jogos lançados recentemente"
+      >
         <GameCarousel title="" type="new" />
-      </section>
+      </Section>
 
-      <section className="px-8 py-12 space-y-6">
-        <div className="flex flex-col items-center justify-center space-y-4">
-          <div className="flex items-center gap-3">
-            <Trophy className="w-5 h-5 text-yellow-400" />
-            <h2 className="text-xl font-bold text-white">Mais bem avaliados</h2>
-          </div>
-          <p className="text-slate-500 text-sm">Os melhores jogos de todos os tempos</p>
-        </div>
+      <Section
+        icon={<Trophy size={18} color="#FFD700" />}
+        title="Mais bem avaliados"
+        subtitle="Os melhores jogos de todos os tempos"
+      >
         <GameCarousel title="" type="top" />
-      </section>
+      </Section>
     </main>
+  );
+}
+
+function Section({
+  icon,
+  title,
+  subtitle,
+  children,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  subtitle: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section
+      style={{
+        padding: "40px 24px",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: 1100,
+          margin: "0 auto",
+          display: "flex",
+          flexDirection: "column",
+          gap: 16,
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 6,
+            textAlign: "center",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            {icon}
+            <h2 style={{ fontSize: 18, fontWeight: 700 }}>{title}</h2>
+          </div>
+
+          <p
+            style={{
+              fontSize: 13,
+              color: "#B3B3B3",
+            }}
+          >
+            {subtitle}
+          </p>
+        </div>
+
+        {children}
+      </div>
+    </section>
   );
 }

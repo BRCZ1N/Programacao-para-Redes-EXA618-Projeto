@@ -1,52 +1,65 @@
+import { Outlet } from "react-router-dom";
+import { AppBarMenu } from "../components/AppBarMenu";
 import { AppSidebar } from "../components/AppSidebar";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbList,
-} from "../components/ui/breadcrumb";
-import { Separator } from "../components/ui/separator";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "../components/ui/sidebar";
-import { Outlet, useLocation } from "react-router-dom";
+
+const theme = {
+  bg: "#000000",
+  surface: "#121212",
+  border: "#2A2A2A",
+  text: "#FFFFFF",
+};
 
 export function Dashboard() {
-  const location = useLocation();
-  const routeLabels: Record<string, string> = {
-    "/dashboard/games": "Games",
-    "/dashboard/playlists": "Biblioteca",
-  };
-
   return (
-    <SidebarProvider>
-      <AppSidebar />
+    <div
+      style={{
+        height: "100vh",
+        display: "grid",
+        gridTemplateRows: "64px 1fr",
+        gridTemplateColumns: "260px 1fr",
+        gridTemplateAreas: `
+          "header header"
+          "sidebar content"
+        `,
+        background: theme.bg,
+        color: theme.text,
+        overflow: "hidden",
+      }}
+    >
 
-      <SidebarInset>
-        <header className="flex h-14 items-center gap-4 border-b border-slate-800 bg-slate-950 px-6 shadow-sm">
-          <div className="flex items-center gap-4 flex-1">
-            <SidebarTrigger className="self-center text-slate-400 hover:text-white hover:bg-slate-800" />
+      {/* HEADER */}
+      <header
+        style={{
+          gridArea: "header",
+          background: theme.surface,
+          borderBottom: `1px solid ${theme.border}`,
+        }}
+      >
+        <AppBarMenu />
+      </header>
 
-            <Separator
-              orientation="vertical"
-              className="self-center bg-slate-800 h-6"
-            />
+      {/* SIDEBAR */}
+      <aside
+        style={{
+          gridArea: "sidebar",
+          background: theme.surface,
+          borderRight: `1px solid ${theme.border}`,
+          overflow: "hidden",
+        }}
+      >
+        <AppSidebar />
+      </aside>
 
-            <Breadcrumb className="self-center">
-              <BreadcrumbList>
-                <BreadcrumbItem className="text-sm font-semibold text-white">
-                  {routeLabels[location.pathname] ?? "Dashboard"}
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-          </div>
-        </header>
-
-        <main className="flex-1 bg-slate-950 min-h-screen">
-          <Outlet />
-        </main>
-      </SidebarInset>
-    </SidebarProvider>
+      {/* CONTENT */}
+      <main
+        style={{
+          gridArea: "content",
+          background: theme.bg,
+          overflow: "auto",
+        }}
+      >
+        <Outlet />
+      </main>
+    </div>
   );
 }

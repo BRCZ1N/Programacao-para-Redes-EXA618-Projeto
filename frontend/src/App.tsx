@@ -3,7 +3,7 @@ import { Home } from "./pages/Home";
 import { ForgotPassword } from "./pages/ForgotPassword";
 import { Dashboard } from './pages/Dashboard';
 import { GamesGrid } from "./pages/GamesGrid";
-import { PlaylistGrid } from './pages/PlaylistGrid';
+import { PlaylistPage } from './pages/PlaylistPage';
 
 function App() {
   return (
@@ -13,7 +13,7 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/dashboard" element={<Dashboard />}>
           <Route path="games" element={<GamesGrid />} />
-          <Route path="playlists" element={<PlaylistGrid />} />
+          <Route path="playlist/:playlistId" element={<PlaylistPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

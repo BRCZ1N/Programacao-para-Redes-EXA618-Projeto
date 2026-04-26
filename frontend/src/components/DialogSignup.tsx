@@ -1,6 +1,30 @@
+"use client";
+
 import { useState } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from "./ui/dialog";
-import { SignupForm } from "./SignupForm";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "./ui/dialog";
+
+import { Button } from "./ui/button";
+import {
+  Field,
+  FieldDescription,
+  FieldLabel,
+} from "../components/ui/field";
+
+import { Input } from "../components/ui/input";
+import { DialogLogin } from "./DialogLogin";
+
+const theme = {
+  bg: "#000000",
+  surface: "#121212",
+  border: "#2A2A2A",
+  text: "#FFFFFF",
+  muted: "#A1A1A1",
+};
 
 export function DialogSignup({
   open,
@@ -12,13 +36,23 @@ export function DialogSignup({
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function handleSignup(data: {
-    username: string;
-    first_name: string;
-    last_name: string;
-    email: string;
-    password: string;
-  }) {
+  const [loginOpen, setLoginOpen] = useState(false);
+
+  const [username, setUserName] = useState("");
+  const [first_name, setFirstName] = useState("");
+  const [last_name, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+
+    if (password !== confirmPassword) {
+      setError("As senhas não coincidem");
+      return;
+    }
+
     try {
       setLoading(true);
       setError("");
@@ -26,21 +60,22 @@ export function DialogSignup({
       const res = await fetch("http://127.0.0.1:8000/api/user/register/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          username,
+          first_name,
+          last_name,
+          email,
+          password,
+        }),
       });
 
       if (res.ok) {
         onOpenChange(false);
-      } else if (res.status === 404) {
-        setError("Erro ao registrar usuário");
-      } else if (res.status === 400) {
-        const errorData = await res.json();
-        setError(errorData.message || "Dados inválidos");
       } else {
-        setError("Não foi possível criar a conta");
+        const data = await res.json();
+        setError(data.message || "Erro ao criar conta");
       }
-    } catch (err) {
-      console.log(err);
+    } catch {
       setError("Erro de conexão");
     } finally {
       setLoading(false);
@@ -48,12 +83,158 @@ export function DialogSignup({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full max-w-xs bg-slate-900 border border-slate-800 p-4 sm:p-6 [&>button]:text-slate-400 [&>button]:hover:text-white [&>button]:hover:bg-slate-800/60 [&>button]:rounded-md [&>button]:transition">
-        <SignupForm onSubmit={handleSignup} error={error} loading={loading} />
-      </DialogContent>
-      <DialogTitle />
-      <DialogDescription />
-    </Dialog>
+    <>
+      {/* ================= SIGNUP ================= */}
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent
+          style={{
+            width: "100%",
+            maxWidth: 420,
+            background: theme.surface,
+            border: `1px solid ${theme.border}`,
+            borderRadius: 12,
+            padding: 24,
+            color: theme.text,
+          }}
+        >
+          <DialogTitle style={{ fontSize: 18, fontWeight: 800 }}>
+            Criar conta
+          </DialogTitle>
+
+          <DialogDescription
+            style={{
+              fontSize: 13,
+              color: theme.muted,
+              marginBottom: 16,
+            }}
+          >
+            Crie sua conta para começar a montar suas playlists
+          </DialogDescription>
+
+          <form onSubmit={handleSubmit} className="space-y-3">
+
+            {/* USERNAME */}
+            <Field>
+              <FieldLabel className="text-xs text-white">
+                Nome de usuário
+              </FieldLabel>
+              <Input
+                value={username}
+                onChange={(e) => setUserName(e.target.value)}
+                className="bg-[#0B0F14] border-[#2A2A2A] text-white h-9 text-sm"
+                required
+              />
+            </Field>
+
+            {/* NAME */}
+            <div className="grid grid-cols-2 gap-2">
+              <Field>
+                <FieldLabel className="text-xs text-white">
+                  Nome
+                </FieldLabel>
+                <Input
+                  value={first_name}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  className="bg-[#0B0F14] border-[#2A2A2A] text-white h-9 text-sm"
+                  required
+                />
+              </Field>
+
+              <Field>
+                <FieldLabel className="text-xs text-white">
+                  Sobrenome
+                </FieldLabel>
+                <Input
+                  value={last_name}
+                  onChange={(e) => setLastName(e.target.value)}
+                  className="bg-[#0B0F14] border-[#2A2A2A] text-white h-9 text-sm"
+                  required
+                />
+              </Field>
+            </div>
+
+            {/* EMAIL */}
+            <Field>
+              <FieldLabel className="text-xs text-white">
+                Email
+              </FieldLabel>
+              <Input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="bg-[#0B0F14] border-[#2A2A2A] text-white h-9 text-sm"
+                required
+              />
+            </Field>
+
+            {/* PASSWORD */}
+            <Field>
+              <FieldLabel className="text-xs text-white">
+                Senha
+              </FieldLabel>
+              <Input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="bg-[#0B0F14] border-[#2A2A2A] text-white h-9 text-sm"
+                required
+              />
+            </Field>
+
+            {/* CONFIRM */}
+            <Field>
+              <FieldLabel className="text-xs text-white">
+                Confirmar senha
+              </FieldLabel>
+              <Input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="bg-[#0B0F14] border-[#2A2A2A] text-white h-9 text-sm"
+                required
+              />
+            </Field>
+
+            {/* ERROR */}
+            {error && (
+              <div className="text-xs text-red-400 border border-red-900 bg-red-950/30 px-3 py-2 rounded">
+                {error}
+              </div>
+            )}
+
+            {/* BUTTON */}
+            <Button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-white text-black hover:bg-gray-200 font-bold h-9"
+            >
+              {loading ? "Criando..." : "Criar conta"}
+            </Button>
+
+            {/* SWITCH TO LOGIN */}
+            <div className="text-center text-xs text-gray-400">
+              Já tem conta?{" "}
+              <button
+                type="button"
+                onClick={() => {
+                  onOpenChange(false);  
+                  setLoginOpen(true);   
+                }}
+                className="text-white hover:underline"
+              >
+                Entrar
+              </button>
+            </div>
+
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* ================= LOGIN ================= */}
+      <DialogLogin
+        open={loginOpen}
+        onOpenChange={setLoginOpen}
+      />
+    </>
   );
 }

@@ -17,19 +17,19 @@ export function EmptyDemo({ action }: Props) {
       <div className="flex flex-col items-center gap-5">
         <EmptyHeader className="flex flex-col items-center gap-4">
 
-          {/* TITLE */}
+        
           <EmptyTitle className="text-2xl font-semibold text-slate-100">
             Sua biblioteca está vazia
           </EmptyTitle>
 
-          {/* DESCRIPTION */}
+     
           <EmptyDescription className="max-w-md text-sm text-slate-400 leading-relaxed">
             Gere sua primeira playlist e descubra novos jogos para jogar.
           </EmptyDescription>
 
         </EmptyHeader>
 
-        {/* ACTION */}
+     
         {action && (
           <EmptyContent className="mt-8 w-full flex justify-center">
             {action}

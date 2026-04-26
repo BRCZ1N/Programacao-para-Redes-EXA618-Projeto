@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import type { Playlist } from "../models/Playlist";
 import { EmptyDemo } from "../components/EmptyDemo";
 import { PlaylistCard } from "../components/PlaylistCard";
@@ -10,28 +10,26 @@ import { AppBar, Toolbar, Typography, Button } from "@mui/material";
 export function PlaylistGrid() {
   const [data, setData] = useState<Playlist[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
   const isFetchingRef = useRef(false);
-
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
-
-  const [open, setOpen] = useState(false);
-  const [playlist, setPlaylist] = useState<Playlist | null>(null);
-
-  const [openCreatePlaylist, setOpenCreatePlaylist] = useState(false);
-
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [open, setOpen] = useState(false);
+  const [playlist, setPlaylist] = useState<Playlist | null>(null);
+  const [openCreatePlaylist, setOpenCreatePlaylist] = useState(false);
+
   const [nextUrl, setNextUrl] = useState<string | null>(
-    "http://localhost:8000/api/playlist/",
+    "http://localhost:8000/api/playlist/"
   );
 
-  function toggleSelect(id: string) {
+  const toggleSelect = useCallback((id: string) => {
     setSelectedIds((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
     );
-  }
+  }, []);
 
-  async function loadMore() {
+  const loadMore = useCallback(async () => {
     if (!nextUrl || isFetchingRef.current) return;
 
     isFetchingRef.current = true;
@@ -49,7 +47,7 @@ export function PlaylistGrid() {
           {
             method: "POST",
             credentials: "include",
-          },
+          }
         );
 
         if (refreshResponse.ok) {
@@ -64,9 +62,8 @@ export function PlaylistGrid() {
         const json = await response.json();
 
         setData((prev) => {
-          const newItems = json.results.filter(
-            (item: any) => !prev.some((p) => p.id === item.id),
-          );
+          const ids = new Set(prev.map((p) => p.id));
+          const newItems = json.results.filter((i: any) => !ids.has(i.id));
 
           if (newItems.length === 0) {
             setNextUrl(null);
@@ -81,10 +78,12 @@ export function PlaylistGrid() {
     } catch (error) {
       console.log("Erro:", error);
     } finally {
-      isFetchingRef.current = false;
-      setIsLoading(false);
+      setTimeout(() => {
+        isFetchingRef.current = false;
+        setIsLoading(false);
+      }, 250); // debounce leve anti spam
     }
-  }
+  }, [nextUrl]);
 
   async function deletePlaylists(ids: string[]) {
     try {
@@ -103,7 +102,7 @@ export function PlaylistGrid() {
           {
             method: "POST",
             credentials: "include",
-          },
+          }
         );
 
         if (refreshResponse.ok) {
@@ -121,8 +120,6 @@ export function PlaylistGrid() {
       if (response.ok) {
         setData((prev) => prev.filter((item) => !ids.includes(item.id)));
         setSelectedIds([]);
-      } else {
-        console.log("Erro ao deletar");
       }
     } catch (error) {
       console.log("Erro:", error);
@@ -135,25 +132,26 @@ export function PlaylistGrid() {
 
   function handleCreatedPlaylist(newPlaylist: Playlist) {
     setData((prev) => [newPlaylist, ...prev]);
-
     setPlaylist(newPlaylist);
     setOpen(true);
   }
 
   useEffect(() => {
     loadMore();
-  }, []);
+  }, [loadMore]);
 
   useEffect(() => {
     if (!nextUrl) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting) {
+        const entry = entries[0];
+
+        if (entry.isIntersecting && !isFetchingRef.current) {
           loadMore();
         }
       },
-      { rootMargin: "200px" },
+      { rootMargin: "300px" }
     );
 
     const current = loadMoreRef.current;
@@ -162,15 +160,15 @@ export function PlaylistGrid() {
 
     return () => {
       if (current) observer.unobserve(current);
+      observer.disconnect();
     };
-  }, [nextUrl]);
+  }, [nextUrl, loadMore]);
 
   return (
     <>
       {data.length === 0 && !isLoading ? (
-          <EmptyDemo
-            action={<FakePlaylistCard onClick={handleGeneratePlaylist} />}
-          />
+        <FakePlaylistCard onClick={handleGeneratePlaylist}
+        />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
           <FakePlaylistCard onClick={handleGeneratePlaylist} />
@@ -188,7 +186,9 @@ export function PlaylistGrid() {
           <div ref={loadMoreRef} />
 
           {isLoading && (
-            <div className="col-span-full text-center py-4">Carregando...</div>
+            <div className="col-span-full text-center py-4">
+              Carregando...
+            </div>
           )}
         </div>
       )}
@@ -217,8 +217,8 @@ export function PlaylistGrid() {
             width: "fit-content",
             px: 1,
             py: 0.3,
-            backgroundColor: "rgba(0,0,0,0.85)",
-            backdropFilter: "blur(8px)",
+            backgroundColor: "rgba(0,0,0,0.9)",
+            boxShadow: "none",
           }}
         >
           <Toolbar
@@ -226,40 +226,20 @@ export function PlaylistGrid() {
               minHeight: "unset",
               height: "auto",
               display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
               gap: 1,
               px: 1,
             }}
           >
-            <Typography variant="caption" sx={{ whiteSpace: "nowrap" }}>
-              {selectedIds.length} selecionad
-              {selectedIds.length > 1 ? "os" : "o"}
+            <Typography variant="caption">
+              {selectedIds.length} selecionado
+              {selectedIds.length > 1 ? "s" : ""}
             </Typography>
 
-            <Button
-              size="small"
-              onClick={() => setSelectedIds([])}
-              sx={{
-                textTransform: "none",
-                "&:hover": {
-                  backgroundColor: "#333",
-                },
-              }}
-            >
+            <Button size="small" onClick={() => setSelectedIds([])}>
               Desfazer
             </Button>
 
-            <Button
-              size="small"
-              onClick={() => deletePlaylists(selectedIds)}
-              sx={{
-                textTransform: "none",
-                "&:hover": {
-                  backgroundColor: "#333",
-                },
-              }}
-            >
+            <Button size="small" onClick={() => deletePlaylists(selectedIds)}>
               Excluir
             </Button>
           </Toolbar>

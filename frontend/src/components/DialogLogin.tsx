@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import {
   Dialog,
@@ -5,8 +7,15 @@ import {
   DialogDescription,
   DialogTitle,
 } from "./ui/dialog";
+
 import { LoginForm } from "./LoginForm";
 import { useNavigate } from "react-router-dom";
+
+const theme = {
+  surface: "#121212",
+  text: "#FFFFFF",
+  muted: "#B3B3B3",
+};
 
 export function DialogLogin({
   open,
@@ -17,6 +26,7 @@ export function DialogLogin({
 }) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   async function handleLogin(data: { email: string; password: string }) {
@@ -40,8 +50,7 @@ export function DialogLogin({
         const errorData = await response.json();
         setError(errorData.message || "Erro ao fazer login");
       }
-    } catch (error) {
-      console.log("Erro:", error);
+    } catch {
       setError("Erro de conexão");
     } finally {
       setLoading(false);
@@ -50,11 +59,48 @@ export function DialogLogin({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full max-w-xs bg-slate-900 border border-slate-800 p-4 sm:p-6 [&>button]:text-slate-400 [&>button]:hover:text-white [&>button]:hover:bg-slate-800 [&>button]:rounded-md [&>button]:transition">
-        <LoginForm onSubmit={handleLogin} error={error} loading={loading} />
+      <DialogContent
+        style={{
+          width: "100%",
+          maxWidth: 360,
+          background: theme.surface,
+
+          padding: 24,
+          color: theme.text,
+
+          border: "none",
+          boxShadow: "none",
+        }}
+      >
+        {/* TITLE */}
+        <DialogTitle
+          style={{
+            fontSize: 18,
+            fontWeight: 800,
+            marginBottom: 4,
+          }}
+        >
+          Entrar
+        </DialogTitle>
+
+        {/* DESCRIPTION */}
+        <DialogDescription
+          style={{
+            fontSize: 13,
+            color: theme.muted,
+            marginBottom: 12,
+          }}
+        >
+          Acesse sua conta para continuar
+        </DialogDescription>
+
+        {/* FORM */}
+        <LoginForm
+          onSubmit={handleLogin}
+          error={error}
+          loading={loading}
+        />
       </DialogContent>
-      <DialogTitle />
-      <DialogDescription />
     </Dialog>
   );
 }

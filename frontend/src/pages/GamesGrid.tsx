@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { GameCard } from "../components/GameCard";
 import { Skeleton } from "../components/ui/skeleton";
 import type { Game } from "../models/Game";
@@ -12,8 +12,9 @@ export function GamesGrid() {
 
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
   const isFetchingRef = useRef(false);
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
-  async function loadMore() {
+  const loadMore = useCallback(async () => {
     if (!nextUrl || isFetchingRef.current) return;
 
     isFetchingRef.current = true;
@@ -26,7 +27,7 @@ export function GamesGrid() {
       });
 
       if (response.status === 401) {
-        const refreshResponse = await fetch(
+        const refresh = await fetch(
           "http://localhost:8000/api/auth/refresh/",
           {
             method: "POST",
@@ -34,7 +35,7 @@ export function GamesGrid() {
           }
         );
 
-        if (refreshResponse.ok) {
+        if (refresh.ok) {
           response = await fetch(nextUrl, {
             method: "GET",
             credentials: "include",
@@ -42,56 +43,66 @@ export function GamesGrid() {
         }
       }
 
-      if (response.ok) {
-        const json = await response.json();
+      if (!response.ok) return;
 
-        setData((prev) => {
-          const newItems = json.results.filter(
-            (item: Game) => !prev.some((p) => p.id === item.id)
-          );
+      const json = await response.json();
 
-          if (newItems.length === 0) {
-            setNextUrl(null);
-            return prev;
+      setData((prev) => {
+        const existingIds = new Set(prev.map((p) => p.id));
+
+        const newItems: Game[] = [];
+        for (const item of json.results) {
+          if (!existingIds.has(item.id)) {
+            newItems.push(item);
           }
+        }
 
-          return [...prev, ...newItems];
-        });
+        if (newItems.length === 0) {
+          setNextUrl(null);
+          return prev;
+        }
 
-        setNextUrl(json.next);
-      }
-    } catch (error) {
-      console.log("Erro:", error);
+        return prev.concat(newItems);
+      });
+
+      setNextUrl(json.next);
+    } catch (err) {
+      console.log("Erro:", err);
     } finally {
       isFetchingRef.current = false;
       setIsLoading(false);
     }
-  }
+  }, [nextUrl]);
 
   useEffect(() => {
     loadMore();
   }, []);
 
   useEffect(() => {
-    if (!nextUrl) return;
+    const el = loadMoreRef.current;
+    if (!el || !nextUrl) return;
 
-    const observer = new IntersectionObserver(
+    if (observerRef.current) observerRef.current.disconnect();
+
+    observerRef.current = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting) {
+        const first = entries[0];
+        if (first.isIntersecting && !isFetchingRef.current) {
           loadMore();
         }
       },
-      { rootMargin: "200px" }
+      {
+        rootMargin: "300px",
+        threshold: 0.1,
+      }
     );
 
-    const current = loadMoreRef.current;
-
-    if (current) observer.observe(current);
+    observerRef.current.observe(el);
 
     return () => {
-      if (current) observer.unobserve(current);
+      observerRef.current?.disconnect();
     };
-  }, [nextUrl]);
+  }, [nextUrl, loadMore]);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 p-4">
@@ -101,10 +112,13 @@ export function GamesGrid() {
 
       <div ref={loadMoreRef} className="h-10 col-span-full" />
 
-      {isLoading &&
-        Array.from({ length: 4 }).map((_, i) => (
-          <Skeleton key={i} className="h-40 w-full rounded-xl" />
-        ))}
+      {isLoading && (
+        <div className="col-span-full grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Skeleton key={i} className="h-40 w-full rounded-xl" />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
