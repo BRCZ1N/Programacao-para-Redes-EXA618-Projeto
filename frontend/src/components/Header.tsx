@@ -41,7 +41,6 @@ export function Header() {
           }}
         >
 
-          {/* LOGO */}
           <div
             style={{
               fontWeight: 900,
@@ -53,10 +52,8 @@ export function Header() {
             PlaylistDiscovery
           </div>
 
-          {/* ACTIONS */}
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
 
-            {/* LOGIN */}
             <button
               onClick={() => setLoginOpen(true)}
               style={{
@@ -78,7 +75,6 @@ export function Header() {
               Login
             </button>
 
-            {/* REGISTER (PRIMARY) */}
             <button
               onClick={() => setRegisterOpen(true)}
               style={{
@@ -107,7 +103,6 @@ export function Header() {
         </div>
       </header>
 
-      {/* MODALS */}
       <DialogLogin open={loginOpen} onOpenChange={setLoginOpen} />
       <DialogSignup open={registerOpen} onOpenChange={setRegisterOpen} />
     </>

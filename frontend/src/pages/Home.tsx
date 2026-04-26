@@ -21,7 +21,6 @@ export function Home() {
     >
       <Header />
 
-
       <section
         style={{
           padding: "80px 24px",
@@ -42,6 +41,7 @@ export function Home() {
               fontWeight: 900,
               lineHeight: 1.1,
               letterSpacing: "-1px",
+              color: "#fff",
             }}
           >
             Monte suas playlists com os melhores jogos
@@ -75,38 +75,38 @@ export function Home() {
             onMouseEnter={(e) =>
               (e.currentTarget.style.transform = "scale(1.03)")
             }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.transform = "scale(1)")
-            }
+            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
           >
             Começar agora
           </button>
         </div>
       </section>
 
-      <Section
-        icon={<Flame size={18} color="#ff7a00" />}
-        title="Jogos em alta"
-        subtitle="Os jogos mais populares agora"
-      >
-        <GameCarousel title="" type="trending" />
-      </Section>
+      <div style={{ color: "#fff" }}>
+        <Section
+          icon={<Flame size={18} color="#ff7a00" />}
+          title="Jogos em alta"
+          subtitle="Os jogos mais populares agora"
+        >
+          <GameCarousel title="" type="trending" />
+        </Section>
 
-      <Section
-        icon={<Sparkles size={18} color="#3B82F6" />}
-        title="Lançamentos recentes"
-        subtitle="Novos jogos lançados recentemente"
-      >
-        <GameCarousel title="" type="new" />
-      </Section>
+        <Section
+          icon={<Sparkles size={18} color="#3B82F6" />}
+          title="Lançamentos recentes"
+          subtitle="Novos jogos lançados recentemente"
+        >
+          <GameCarousel title="" type="new" />
+        </Section>
 
-      <Section
-        icon={<Trophy size={18} color="#FFD700" />}
-        title="Mais bem avaliados"
-        subtitle="Os melhores jogos de todos os tempos"
-      >
-        <GameCarousel title="" type="top" />
-      </Section>
+        <Section
+          icon={<Trophy size={18} color="#FFD700" />}
+          title="Mais bem avaliados"
+          subtitle="Os melhores jogos de todos os tempos"
+        >
+          <GameCarousel title="" type="top" />
+        </Section>
+      </div>
     </main>
   );
 }

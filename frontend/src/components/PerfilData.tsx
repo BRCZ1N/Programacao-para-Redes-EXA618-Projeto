@@ -9,6 +9,17 @@ type User = {
   email: string;
 };
 
+const theme = {
+  bg: "#0A0A0A",
+  surface: "#111111",
+  border: "#2A2A2A",
+  text: "#FFFFFF",
+  muted: "rgba(255,255,255,0.55)",
+  inputBg: "#121212",
+  inputHover: "#161616",
+  focus: "#3A3A3A",
+};
+
 export function PerfilData() {
   const [user, setUser] = useState<User | null>(null);
   const [editing, setEditing] = useState<string | null>(null);
@@ -19,7 +30,7 @@ export function PerfilData() {
     last_name: "",
     password: "",
   });
-  
+
   async function loadUser() {
     try {
       let response = await fetch("http://localhost:8000/api/user/me/", {
@@ -68,43 +79,15 @@ export function PerfilData() {
     try {
       let response = await fetch("http://localhost:8000/api/user/update/", {
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify(data),
       });
 
-      if (response.status === 401) {
-        const refreshResponse = await fetch(
-          "http://localhost:8000/api/auth/refresh/",
-          {
-            method: "POST",
-            credentials: "include",
-          }
-        );
-
-        if (refreshResponse.ok) {
-          response = await fetch(
-            "http://localhost:8000/api/user/update/",
-            {
-              method: "PATCH",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              credentials: "include",
-              body: JSON.stringify(data),
-            }
-          );
-        }
-      }
-
       if (response.ok) {
         const updatedUser = await response.json();
 
-        
         setUser(updatedUser);
-
         setForm({
           username: updatedUser.username,
           first_name: updatedUser.first_name,
@@ -124,9 +107,14 @@ export function PerfilData() {
 
   if (!user) return null;
 
+  const inputClass =
+    "bg-[#121212] border border-[#2A2A2A] text-white placeholder:text-white/30 " +
+    "hover:bg-[#161616] focus:bg-[#161616] focus:border-[#3A3A3A] " +
+    "focus:ring-0 transition rounded-md";
+
   return (
-    <div className="space-y-6">
-      
+    <div className="space-y-6 text-white">
+
       <EditableField
         label="Nome de usuário"
         value={form.username}
@@ -140,6 +128,7 @@ export function PerfilData() {
           onChange={(e) =>
             setForm({ ...form, username: e.target.value })
           }
+          className={inputClass}
         />
       </EditableField>
 
@@ -156,6 +145,7 @@ export function PerfilData() {
           onChange={(e) =>
             setForm({ ...form, first_name: e.target.value })
           }
+          className={inputClass}
         />
       </EditableField>
 
@@ -172,6 +162,7 @@ export function PerfilData() {
           onChange={(e) =>
             setForm({ ...form, last_name: e.target.value })
           }
+          className={inputClass}
         />
       </EditableField>
 
@@ -198,6 +189,7 @@ export function PerfilData() {
           onChange={(e) =>
             setForm({ ...form, password: e.target.value })
           }
+          className={inputClass}
         />
       </EditableField>
     </div>

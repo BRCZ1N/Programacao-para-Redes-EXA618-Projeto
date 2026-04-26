@@ -215,10 +215,9 @@ def clean_date(value):
 
     value = str(value).lower().strip()
 
-    # remove pontuação
     value = value.replace(".", "")
 
-    # ISO direto
+
     try:
         return datetime.strptime(value, "%Y-%m-%d").date()
     except:
@@ -247,7 +246,6 @@ def clean_existing_dataset():
     except FileNotFoundError:
         return
 
-    # schema fixo
     columns = [
         "id", "title", "date_release", "date_research",
         "price", "discount_price", "developer", "publisher",
@@ -258,7 +256,6 @@ def clean_existing_dataset():
         if col not in df.columns:
             df[col] = None
 
-    # limpeza FORTE (corrige dataset antigo contaminado)
     df["price"] = df["price"].apply(parse_price)
     df["discount_price"] = df["discount_price"].apply(parse_price)
 
@@ -267,7 +264,7 @@ def clean_existing_dataset():
 
     df["date_release"] = df["date_release"].apply(clean_date)
 
-    # garante tipos consistentes
+
     df["total_reviews"] = pd.to_numeric(df["total_reviews"], errors="coerce")
     df["review_rating"] = pd.to_numeric(df["review_rating"], errors="coerce")
 
@@ -284,7 +281,7 @@ def exportToCSV(listGameDetailed):
     except FileNotFoundError:
         df = new_df
 
-    # garante schema fixo (só estrutural, não limpeza)
+
     columns = [
         "id", "title", "date_release", "date_research",
         "price", "discount_price", "developer", "publisher",

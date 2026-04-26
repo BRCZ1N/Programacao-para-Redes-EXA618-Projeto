@@ -5,14 +5,14 @@ from users.views import register_user,me,password_reset,delete_user, logout, upd
 from users.cookies import CookieTokenObtainPairView, CookieTokenRefreshView
 
 urlpatterns = [
-    #path('', home),
+   
     path('api/crawler/', crawl_games),
-    path('api/games/<int:id>/', game_detail),
+    path('api/games/<str:id>/', game_detail),
     path('api/games/featured/', game_featured),
     path('api/games/', game_list),
 
     path('api/playlist/', playlist),
-    path('api/playlist/<int:id>/', playlist_detail),
+    path('api/playlist/<str:id>/', playlist_detail),
 
     path('api/user/register/', register_user),
     path('api/user/delete/', delete_user),

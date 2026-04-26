@@ -14,12 +14,10 @@ from django.shortcuts import get_object_or_404
 @permission_classes([IsAuthenticated])
 def playlist(request):
 
-    # ================= GET =================
     if request.method == "GET":
 
         pk = request.query_params.get("id")
 
-        # 🔥 detalhe de uma playlist
         if pk:
             playlist = get_object_or_404(
                 Playlist.objects.prefetch_related("games"),
@@ -30,7 +28,6 @@ def playlist(request):
             serializer = PlaylistSerializer(playlist)
             return Response(serializer.data, status=200)
 
-        # 🔥 lista paginada
         query = Playlist.objects.filter(
             user=request.user
         ).prefetch_related("games")
@@ -44,19 +41,19 @@ def playlist(request):
 
         return paginator.get_paginated_response(serializer.data)
 
-    # ================= CREATE =================
     if request.method == "POST":
+
+        count = Playlist.objects.filter(user=request.user).count() + 1
 
         playlist = Playlist.objects.create(
             user=request.user,
-            title=request.data.get("title", "Nova playlist"),
-            description=request.data.get("description", "")
+            title=f"Minha playlist {count}",
+            description=""
         )
 
         serializer = PlaylistSerializer(playlist)
         return Response(serializer.data, status=201)
 
-    # ================= DELETE =================
     if request.method == "DELETE":
 
         ids = request.data.get("ids", [])
@@ -76,7 +73,6 @@ def playlist(request):
 
         return Response(status=204)
 
-    # ================= ADD / REMOVE / SET GAMES =================
     if request.method == "PUT":
 
         playlist_id = request.data.get("playlist_id")

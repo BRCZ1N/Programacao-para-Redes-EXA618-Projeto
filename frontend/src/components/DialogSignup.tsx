@@ -84,7 +84,6 @@ export function DialogSignup({
 
   return (
     <>
-      {/* ================= SIGNUP ================= */}
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent
           style={{
@@ -113,7 +112,6 @@ export function DialogSignup({
 
           <form onSubmit={handleSubmit} className="space-y-3">
 
-            {/* USERNAME */}
             <Field>
               <FieldLabel className="text-xs text-white">
                 Nome de usuário
@@ -126,7 +124,6 @@ export function DialogSignup({
               />
             </Field>
 
-            {/* NAME */}
             <div className="grid grid-cols-2 gap-2">
               <Field>
                 <FieldLabel className="text-xs text-white">
@@ -153,7 +150,6 @@ export function DialogSignup({
               </Field>
             </div>
 
-            {/* EMAIL */}
             <Field>
               <FieldLabel className="text-xs text-white">
                 Email
@@ -167,7 +163,6 @@ export function DialogSignup({
               />
             </Field>
 
-            {/* PASSWORD */}
             <Field>
               <FieldLabel className="text-xs text-white">
                 Senha
@@ -181,7 +176,6 @@ export function DialogSignup({
               />
             </Field>
 
-            {/* CONFIRM */}
             <Field>
               <FieldLabel className="text-xs text-white">
                 Confirmar senha
@@ -195,14 +189,12 @@ export function DialogSignup({
               />
             </Field>
 
-            {/* ERROR */}
             {error && (
               <div className="text-xs text-red-400 border border-red-900 bg-red-950/30 px-3 py-2 rounded">
                 {error}
               </div>
             )}
 
-            {/* BUTTON */}
             <Button
               type="submit"
               disabled={loading}
@@ -211,7 +203,6 @@ export function DialogSignup({
               {loading ? "Criando..." : "Criar conta"}
             </Button>
 
-            {/* SWITCH TO LOGIN */}
             <div className="text-center text-xs text-gray-400">
               Já tem conta?{" "}
               <button
@@ -230,7 +221,6 @@ export function DialogSignup({
         </DialogContent>
       </Dialog>
 
-      {/* ================= LOGIN ================= */}
       <DialogLogin
         open={loginOpen}
         onOpenChange={setLoginOpen}

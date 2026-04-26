@@ -1,24 +1,34 @@
 "use client";
 
-import { Menu, User } from "lucide-react";
+import { HomeIcon, Gamepad2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import logo from "../assets/logo.png";
+
+import { UserDropdownMenu } from "../components/UserDropdownMenu";
 
 const theme = {
   bg: "#000000",
+  surface: "#121212",
+  surfaceHover: "#1A1A1A",
+  border: "#2A2A2A",
   text: "#FFFFFF",
   muted: "#B3B3B3",
+  accent: "#1DB954",
 };
 
 const pages = [
-  { label: "Playlists", path: "/dashboard/playlists" },
-  { label: "Games", path: "/dashboard/games" },
+  {
+    path: "/",
+    icon: <HomeIcon size={16} />,
+  },
+  {
+    path: "/dashboard/games",
+    icon: <Gamepad2 size={16} />,
+  },
 ];
 
 export function AppBarMenu() {
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
 
   return (
     <header
@@ -29,29 +39,13 @@ export function AppBarMenu() {
         alignItems: "center",
         justifyContent: "space-between",
         padding: "0 16px",
+        borderBottom: `1px solid ${theme.border}`,
         background: theme.bg,
         color: theme.text,
         position: "relative",
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-        <button
-          onClick={() => setOpen((v) => !v)}
-          style={{
-            width: 36,
-            height: 36,
-            borderRadius: 8,
-            border: "1px solid rgba(255,255,255,0.08)",
-            background: "#000",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            cursor: "pointer",
-          }}
-        >
-          <Menu size={18} color={theme.text} />
-        </button>
-
         <div
           onClick={() => navigate("/")}
           style={{
@@ -90,72 +84,35 @@ export function AppBarMenu() {
             key={page.path}
             onClick={() => navigate(page.path)}
             style={{
-              background: "transparent",
-              border: "none",
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              background: "rgba(255,255,255,0.04)",
+              padding: "6px 10px",
+              borderRadius: 999,
+              border: "1px solid rgba(255,255,255,0.06)",
               color: theme.muted,
               cursor: "pointer",
               fontSize: 14,
               transition: "0.2s",
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = theme.text)}
-            onMouseLeave={(e) => (e.currentTarget.style.color = theme.muted)}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = theme.text;
+              e.currentTarget.style.background =
+                "rgba(255,255,255,0.08)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = theme.muted;
+              e.currentTarget.style.background =
+                "rgba(255,255,255,0.04)";
+            }}
           >
-            {page.label}
+            <span style={{ display: "flex" }}>{page.icon}</span>
           </button>
         ))}
       </nav>
 
-      <button
-        style={{
-          width: 38,
-          height: 38,
-          borderRadius: "50%",
-          background: "#111",
-          border: "1px solid rgba(255,255,255,0.08)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          cursor: "pointer",
-        }}
-      >
-        <User size={18} color={theme.text} />
-      </button>
-
-      {open && (
-        <div
-          style={{
-            position: "absolute",
-            top: 64,
-            left: 0,
-            right: 0,
-            background: "#000",
-            borderTop: "1px solid rgba(255,255,255,0.08)",
-            padding: 12,
-          }}
-        >
-          {pages.map((page) => (
-            <div
-              key={page.path}
-              onClick={() => {
-                navigate(page.path);
-                setOpen(false);
-              }}
-              style={{
-                padding: 10,
-                borderRadius: 6,
-                cursor: "pointer",
-                color: theme.text,
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = "#111")}
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.background = "transparent")
-              }
-            >
-              {page.label}
-            </div>
-          ))}
-        </div>
-      )}
+      <UserDropdownMenu />
     </header>
   );
 }

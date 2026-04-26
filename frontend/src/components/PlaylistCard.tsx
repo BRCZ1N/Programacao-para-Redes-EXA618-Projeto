@@ -1,10 +1,10 @@
 "use client";
 
 import { Checkbox } from "../components/ui/checkbox";
-import type { GameTeste } from "../models/Game";
+import type { Game } from "../models/Game";
 
 type Props = {
-  games: GameTeste[];
+  games: Game[];
   title?: string;
   selected?: boolean;
   onSelect?: (checked: boolean) => void;

@@ -27,7 +27,6 @@ export function Dashboard() {
       }}
     >
 
-      {/* HEADER */}
       <header
         style={{
           gridArea: "header",
@@ -38,7 +37,6 @@ export function Dashboard() {
         <AppBarMenu />
       </header>
 
-      {/* SIDEBAR */}
       <aside
         style={{
           gridArea: "sidebar",
@@ -50,7 +48,6 @@ export function Dashboard() {
         <AppSidebar />
       </aside>
 
-      {/* CONTENT */}
       <main
         style={{
           gridArea: "content",

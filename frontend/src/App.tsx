@@ -13,7 +13,7 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/dashboard" element={<Dashboard />}>
           <Route path="games" element={<GamesGrid />} />
-          <Route path="playlist/:playlistId" element={<PlaylistPage />} />
+          <Route path="playlist/:id" element={<PlaylistPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

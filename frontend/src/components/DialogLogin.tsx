@@ -72,7 +72,6 @@ export function DialogLogin({
           boxShadow: "none",
         }}
       >
-        {/* TITLE */}
         <DialogTitle
           style={{
             fontSize: 18,
@@ -83,7 +82,6 @@ export function DialogLogin({
           Entrar
         </DialogTitle>
 
-        {/* DESCRIPTION */}
         <DialogDescription
           style={{
             fontSize: 13,
@@ -94,7 +92,6 @@ export function DialogLogin({
           Acesse sua conta para continuar
         </DialogDescription>
 
-        {/* FORM */}
         <LoginForm
           onSubmit={handleLogin}
           error={error}

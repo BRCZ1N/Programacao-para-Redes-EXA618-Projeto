@@ -22,7 +22,7 @@ export function AppSidebar() {
   const [search, setSearch] = useState("");
 
   const [nextUrl, setNextUrl] = useState<string | null>(
-    "http://localhost:8000/api/playlist/"
+    "http://localhost:8000/api/playlist/",
   );
 
   const isFetchingRef = useRef(false);
@@ -77,7 +77,36 @@ export function AppSidebar() {
 
   useEffect(() => {
     loadPlaylists();
-  }, []);
+  }, [loadPlaylists]);
+
+  const createPlaylist = async () => {
+    try {
+      const res = await fetch("http://localhost:8000/api/playlist/", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: `Nova playlist ${playlists.length + 1}`,
+          description: "",
+        }),
+      });
+
+      if (!res.ok) {
+        console.error("Erro ao criar playlist");
+        return;
+      }
+
+      const json = await res.json();
+
+      setPlaylists((prev) => [json, ...prev]);
+
+      navigate(`/dashboard/playlist/${json.id}`);
+    } catch (err) {
+      console.error("Erro create playlist:", err);
+    }
+  };
 
   return (
     <aside
@@ -90,6 +119,7 @@ export function AppSidebar() {
         borderRight: `1px solid ${theme.border}`,
       }}
     >
+
       <div
         style={{
           padding: 12,
@@ -98,20 +128,10 @@ export function AppSidebar() {
           alignItems: "center",
         }}
       >
-        <button
-          style={{
-            color: theme.muted,
-            background: "transparent",
-            border: "none",
-            fontSize: 18,
-            cursor: "pointer",
-          }}
-        >
-          ☰
-        </button>
+        
 
         <button
-          onClick={() => navigate("/dashboard/create")}
+          onClick={createPlaylist}
           style={{
             display: "flex",
             alignItems: "center",
@@ -123,6 +143,15 @@ export function AppSidebar() {
             color: theme.text,
             fontSize: 12,
             cursor: "pointer",
+            transition: "0.15s",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = theme.surfaceHover;
+            e.currentTarget.style.borderColor = "rgba(255,255,255,0.2)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "transparent";
+            e.currentTarget.style.borderColor = theme.border;
           }}
         >
           <Plus size={14} />

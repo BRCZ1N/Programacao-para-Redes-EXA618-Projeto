@@ -1,9 +1,11 @@
-import type { GameTeste } from "../models/Game";
+import type { Game } from "../models/Game";
 
 export type Playlist = {
   id: string;
   title: string;
-  games: GameTeste[];
+  updated_at: string;
+  description: string;
+  games: Game[];
 };
 
 

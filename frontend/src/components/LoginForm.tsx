@@ -55,7 +55,6 @@ export function LoginForm({
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-3">
 
-            {/* EMAIL */}
             <Field>
               <FieldLabel
                 htmlFor="email"
@@ -81,7 +80,6 @@ export function LoginForm({
               />
             </Field>
 
-            {/* PASSWORD */}
             <Field>
               <div className="flex items-center justify-between mb-2">
                 <FieldLabel
@@ -121,7 +119,6 @@ export function LoginForm({
               </Link>
             </Field>
 
-            {/* ERROR */}
             {error && (
               <div
                 style={{
@@ -137,7 +134,6 @@ export function LoginForm({
               </div>
             )}
 
-            {/* BUTTON */}
             <Button
               type="submit"
               disabled={loading}
@@ -155,7 +151,6 @@ export function LoginForm({
               {loading ? "Entrando..." : "Entrar"}
             </Button>
 
-            {/* SIGNUP */}
             <div
               style={{
                 textAlign: "center",
