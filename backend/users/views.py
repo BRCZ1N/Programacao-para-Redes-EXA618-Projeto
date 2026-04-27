@@ -11,15 +11,21 @@ from decouple import config
 def logout(request):
     res = Response({"status": "Usuário deslogado com sucesso"})
 
-    res.delete_cookie(
-        "access",
-        path="/",
-        secure=True,
-        samesite="None",
-    )
+    res.set_cookie(
+    "access",
+    "",
+    expires="Thu, 01 Jan 1970 00:00:00 GMT",
+    max_age=0,
+    path="/",
+    secure=True,
+    samesite="None",
+)
 
-    res.delete_cookie(
+    res.set_cookie(
         "refresh",
+        "",
+        expires="Thu, 01 Jan 1970 00:00:00 GMT",
+        max_age=0,
         path="/",
         secure=True,
         samesite="None",
