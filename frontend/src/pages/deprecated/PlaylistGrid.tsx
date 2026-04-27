@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import type { Playlist } from "../models/Playlist";
+import type { Playlist } from "../../models/Playlist";
 import { EmptyDemo } from "../components/EmptyDemo";
-import { PlaylistCard } from "../components/PlaylistCard";
+import { PlaylistCard } from "../../components/PlaylistCard";
 import { FakePlaylistCard } from "../components/FakePlaylistCard";
 import { PlaylistDrawer } from "../components/PlaylistDrawer";
-import { DialogCreatePlaylist } from "../components/DialogPlaylistCreate";
+import { DialogCreatePlaylist } from "../../components/DialogPlaylistCreate";
 import { AppBar, Toolbar, Typography, Button } from "@mui/material";
 
 export function PlaylistGrid() {

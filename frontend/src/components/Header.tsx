@@ -41,15 +41,27 @@ export function Header() {
             justifyContent: "space-between",
           }}
         >
-
+          {/* LOGO + TITLE */}
           <div
             style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
               fontWeight: 900,
               fontSize: 18,
               letterSpacing: "-0.5px",
               color: theme.text,
             }}
           >
+            <img
+              src={logo}
+              alt="PlaylistDiscovery logo"
+              style={{
+                width: 28,
+                height: 28,
+                objectFit: "contain",
+              }}
+            />
             PlaylistDiscovery
           </div>
 

@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { GameCarousel } from "../components/GameCarousel";
 import { Header } from "../components/Header";
 import { Flame, Sparkles, Trophy } from "lucide-react";
@@ -11,6 +12,7 @@ const theme = {
 };
 
 export function Home() {
+  const navigate = useNavigate();
   return (
     <main
       style={{
@@ -61,6 +63,7 @@ export function Home() {
           </p>
 
           <button
+            onClick={() => navigate("/dashboard")}
             style={{
               width: 180,
               padding: "12px 16px",

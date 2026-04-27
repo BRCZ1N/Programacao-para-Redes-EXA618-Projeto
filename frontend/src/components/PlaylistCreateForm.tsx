@@ -3,10 +3,20 @@
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { PlaylistFilters } from "./PlaylistFilters";
+import { SliderBlock } from "./SliderBlock";
+import { TagsInput } from "./TagsInput";
 
 type Props = {
   onSuccess?: (playlist: any) => void;
+};
+
+const theme = {
+  bg: "#000000",
+  card: "#0F0F0F",
+  border: "#262626",
+  text: "#FFFFFF",
+  muted: "#A3A3A3",
+  accent: "#FFFFFF",
 };
 
 export function PlaylistCreateForm({ onSuccess }: Props) {
@@ -40,7 +50,6 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
       if (!res.ok) throw new Error("Erro ao criar playlist");
 
       const data = await res.json();
-
       onSuccess?.(data);
 
       setForm({
@@ -57,35 +66,30 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
   }
 
   return (
-    <div className="flex flex-col gap-6 text-white">
-      
-      <div className="space-y-1">
-        <h3 className="text-sm font-semibold text-white">Informações</h3>
-        <p className="text-xs text-slate-400">
-          Defina os dados básicos da sua playlist
+    <div className="flex flex-col gap-5 text-white">
+
+      {/* HEADER */}
+      <div>
+        <h2 className="text-base font-semibold">Criar playlist</h2>
+        <p className="text-xs text-neutral-400">
+          Configure os filtros da sua playlist
         </p>
       </div>
 
-      
-      <div className="space-y-3">
+      <div
+        style={{
+          background: theme.card,
+          
+        }}
+        className="flex flex-col gap-3 p-4 rounded-lg"
+      >
         <Input
           placeholder="Título"
           value={form.title}
           onChange={(e) =>
-            setForm((prev) => ({
-              ...prev,
-              title: e.target.value,
-            }))
+            setForm((prev) => ({ ...prev, title: e.target.value }))
           }
-          className="
-            bg-slate-900/60
-            border border-slate-800/60
-            text-white
-            placeholder:text-slate-500
-            focus:border-blue-500/50
-            focus:ring-2 focus:ring-blue-500/20
-            transition
-          "
+          className="bg-black border border-neutral-800 text-white placeholder:text-neutral-500"
         />
 
         <Input
@@ -97,33 +101,73 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
               description: e.target.value,
             }))
           }
-          className="
-            bg-slate-900/60
-            border border-slate-800/60
-            text-white
-            placeholder:text-slate-500
-            focus:border-blue-500/50
-            focus:ring-2 focus:ring-blue-500/20
-            transition
-          "
+          className="bg-black border border-neutral-800 text-white placeholder:text-neutral-500"
         />
       </div>
 
-      
-      <div className="rounded-xl border border-slate-800/60 bg-slate-900/30 p-3">
-        <PlaylistFilters form={form} setForm={setForm} />
+      <div
+        style={{
+          background: theme.card,
+        }}
+        className="flex flex-col gap-4 p-4 rounded-lg"
+      >
+        <div>
+          <h3 className="text-sm font-medium">Filtros</h3>
+          <p className="text-xs text-neutral-500">
+            Refine os jogos da sua playlist
+          </p>
+        </div>
+
+        <TagsInput
+          value={form.tag}
+          onChange={(tag) =>
+            setForm((prev) => ({ ...prev, tag }))
+          }
+        />
+
+        <SliderBlock
+          label="Rating mínimo"
+          value={form.rating}
+          onChange={(value) =>
+            setForm((prev) => ({ ...prev, rating: value }))
+          }
+          min={0}
+          max={10}
+        />
+
+        <SliderBlock
+          label="Preço mínimo"
+          value={form.price}
+          onChange={(value) =>
+            setForm((prev) => ({ ...prev, price: value }))
+          }
+          min={0}
+          max={1000}
+          step={1}
+          prefix="R$"
+        />
+
+        <SliderBlock
+          label="Reviews mínimo"
+          value={form.reviews}
+          onChange={(value) =>
+            setForm((prev) => ({ ...prev, reviews: value }))
+          }
+          min={0}
+          max={100000}
+          step={1}
+        />
       </div>
 
-      
+      {/* BUTTON */}
       <Button
         onClick={handleSubmit}
         className="
-          w-full
-          bg-blue-600
-          hover:bg-blue-500
-          text-white
-          font-medium
-          shadow-md shadow-blue-500/20
+          w-full 
+          bg-white 
+          text-black 
+          font-semibold 
+          hover:bg-neutral-200 
           transition
         "
       >
