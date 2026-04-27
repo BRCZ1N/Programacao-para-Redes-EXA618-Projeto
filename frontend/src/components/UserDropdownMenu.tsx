@@ -79,7 +79,7 @@ export function UserDropdownMenu() {
           <DropdownMenuGroup>
             <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
 
-            <DropdownMenuItem onClick={() => setOpenConfig(true)}>
+            <DropdownMenuItem className="flex items-center cursor-pointer text-[#b3b3b3] data-[highlighted]:bg-[#1a1a1a] data-[highlighted]:text-white" onClick={() => setOpenConfig(true)}>
               <Settings size={14} style={{ marginRight: 8 }} />
               Configurações
             </DropdownMenuItem>
@@ -89,23 +89,15 @@ export function UserDropdownMenu() {
 
           <DropdownMenuItem
             onClick={handleLogout}
-            style={{
-              color: "#E50914",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-            }}
+            className="flex items-center cursor-pointer text-[#b3b3b3] data-[highlighted]:bg-[#1a1a1a] data-[highlighted]:text-white"
           >
-            <LogOut size={14} style={{ marginRight: 8 }} />
+            <LogOut size={14} className="mr-2" />
             Sair
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <DialogConfiguration
-        open={openConfig}
-        onOpenChange={setOpenConfig}
-      />
+      <DialogConfiguration open={openConfig} onOpenChange={setOpenConfig} />
     </>
   );
 }

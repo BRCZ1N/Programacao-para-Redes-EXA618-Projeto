@@ -328,7 +328,7 @@ export function PlaylistPage() {
         open={openCreate}
         onOpenChange={setOpenCreate}
         onCreated={handleCreated}
-      />
+      />  
     </div>
   );
 }

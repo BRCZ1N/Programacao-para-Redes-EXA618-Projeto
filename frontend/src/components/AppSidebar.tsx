@@ -5,6 +5,15 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useCallback, useRef } from "react";
 import type { Playlist } from "../models/Playlist";
 
+import {
+  ContextMenu,
+  ContextMenuTrigger,
+  ContextMenuContent,
+  ContextMenuItem,
+} from "../components/ui/context-menu";
+
+import { DialogEditPlaylist } from "../components/DialogEditPlaylist";
+
 const theme = {
   bg: "#000000",
   surface: "#121212",
@@ -26,6 +35,12 @@ export function AppSidebar() {
   );
 
   const isFetchingRef = useRef(false);
+
+  // 🔥 CONTROLE DO DIALOG
+  const [openEdit, setOpenEdit] = useState(false);
+  const [selectedPlaylist, setSelectedPlaylist] = useState<Playlist | null>(
+    null,
+  );
 
   const normalize = (text: string) =>
     text
@@ -57,10 +72,7 @@ export function AppSidebar() {
     isFetchingRef.current = true;
 
     try {
-      const res = await fetch(nextUrl, {
-        credentials: "include",
-      });
-
+      const res = await fetch(nextUrl, { credentials: "include" });
       const json = await res.json();
 
       setPlaylists((prev) => {
@@ -80,172 +92,198 @@ export function AppSidebar() {
   }, [loadPlaylists]);
 
   const createPlaylist = async () => {
+    const res = await fetch("http://localhost:8000/api/playlist/", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: `Nova playlist ${playlists.length + 1}`,
+        description: "",
+      }),
+    });
+
+    const json = await res.json();
+    setPlaylists((prev) => [json, ...prev]);
+    navigate(`/dashboard/playlist/${json.id}`);
+  };
+
+  const deletePlaylist = async (id: string) => {
     try {
       const res = await fetch("http://localhost:8000/api/playlist/", {
-        method: "POST",
+        method: "DELETE",
         credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title: `Nova playlist ${playlists.length + 1}`,
-          description: "",
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: [id] }),
       });
 
-      if (!res.ok) {
-        console.error("Erro ao criar playlist");
-        return;
-      }
+      if (!res.ok) return;
 
-      const json = await res.json();
-
-      setPlaylists((prev) => [json, ...prev]);
-
-      navigate(`/dashboard/playlist/${json.id}`);
+      setPlaylists((prev) => prev.filter((p) => p.id !== id));
     } catch (err) {
-      console.error("Erro create playlist:", err);
+      console.error(err);
     }
   };
 
-  return (
-    <aside
-      style={{
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        background: theme.bg,
-        color: theme.text,
-        borderRight: `1px solid ${theme.border}`,
-      }}
-    >
+  const editPlaylist = (playlist: Playlist) => {
+    setSelectedPlaylist(playlist);
+    setOpenEdit(true);
+  };
 
-      <div
+  const handleUpdated = (updated: Playlist) => {
+    setPlaylists((prev) =>
+      prev.map((p) => (p.id === updated.id ? updated : p)),
+    );
+  };
+
+  return (
+    <>
+      <aside
         style={{
-          padding: 12,
+          height: "100%",
           display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
+          flexDirection: "column",
+          background: theme.bg,
+          color: theme.text,
+          borderRight: `1px solid ${theme.border}`,
         }}
       >
-        
-
-        <button
-          onClick={createPlaylist}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 6,
-            padding: "6px 10px",
-            borderRadius: 8,
-            background: "transparent",
-            border: `1px solid ${theme.border}`,
-            color: theme.text,
-            fontSize: 12,
-            cursor: "pointer",
-            transition: "0.15s",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = theme.surfaceHover;
-            e.currentTarget.style.borderColor = "rgba(255,255,255,0.2)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "transparent";
-            e.currentTarget.style.borderColor = theme.border;
-          }}
-        >
-          <Plus size={14} />
-          Criar
-        </button>
-      </div>
-
-      <div style={{ padding: 12 }}>
         <div
           style={{
+            padding: 12,
             display: "flex",
+            justifyContent: "space-between",
             alignItems: "center",
-            gap: 8,
-            background: theme.surface,
-            padding: "8px 10px",
-            borderRadius: 8,
-            border: `1px solid ${theme.border}`,
           }}
         >
-          <Search size={16} color={theme.muted} />
-
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Buscar playlist..."
-            style={{
-              background: "transparent",
-              border: "none",
-              outline: "none",
-              color: theme.text,
-              width: "100%",
-              fontSize: 13,
-            }}
-          />
+          <button
+            onClick={createPlaylist}
+            className="flex items-center gap-2 px-3 py-1.5 text-xs rounded-md 
+             border border-[#2A2A2A] text-white 
+             hover:bg-[#1a1a1a] transition-colors"
+          >
+            <Plus size={14} />
+            Criar
+          </button>
         </div>
-      </div>
 
-      <div style={{ flex: 1, overflowY: "auto", padding: 8 }}>
-        {filteredPlaylists.map((item) => (
+        {/* SEARCH */}
+        <div style={{ padding: 12 }}>
           <div
-            key={item.id}
-            onClick={() => navigate(`/dashboard/playlist/${item.id}`)}
             style={{
               display: "flex",
               alignItems: "center",
-              gap: 10,
+              gap: 8,
+              background: theme.surface,
               padding: "8px 10px",
               borderRadius: 8,
-              cursor: "pointer",
-              transition: "0.15s",
+              border: `1px solid ${theme.border}`,
             }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.background = theme.surfaceHover)
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.background = "transparent")
-            }
           >
-            <div
-              style={{
-                width: 40,
-                height: 40,
-                borderRadius: 6,
-                overflow: "hidden",
-                background: theme.surface,
-                flexShrink: 0,
-              }}
-            >
-              {item.games?.[0]?.url_image && (
-                <img
-                  src={item.games[0].url_image}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                  }}
-                />
-              )}
-            </div>
+            <Search size={16} color={theme.muted} />
 
-            <span
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Buscar playlist..."
               style={{
-                fontSize: 13,
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
+                background: "transparent",
+                border: "none",
+                outline: "none",
                 color: theme.text,
+                width: "100%",
+                fontSize: 13,
               }}
-            >
-              {item.title}
-            </span>
+            />
           </div>
-        ))}
-      </div>
-    </aside>
+        </div>
+
+        {/* LIST */}
+        <div style={{ flex: 1, overflowY: "auto", padding: 8 }}>
+          {filteredPlaylists.map((item) => (
+            <ContextMenu key={item.id}>
+              <ContextMenuTrigger asChild>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                    padding: "8px 10px",
+                    borderRadius: 8,
+                    cursor: "pointer",
+                  }}
+                  onClick={() => navigate(`/dashboard/playlist/${item.id}`)}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.background = theme.surfaceHover)
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.background = "transparent")
+                  }
+                >
+                  <div
+                    style={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: 6,
+                      overflow: "hidden",
+                      background: theme.surface,
+                      flexShrink: 0,
+                    }}
+                  >
+                    {item.games?.[0]?.url_image && (
+                      <img
+                        src={item.games[0].url_image}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                      />
+                    )}
+                  </div>
+
+                  <span
+                    style={{
+                      fontSize: 13,
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
+                    {item.title}
+                  </span>
+                </div>
+              </ContextMenuTrigger>
+
+              <ContextMenuContent
+                style={{
+                  background: "#121212",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  color: "#fff",
+                  width: 160,
+                }}
+              >
+                <ContextMenuItem onClick={() => editPlaylist(item)}>
+                  Editar
+                </ContextMenuItem>
+
+                <ContextMenuItem
+                  onClick={() => deletePlaylist(item.id)}
+                  style={{ color: "#ff4d4d" }}
+                >
+                  Excluir
+                </ContextMenuItem>
+              </ContextMenuContent>
+            </ContextMenu>
+          ))}
+        </div>
+      </aside>
+
+      <DialogEditPlaylist
+        open={openEdit}
+        onOpenChange={setOpenEdit}
+        playlist={selectedPlaylist}
+        onUpdated={handleUpdated}
+      />
+    </>
   );
 }

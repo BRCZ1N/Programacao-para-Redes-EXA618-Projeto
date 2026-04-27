@@ -77,41 +77,33 @@ def playlist(request):
 
         playlist_id = request.data.get("playlist_id")
         action = request.data.get("action")
-        game_ids = request.data.get("game_ids", [])
-
-        if not playlist_id:
-            return Response(
-                {"error": "playlist_id é obrigatório"},
-                status=400
-            )
 
         playlist = get_object_or_404(
             Playlist,
             id=playlist_id,
             user=request.user
         )
+        
+        if "title" in request.data or "description" in request.data:
+            playlist.title = request.data.get("title", playlist.title)
+            playlist.description = request.data.get("description", playlist.description)
+            playlist.save()
 
+            return Response(PlaylistSerializer(playlist).data)
+
+        # 🔥 SENÃO → mexe nos jogos
+        game_ids = request.data.get("game_ids", [])
         games = Game.objects.filter(id__in=game_ids)
 
         if action == "add":
             playlist.games.add(*games)
-
         elif action == "remove":
             playlist.games.remove(*games)
-
         elif action == "set":
             playlist.games.set(games)
 
-        else:
-            return Response(
-                {"error": "Ação inválida"},
-                status=400
-            )
-
         playlist.refresh_from_db()
-        serializer = PlaylistSerializer(playlist)
-
-        return Response(serializer.data, status=200)
+        return Response(PlaylistSerializer(playlist).data)
 
 
 @api_view(["GET", "PUT", "DELETE"])

@@ -10,7 +10,6 @@ class PlaylistSerializer(serializers.ModelSerializer):
 
 
 class PlaylistUpdateSerializer(serializers.ModelSerializer):
-    games = GameSerializer(many=True)
     class Meta:
         model = Playlist
-        fields = ['title','description','active']
+        fields = ['title', 'description', 'active']

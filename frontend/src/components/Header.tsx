@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { DialogLogin } from "./DialogLogin";
 import { DialogSignup } from "./DialogSignup";
+import logo from "../assets/logo.png";
 
 const theme = {
   bg: "#000000",
@@ -53,7 +54,6 @@ export function Header() {
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-
             <button
               onClick={() => setLoginOpen(true)}
               style={{
@@ -65,12 +65,8 @@ export function Header() {
                 cursor: "pointer",
                 transition: "0.2s",
               }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.color = theme.text)
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.color = theme.muted)
-              }
+              onMouseEnter={(e) => (e.currentTarget.style.color = theme.text)}
+              onMouseLeave={(e) => (e.currentTarget.style.color = theme.muted)}
             >
               Login
             </button>
@@ -97,9 +93,7 @@ export function Header() {
             >
               Registro
             </button>
-
           </div>
-
         </div>
       </header>
 
