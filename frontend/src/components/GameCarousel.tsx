@@ -15,7 +15,7 @@ type Game = {
   id: number;
   title: string;
   price: number;
-  discount_price?: number;
+  discount_price: string;
   url_image: string;
 };
 
@@ -25,7 +25,7 @@ type SkeletonItem = {
 };
 
 async function fetchGames(type: string): Promise<Game[]> {
-  const res = await fetch(`/api/games/featured?type=${type}`);
+  const res = await fetch(`http://localhost:8000/api/games/featured?type=${type}`);
 
   if (!res.ok) throw new Error("Erro ao buscar jogos");
 

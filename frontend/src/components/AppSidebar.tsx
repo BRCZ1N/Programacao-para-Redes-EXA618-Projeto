@@ -108,11 +108,9 @@ export function AppSidebar() {
 
   const deletePlaylist = async (id: string) => {
     try {
-      const res = await fetch("http://localhost:8000/api/playlist/", {
+      const res = await fetch(`http://localhost:8000/api/playlist/${id}`, {
         method: "DELETE",
         credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ids: [id] }),
       });
 
       if (!res.ok) return;
@@ -156,9 +154,7 @@ export function AppSidebar() {
         >
           <button
             onClick={createPlaylist}
-            className="flex items-center gap-2 px-3 py-1.5 text-xs rounded-md 
-             border border-[#2A2A2A] text-white 
-             hover:bg-[#1a1a1a] transition-colors"
+            className="flex items-center gap-2 px-3 py-1.5 text-xs rounded-md border border-[#2A2A2A] text-white hover:bg-[#1a1a1a] transition-colors cursor-pointer"
           >
             <Plus size={14} />
             Criar

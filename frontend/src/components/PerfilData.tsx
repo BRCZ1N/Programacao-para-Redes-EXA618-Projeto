@@ -9,7 +9,8 @@ const inputClass =
   "focus:ring-0 transition rounded-md";
 
 export function PerfilData() {
-  const { user, setUser } = useAuth(); // 🔥 opção 1
+  const { user, refreshUser, setUser } = useAuth();
+
   const [editing, setEditing] = useState<string | null>(null);
 
   const [form, setForm] = useState({
@@ -19,7 +20,6 @@ export function PerfilData() {
     password: "",
   });
 
-  // 🔥 sincroniza form quando user carregar
   useEffect(() => {
     if (user) {
       setForm({
@@ -45,14 +45,18 @@ export function PerfilData() {
       if (res.ok) {
         const updated = await res.json();
 
-        setUser(updated);
+        setUser((prev) =>
+          prev
+            ? {
+                ...prev,
+                ...updated,
+              }
+            : prev,
+        );
 
-        setForm({
-          username: updated.username,
-          first_name: updated.first_name,
-          last_name: updated.last_name,
-          password: "",
-        });
+        setEditing(null);
+
+        refreshUser();
       }
     } catch (err) {
       console.log("Erro ao atualizar usuário:", err);
@@ -61,12 +65,10 @@ export function PerfilData() {
 
   function handleSave(field: keyof typeof form) {
     handleUpdateUser({ [field]: form[field] });
-    setEditing(null);
   }
 
   return (
     <div className="space-y-6 text-white">
-
       <EditableField
         label="Nome de usuário"
         value={form.username}
@@ -77,9 +79,7 @@ export function PerfilData() {
       >
         <Input
           value={form.username}
-          onChange={(e) =>
-            setForm({ ...form, username: e.target.value })
-          }
+          onChange={(e) => setForm({ ...form, username: e.target.value })}
           className={inputClass}
         />
       </EditableField>
@@ -94,9 +94,7 @@ export function PerfilData() {
       >
         <Input
           value={form.first_name}
-          onChange={(e) =>
-            setForm({ ...form, first_name: e.target.value })
-          }
+          onChange={(e) => setForm({ ...form, first_name: e.target.value })}
           className={inputClass}
         />
       </EditableField>
@@ -111,20 +109,10 @@ export function PerfilData() {
       >
         <Input
           value={form.last_name}
-          onChange={(e) =>
-            setForm({ ...form, last_name: e.target.value })
-          }
+          onChange={(e) => setForm({ ...form, last_name: e.target.value })}
           className={inputClass}
         />
       </EditableField>
-
-      <EditableField
-        label="Email"
-        value={user.email}
-        editing={false}
-        onEdit={() => {}}
-        hideEdit
-      />
 
       <EditableField
         label="Senha"
@@ -138,12 +126,18 @@ export function PerfilData() {
           type="password"
           placeholder="Nova senha"
           value={form.password}
-          onChange={(e) =>
-            setForm({ ...form, password: e.target.value })
-          }
+          onChange={(e) => setForm({ ...form, password: e.target.value })}
           className={inputClass}
         />
       </EditableField>
+
+      <EditableField
+        label="Email"
+        value={user.email}
+        editing={false}
+        onEdit={() => {}}
+        hideEdit
+      />
     </div>
   );
 }

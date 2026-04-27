@@ -5,13 +5,14 @@ type User = {
   username: string;
   first_name: string;
   last_name: string;
+  email?: string;
 };
 
 type AuthContextType = {
   user: User | null;
   loading: boolean;
   refreshUser: () => Promise<void>;
-  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>; 
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -22,29 +23,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const refreshUser = async () => {
     try {
-      const res = await apiFetch(
-        "http://localhost:8000/api/user/me/"
-      );
+      const res = await apiFetch("http://localhost:8000/api/user/me/");
 
       if (res.ok) {
-        setUser(await res.json());
+        const data = await res.json();
+        setUser(data);
       } else {
         setUser(null);
       }
-    } catch {
+    } catch (err) {
+      console.error("Erro ao buscar usuário:", err);
       setUser(null);
-    } finally {
-      setLoading(false);
     }
   };
 
   useEffect(() => {
-    refreshUser();
+    let mounted = true;
+
+    (async () => {
+      await refreshUser();
+      if (mounted) setLoading(false);
+    })();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   return (
     <AuthContext.Provider
-      value={{ user, setUser, refreshUser, loading }}
+      value={{
+        user,
+        loading,
+        refreshUser,
+        setUser,
+      }}
     >
       {children}
     </AuthContext.Provider>

@@ -94,16 +94,18 @@ export function PlaylistPage() {
 
     const alreadyAdded = playlistGameIds.has(game.id);
 
-    const res = await fetch("http://localhost:8000/api/playlist/", {
-      method: "PUT",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        playlist_id: activePlaylist.id,
-        action: alreadyAdded ? "remove" : "add",
-        game_ids: [game.id],
-      }),
-    });
+    const res = await fetch(
+      `http://localhost:8000/api/playlist/${activePlaylist.id}/`,
+      {
+        method: "PUT",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: alreadyAdded ? "remove" : "add",
+          game_ids: [game.id],
+        }),
+      },
+    );
 
     const updated = await res.json();
 
@@ -220,6 +222,14 @@ export function PlaylistPage() {
                   background: "#E50914",
                   color: "#fff",
                   fontSize: 12,
+                  cursor: "pointer", 
+                  transition: "0.2s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "#b20710";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "#E50914";
                 }}
               >
                 Remover
@@ -310,10 +320,13 @@ export function PlaylistPage() {
                   style={{
                     padding: "4px 10px",
                     borderRadius: 6,
-                    border: "none",
-                    background: isAdded ? "#333" : theme.accent,
-                    color: "#000",
+                    border: "1px solid rgba(255,255,255,0.1)",
+                    background: isAdded ? "#2A2A2A" : theme.accent,
+                    color: isAdded ? "#A1A1A1" : "#000",
                     fontSize: 12,
+                    cursor: isAdded ? "not-allowed" : "pointer",
+                    opacity: isAdded ? 0.7 : 1,
+                    transition: "0.2s",
                   }}
                 >
                   {isAdded ? "Adicionado" : "Adicionar"}
@@ -328,7 +341,7 @@ export function PlaylistPage() {
         open={openCreate}
         onOpenChange={setOpenCreate}
         onCreated={handleCreated}
-      />  
+      />
     </div>
   );
 }

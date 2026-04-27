@@ -57,14 +57,13 @@ export function DialogEditPlaylist({
       setLoading(true);
       setError("");
 
-      const res = await fetch("http://localhost:8000/api/playlist/", {
+      const res = await fetch(`http://localhost:8000/api/playlist/${playlist.id}/`, {
         method: "PUT",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          playlist_id: playlist.id,
           title,
           description,
         }),

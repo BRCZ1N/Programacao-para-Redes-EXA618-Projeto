@@ -14,24 +14,25 @@ import {
 import { Button } from "../components/ui/button";
 import { User, Settings, LogOut } from "lucide-react";
 import { DialogConfiguration } from "../components/DialogConfiguration";
+import { useAuth } from "../utils/AuthProvider";
 
 export function UserDropdownMenu() {
   const [openConfig, setOpenConfig] = useState(false);
   const navigate = useNavigate();
+  const { refreshUser } = useAuth();
 
   async function handleLogout() {
     try {
-      await fetch("api/auth/logout/", {
+      await fetch("http://localhost:8000/api/auth/logout/", {
         method: "POST",
         credentials: "include",
       });
-
+      await refreshUser();
       navigate("/");
     } catch (err) {
       console.error("Erro ao fazer logout:", err);
     }
   }
-
   return (
     <>
       <DropdownMenu>
@@ -79,7 +80,10 @@ export function UserDropdownMenu() {
           <DropdownMenuGroup>
             <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
 
-            <DropdownMenuItem className="flex items-center cursor-pointer text-[#b3b3b3] data-[highlighted]:bg-[#1a1a1a] data-[highlighted]:text-white" onClick={() => setOpenConfig(true)}>
+            <DropdownMenuItem
+              className="flex items-center cursor-pointer text-[#b3b3b3] data-[highlighted]:bg-[#1a1a1a] data-[highlighted]:text-white"
+              onClick={() => setOpenConfig(true)}
+            >
               <Settings size={14} style={{ marginRight: 8 }} />
               Configurações
             </DropdownMenuItem>
