@@ -7,7 +7,7 @@ export function GamesGrid() {
   const [data, setData] = useState<Game[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [nextUrl, setNextUrl] = useState<string | null>(
-    "http://programacao-para-redes-exa618-projeto.onrender.com/api/games/"
+    "https://programacao-para-redes-exa618-projeto.onrender.com/api/games/"
   );
 
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
@@ -28,7 +28,7 @@ export function GamesGrid() {
 
       if (response.status === 401) {
         const refresh = await fetch(
-          "http://programacao-para-redes-exa618-projeto.onrender.com/api/auth/refresh/",
+          "https://programacao-para-redes-exa618-projeto.onrender.com/api/auth/refresh/",
           {
             method: "POST",
             credentials: "include",
@@ -65,7 +65,7 @@ export function GamesGrid() {
         return prev.concat(newItems);
       });
 
-      setNextUrl(json.next);
+      setNextUrl(json.next ? json.next.replace("http://", "https://") : null);
     } catch (err) {
       console.log("Erro:", err);
     } finally {

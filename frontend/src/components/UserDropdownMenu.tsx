@@ -23,7 +23,7 @@ export function UserDropdownMenu() {
 
   async function handleLogout() {
     try {
-      await fetch("http://programacao-para-redes-exa618-projeto.onrender.com/api/auth/logout/", {
+      await fetch("https://programacao-para-redes-exa618-projeto.onrender.com/api/auth/logout/", {
         method: "POST",
         credentials: "include",
       });

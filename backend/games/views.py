@@ -25,7 +25,7 @@ def game_list(request):
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
-def game_featured(request):
+def game_list_featured(request):
 
     type_ = request.query_params.get("type", "trending")
 
@@ -48,9 +48,23 @@ def game_featured(request):
     serializer = GameViewSerializer(games, many=True)
     return Response(serializer.data)
 
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def search_games(request):
+
+    title = request.query_params.get("title", "").strip()
+
+    query = Game.objects.all()
+
+    if title:
+        query = query.filter(title__istartswith=title)
+
+    serializer = GameGridSerializer(query, many=True)
+    return Response(serializer.data)
+
 
 @api_view(["POST"])
-@permission_classes([AllowAny])
+@permission_classes([IsSuperUser])
 def crawl_games(request):
     games = start_crawler()
     save_games(games)

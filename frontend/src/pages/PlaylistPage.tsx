@@ -41,7 +41,7 @@ export function PlaylistPage() {
 
     const fetchPlaylist = async () => {
       try {
-        const res = await fetch(`http://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/${id}`, {
+        const res = await fetch(`https://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/${id}`, {
           credentials: "include",
         });
 
@@ -72,7 +72,7 @@ export function PlaylistPage() {
 
       try {
         const res = await fetch(
-          `http://programacao-para-redes-exa618-projeto.onrender.com/api/games/?search=${search}`,
+          `https://programacao-para-redes-exa618-projeto.onrender.com/api/games/search/?title=${encodeURIComponent(search)}`,
           { credentials: "include" },
         );
 
@@ -95,7 +95,7 @@ export function PlaylistPage() {
     const alreadyAdded = playlistGameIds.has(game.id);
 
     const res = await fetch(
-      `http://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/${activePlaylist.id}/`,
+      `https://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/${activePlaylist.id}/`,
       {
         method: "PUT",
         credentials: "include",

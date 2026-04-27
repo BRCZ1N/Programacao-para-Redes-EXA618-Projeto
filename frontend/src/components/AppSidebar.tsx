@@ -2,7 +2,7 @@
 
 import { Search, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import type { Playlist } from "../models/Playlist";
 
 import {
@@ -31,7 +31,7 @@ export function AppSidebar() {
   const [search, setSearch] = useState("");
 
   const [nextUrl, setNextUrl] = useState<string | null>(
-    "http://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/",
+    "https://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/",
   );
 
   const isFetchingRef = useRef(false);
@@ -48,22 +48,25 @@ export function AppSidebar() {
       .replace(/[\u0300-\u036f]/g, "")
       .trim();
 
-  const filteredPlaylists = playlists
-    .map((p) => {
-      const title = normalize(p.title);
-      const query = normalize(search);
+  const filteredPlaylists = useMemo(() => {
+    const query = normalize(search);
 
-      if (!query) return { playlist: p, score: 1 };
+    if (!query) return playlists;
 
-      let score = 0;
-      if (title.startsWith(query)) score += 100;
-      if (title.includes(query)) score += 50;
+    return playlists
+      .map((p) => {
+        const title = normalize(p.title);
 
-      return { playlist: p, score };
-    })
-    .filter((i) => i.score > 0)
-    .sort((a, b) => b.score - a.score)
-    .map((i) => i.playlist);
+        let score = 0;
+        if (title.startsWith(query)) score += 100;
+        if (title.includes(query)) score += 50;
+
+        return { playlist: p, score };
+      })
+      .filter((i) => i.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .map((i) => i.playlist);
+  }, [playlists, search]);
 
   const loadPlaylists = useCallback(async () => {
     if (!nextUrl || isFetchingRef.current) return;
@@ -91,15 +94,18 @@ export function AppSidebar() {
   }, [loadPlaylists]);
 
   const createPlaylist = async () => {
-    const res = await fetch("http://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/", {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        title: `Nova playlist ${playlists.length + 1}`,
-        description: "",
-      }),
-    });
+    const res = await fetch(
+      "https://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/",
+      {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: `Nova playlist ${playlists.length + 1}`,
+          description: "",
+        }),
+      },
+    );
 
     const json = await res.json();
     setPlaylists((prev) => [json, ...prev]);
@@ -108,10 +114,13 @@ export function AppSidebar() {
 
   const deletePlaylist = async (id: string) => {
     try {
-      const res = await fetch(`http://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/${id}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
+      const res = await fetch(
+        `https://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/${id}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        },
+      );
 
       if (!res.ok) return;
 
