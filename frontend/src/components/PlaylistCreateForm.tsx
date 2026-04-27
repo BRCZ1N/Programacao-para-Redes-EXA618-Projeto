@@ -68,7 +68,6 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
   return (
     <div className="flex flex-col gap-5 text-white">
 
-      {/* HEADER */}
       <div>
         <h2 className="text-base font-semibold">Criar playlist</h2>
         <p className="text-xs text-neutral-400">
@@ -159,7 +158,6 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
         />
       </div>
 
-      {/* BUTTON */}
       <Button
         onClick={handleSubmit}
         className="

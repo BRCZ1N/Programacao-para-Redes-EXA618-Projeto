@@ -36,7 +36,6 @@ export function AppSidebar() {
 
   const isFetchingRef = useRef(false);
 
-  // 🔥 CONTROLE DO DIALOG
   const [openEdit, setOpenEdit] = useState(false);
   const [selectedPlaylist, setSelectedPlaylist] = useState<Playlist | null>(
     null,
@@ -166,7 +165,6 @@ export function AppSidebar() {
           </button>
         </div>
 
-        {/* SEARCH */}
         <div style={{ padding: 12 }}>
           <div
             style={{
@@ -197,7 +195,6 @@ export function AppSidebar() {
           </div>
         </div>
 
-        {/* LIST */}
         <div style={{ flex: 1, overflowY: "auto", padding: 8 }}>
           {filteredPlaylists.map((item) => (
             <ContextMenu key={item.id}>

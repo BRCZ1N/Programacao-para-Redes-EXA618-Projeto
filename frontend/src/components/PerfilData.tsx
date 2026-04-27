@@ -1,27 +1,15 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "./ui/input";
 import { EditableField } from "./EditableField";
+import { useAuth } from "../utils/AuthProvider";
 
-type User = {
-  username: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-};
-
-const theme = {
-  bg: "#0A0A0A",
-  surface: "#111111",
-  border: "#2A2A2A",
-  text: "#FFFFFF",
-  muted: "rgba(255,255,255,0.55)",
-  inputBg: "#121212",
-  inputHover: "#161616",
-  focus: "#3A3A3A",
-};
+const inputClass =
+  "bg-[#121212] border border-[#2A2A2A] text-white placeholder:text-white/30 " +
+  "hover:bg-[#161616] focus:bg-[#161616] focus:border-[#3A3A3A] " +
+  "focus:ring-0 transition rounded-md";
 
 export function PerfilData() {
-  const [user, setUser] = useState<User | null>(null);
+  const { user, setUser } = useAuth(); // 🔥 opção 1
   const [editing, setEditing] = useState<string | null>(null);
 
   const [form, setForm] = useState({
@@ -31,72 +19,43 @@ export function PerfilData() {
     password: "",
   });
 
-  async function loadUser() {
-    try {
-      let response = await fetch("http://localhost:8000/api/user/me/", {
-        method: "GET",
-        credentials: "include",
-      });
-
-      if (response.status === 401) {
-        const refreshResponse = await fetch(
-          "http://localhost:8000/api/auth/refresh/",
-          {
-            method: "POST",
-            credentials: "include",
-          }
-        );
-
-        if (refreshResponse.ok) {
-          response = await fetch("http://localhost:8000/api/user/me/", {
-            method: "GET",
-            credentials: "include",
-          });
-        }
-      }
-
-      if (response.ok) {
-        const data = await response.json();
-
-        setUser(data);
-        setForm({
-          username: data.username,
-          first_name: data.first_name,
-          last_name: data.last_name,
-          password: "",
-        });
-      }
-    } catch (error) {
-      console.log("Erro:", error);
-    }
-  }
-
+  // 🔥 sincroniza form quando user carregar
   useEffect(() => {
-    loadUser();
-  }, []);
+    if (user) {
+      setForm({
+        username: user.username,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        password: "",
+      });
+    }
+  }, [user]);
+
+  if (!user) return null;
 
   async function handleUpdateUser(data: Partial<typeof form>) {
     try {
-      let response = await fetch("http://localhost:8000/api/user/update/", {
+      const res = await fetch("http://localhost:8000/api/user/update/", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify(data),
       });
 
-      if (response.ok) {
-        const updatedUser = await response.json();
+      if (res.ok) {
+        const updated = await res.json();
 
-        setUser(updatedUser);
+        setUser(updated);
+
         setForm({
-          username: updatedUser.username,
-          first_name: updatedUser.first_name,
-          last_name: updatedUser.last_name,
+          username: updated.username,
+          first_name: updated.first_name,
+          last_name: updated.last_name,
           password: "",
         });
       }
-    } catch (error) {
-      console.log("Erro ao atualizar usuário:", error);
+    } catch (err) {
+      console.log("Erro ao atualizar usuário:", err);
     }
   }
 
@@ -104,13 +63,6 @@ export function PerfilData() {
     handleUpdateUser({ [field]: form[field] });
     setEditing(null);
   }
-
-  if (!user) return null;
-
-  const inputClass =
-    "bg-[#121212] border border-[#2A2A2A] text-white placeholder:text-white/30 " +
-    "hover:bg-[#161616] focus:bg-[#161616] focus:border-[#3A3A3A] " +
-    "focus:ring-0 transition rounded-md";
 
   return (
     <div className="space-y-6 text-white">

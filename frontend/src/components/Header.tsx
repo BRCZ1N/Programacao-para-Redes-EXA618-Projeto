@@ -41,7 +41,6 @@ export function Header() {
             justifyContent: "space-between",
           }}
         >
-          {/* LOGO + TITLE */}
           <div
             style={{
               display: "flex",

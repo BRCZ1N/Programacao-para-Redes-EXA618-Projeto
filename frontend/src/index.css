@@ -5,7 +5,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* ================= LIGHT ================= */
 :root {
   --text: #6b6375;
   --text-h: #08060d;
@@ -14,7 +13,6 @@
   --border: oklch(0.922 0 0);
   --code-bg: #f4f3ec;
 
-  /* 🔥 FIX: remove roxo do hover/accent */
   --accent: #1a1a1a;
   --accent-foreground: #ffffff;
   --accent-bg: rgba(0, 0, 0, 0.04);
@@ -90,7 +88,6 @@
   }
 }
 
-/* ================= ROOT ================= */
 #root {
   width: 100%;
   min-height: 100vh;
@@ -98,12 +95,10 @@
   flex-direction: column;
 }
 
-/* ================= BODY ================= */
 body {
   margin: 0;
 }
 
-/* ================= TYPO ================= */
 h1,
 h2 {
   font-family: var(--heading);
@@ -129,7 +124,6 @@ p {
   margin: 0;
 }
 
-/* ================= CODE ================= */
 code,
 .counter {
   font-family: var(--mono);
@@ -145,7 +139,7 @@ code {
   background: var(--code-bg);
 }
 
-/* ================= TAILWIND BRIDGE ================= */
+
 @theme inline {
   --font-heading: var(--font-sans);
   --font-sans: 'Geist Variable', sans-serif;
@@ -160,7 +154,6 @@ code {
   --radius: 0.625rem;
 }
 
-/* ================= DARK CLASS ================= */
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -169,7 +162,6 @@ code {
   --accent-foreground: #ffffff;
 }
 
-/* ================= BASE ================= */
 @layer base {
   body {
     @apply bg-background text-foreground;

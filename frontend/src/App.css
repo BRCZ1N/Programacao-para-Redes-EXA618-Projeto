@@ -9,7 +9,6 @@
   --text: #ffffff;
   --muted: #b3b3b3;
 
-  /* garante que NÃO existe accent color */
   --accent: #ffffff;
   --accent-bg: transparent;
   --accent-border: rgba(255, 255, 255, 0.18);
@@ -17,7 +16,6 @@
   --ring: rgba(255, 255, 255, 0.25);
 }
 
-/* ================= RESET FOCUS (REMOVE ROSA) ================= */
 button:focus,
 button:focus-visible,
 [role="button"]:focus,
@@ -29,12 +27,10 @@ a:focus-visible {
   box-shadow: none !important;
 }
 
-/* remove qualquer ring/purple de libs tipo shadcn/radix */
 * {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* ================= COUNTER ================= */
 .counter {
   font-size: 16px;
   padding: 5px 10px;
@@ -51,7 +47,6 @@ a:focus-visible {
   }
 }
 
-/* ================= HERO ================= */
 .hero {
   position: relative;
 
@@ -91,7 +86,6 @@ a:focus-visible {
   }
 }
 
-/* ================= CENTER ================= */
 #center {
   display: flex;
   flex-direction: column;
@@ -106,7 +100,6 @@ a:focus-visible {
   }
 }
 
-/* ================= NEXT STEPS ================= */
 #next-steps {
   display: flex;
   border-top: 1px solid var(--border);
@@ -133,7 +126,6 @@ a:focus-visible {
   }
 }
 
-/* ================= LINKS ================= */
 #next-steps ul {
   list-style: none;
   padding: 0;
@@ -161,7 +153,6 @@ a:focus-visible {
   }
 }
 
-/* ================= SPACER ================= */
 #spacer {
   height: 88px;
   border-top: 1px solid var(--border);
@@ -171,7 +162,6 @@ a:focus-visible {
   }
 }
 
-/* ================= SCROLL ================= */
 .scroll-hidden {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -181,7 +171,6 @@ a:focus-visible {
   display: none;
 }
 
-/* ================= DOCS ================= */
 #docs {
   border-right: 1px solid var(--border);
 
@@ -191,7 +180,6 @@ a:focus-visible {
   }
 }
 
-/* ================= TICKS ================= */
 .ticks {
   position: relative;
   width: 100%;

@@ -7,7 +7,6 @@ import {
   DialogDescription,
   DialogTitle,
 } from "./ui/dialog";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 import type { UserPerfil } from "../models/User";
 import { UserRound } from "lucide-react";
@@ -120,9 +119,6 @@ export function DialogConfiguration({
               {tab === "account" && (
                 <div className="space-y-3">
                   <h2 className="text-sm font-semibold">Conta</h2>
-                  <p className="text-xs text-[#B3B3B3]">
-                    Gerencie sua conta principal
-                  </p>
                   <PerfilData />
                 </div>
               )}

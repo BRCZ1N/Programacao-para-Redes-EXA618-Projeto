@@ -21,7 +21,6 @@ export function EditableField({
   return (
     <div className="flex items-start justify-between group pb-4 border-b border-[#2A2A2A]">
 
-      {/* LABEL + VALUE */}
       <div className="flex-1 space-y-1">
         <p className="text-[11px] tracking-widest uppercase text-white/40">
           {label}
@@ -66,7 +65,6 @@ export function EditableField({
         )}
       </div>
 
-      {/* EDIT BUTTON */}
       {!hideEdit && !editing && (
         <button
           onClick={onEdit}
