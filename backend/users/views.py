@@ -10,9 +10,13 @@ from decouple import config
 @api_view(['POST'])
 def logout(request):
     res = Response({"status": "Usuário deslogado com sucesso"})
-    res.delete_cookie("access", path="/")
-    res.delete_cookie("refresh", path="/")
+
+    domain = "programacao-para-redes-exa618-projeto.onrender.com"
+
+    res.delete_cookie("access", path="/", domain=domain)
+    res.delete_cookie("refresh", path="/", domain=domain)
     res.delete_cookie("csrftoken", path="/")
+
     return res
 
 @api_view(['PATCH'])

@@ -19,7 +19,7 @@ import { useAuth } from "../utils/AuthProvider";
 export function UserDropdownMenu() {
   const [openConfig, setOpenConfig] = useState(false);
   const navigate = useNavigate();
-  const { refreshUser } = useAuth();
+  const { setUser} = useAuth();
 
   async function handleLogout() {
     try {
@@ -27,8 +27,8 @@ export function UserDropdownMenu() {
         method: "POST",
         credentials: "include",
       });
-      await refreshUser();
       navigate("/");
+      setUser(null)
     } catch (err) {
       console.error("Erro ao fazer logout:", err);
     }
