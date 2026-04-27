@@ -14,8 +14,8 @@ class CookieTokenObtainPairView(TokenObtainPairView):
             "access",   
             access,
             httponly=True,
-            secure=False, 
-            samesite="Lax",
+            secure=True, 
+            samesite="None",
             path="/",
             max_age=60 * 30,
         )
@@ -24,8 +24,8 @@ class CookieTokenObtainPairView(TokenObtainPairView):
             "refresh",
             refresh,
             httponly=True,
-            secure=False,
-            samesite="Lax",
+            secure=True,
+            samesite="None",
             path="/",
             max_age=60 * 60 * 24 * 7,
         )

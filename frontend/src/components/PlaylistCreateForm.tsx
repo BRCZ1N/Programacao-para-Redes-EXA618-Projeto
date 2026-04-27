@@ -40,7 +40,7 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
     };
 
     try {
-      const res = await fetch("http://localhost:8000/api/playlist/", {
+      const res = await fetch("https://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

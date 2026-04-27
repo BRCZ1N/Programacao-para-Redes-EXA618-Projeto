@@ -26,14 +26,14 @@ export function DialogConfiguration({
 
   async function loadUser() {
     try {
-      let response = await fetch("http://localhost:8000/api/user/me/", {
+      let response = await fetch("https://programacao-para-redes-exa618-projeto.onrender.com/api/user/me/", {
         method: "GET",
         credentials: "include",
       });
 
       if (response.status === 401) {
         const refreshResponse = await fetch(
-          "http://localhost:8000/api/auth/refresh/",
+          "https://programacao-para-redes-exa618-projeto.onrender.com/api/auth/refresh/",
           {
             method: "POST",
             credentials: "include",
@@ -41,7 +41,7 @@ export function DialogConfiguration({
         );
 
         if (refreshResponse.ok) {
-          response = await fetch("http://localhost:8000/api/user/me/", {
+          response = await fetch("https://programacao-para-redes-exa618-projeto.onrender.com/api/user/me/", {
             method: "GET",
             credentials: "include",
           });
