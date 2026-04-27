@@ -1,6 +1,7 @@
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework.response import Response
 
+
 class CookieTokenObtainPairView(TokenObtainPairView):
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
@@ -11,10 +12,10 @@ class CookieTokenObtainPairView(TokenObtainPairView):
         response = Response({"ok": True})
 
         response.set_cookie(
-            "access",   
+            "access",
             access,
             httponly=True,
-            secure=True, 
+            secure=True,
             samesite="None",
             path="/",
             max_age=60 * 30,
@@ -31,7 +32,8 @@ class CookieTokenObtainPairView(TokenObtainPairView):
         )
 
         return response
-    
+
+
 class CookieTokenRefreshView(TokenRefreshView):
     def post(self, request, *args, **kwargs):
         refresh = request.COOKIES.get("refresh")
@@ -48,7 +50,8 @@ class CookieTokenRefreshView(TokenRefreshView):
             "access",
             access,
             httponly=True,
-            samesite="Lax",
+            samesite="None",
+            secure=True,
             path="/",
             max_age=60 * 30,
         )
