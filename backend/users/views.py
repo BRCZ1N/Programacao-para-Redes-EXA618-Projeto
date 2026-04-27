@@ -10,9 +10,21 @@ from decouple import config
 @api_view(['POST'])
 def logout(request):
     res = Response({"status": "Usuário deslogado com sucesso"})
-    res.delete_cookie("access", path="/")
-    res.delete_cookie("refresh", path="/")
-    res.delete_cookie("csrftoken", path="/")
+
+    res.delete_cookie(
+        "access",
+        path="/",
+        secure=True,
+        samesite="None",
+    )
+
+    res.delete_cookie(
+        "refresh",
+        path="/",
+        secure=True,
+        samesite="None",
+    )
+
     return res
 
 @api_view(['PATCH'])
