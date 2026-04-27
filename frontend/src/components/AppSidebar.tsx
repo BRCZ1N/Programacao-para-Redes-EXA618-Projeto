@@ -31,7 +31,7 @@ export function AppSidebar() {
   const [search, setSearch] = useState("");
 
   const [nextUrl, setNextUrl] = useState<string | null>(
-    "https://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/",
+    "http://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/",
   );
 
   const isFetchingRef = useRef(false);
@@ -91,7 +91,7 @@ export function AppSidebar() {
   }, [loadPlaylists]);
 
   const createPlaylist = async () => {
-    const res = await fetch("https://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/", {
+    const res = await fetch("http://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/", {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
@@ -108,7 +108,7 @@ export function AppSidebar() {
 
   const deletePlaylist = async (id: string) => {
     try {
-      const res = await fetch(`https://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/${id}`, {
+      const res = await fetch(`http://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/${id}`, {
         method: "DELETE",
         credentials: "include",
       });

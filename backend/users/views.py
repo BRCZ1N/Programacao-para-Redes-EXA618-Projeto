@@ -1,25 +1,31 @@
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.decorators import api_view, permission_classes
-from .serializers import RegisterSerializer, PerfilSerializer, UserUpdateSerializer, CustomUser
+from .serializers import (
+    RegisterSerializer,
+    PerfilSerializer,
+    UserUpdateSerializer,
+    CustomUser,
+)
 from .models import CustomUser
 from django.core.mail import send_mail
 from .models import PasswordResetToken
 from decouple import config
 
-@api_view(['POST'])
+
+@api_view(["POST"])
 def logout(request):
     res = Response({"status": "Usuário deslogado com sucesso"})
 
     res.set_cookie(
-    "access",
-    "",
-    expires="Thu, 01 Jan 1970 00:00:00 GMT",
-    max_age=0,
-    path="/",
-    secure=True,
-    samesite="None",
-)
+        "access",
+        "",
+        expires="Thu, 01 Jan 1970 00:00:00 GMT",
+        max_age=0,
+        path="/",
+        secure=True,
+        samesite="None",
+    )
 
     res.set_cookie(
         "refresh",
@@ -33,7 +39,8 @@ def logout(request):
 
     return res
 
-@api_view(['PATCH'])
+
+@api_view(["PATCH"])
 @permission_classes([IsAuthenticated])
 def update_user(request):
     user = request.user
@@ -51,20 +58,23 @@ def update_user(request):
 
     if last_name is not None:
         user.last_name = last_name
-    
+
     if password:
         user.set_password(password)
 
     user.save()
 
-    return Response({
-        "username": user.username,
-        "first_name": user.first_name,
-        "last_name": user.last_name,
-        "email": user.email,
-    })
+    return Response(
+        {
+            "username": user.username,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "email": user.email,
+        }
+    )
 
-@api_view(['POST'])
+
+@api_view(["POST"])
 @permission_classes([AllowAny])
 def register_user(request):
 
@@ -72,71 +82,73 @@ def register_user(request):
 
     if not serializer.is_valid():
         return Response({"Erro": serializer.errors}, status=400)
-        
+
     serializer.save()
     return Response({"status": "Cadastro realizado com sucesso"}, status=201)
 
-@api_view(['DELETE'])
+
+@api_view(["DELETE"])
 @permission_classes([IsAdminUser])
 def delete_user(request):
 
     email = request.data.get("email")
 
     if not email:
-        
-        return Response(
-            {"error": "Email é obrigatório"},status=400)
+
+        return Response({"error": "Email é obrigatório"}, status=400)
 
     user = CustomUser.objects.get(email=email)
 
     if not user:
 
         return Response({"status": "Usuário não encontrado"}, status=404)
-    
+
     user.delete()
     return Response(status=204)
-        
 
-@api_view(['GET','PUT'])
+
+@api_view(["GET", "PUT"])
 @permission_classes([IsAuthenticated])
 def me(request):
 
-    if request.method == 'GET':
+    if request.method == "GET":
 
         serializer = PerfilSerializer(request.user)
-        
+
         return Response(serializer.data, status=200)
-    
-    if request.method == 'PUT':
+
+    if request.method == "PUT":
 
         serializer = UserUpdateSerializer(request.user, data=request.data, partial=True)
 
         if serializer.is_valid():
             serializer.save()
             return Response({"status": "Dados atualizados com sucesso"}, status=200)
-            
+
         return Response({"Erro": serializer.errors}, status=400)
 
-@api_view(['POST'])
+
+@api_view(["POST"])
 @permission_classes([AllowAny])
 def password_reset(request):
 
     email = request.data.get("email")
 
     if not email:
-        
-        return Response(
-            {"error": "Email é obrigatório"},status=400)
+
+        return Response({"error": "Email é obrigatório"}, status=400)
 
     user = CustomUser.objects.get(email=email)
 
     if not user:
 
         return Response({"status": "Usuário não encontrado"}, status=404)
-    
+
     token_obj = PasswordResetToken.objects.create(user=user)
 
-    reset_link = f"https://FALTA FAZER O FRONT DISSO/reset-password?token={token_obj.token}"
+    reset_link = (
+        f"https://FALTA FAZER O FRONT DISSO/reset-password?token={token_obj.token}"
+    )
 
     send_mail(
         subject="Password reset",
@@ -146,4 +158,3 @@ def password_reset(request):
     )
 
     return Response({"status": "email_sent"})
-    

@@ -25,7 +25,7 @@ type SkeletonItem = {
 };
 
 async function fetchGames(type: string): Promise<Game[]> {
-  const res = await fetch(`https://programacao-para-redes-exa618-projeto.onrender.com/api/games/featured?type=${type}`);
+  const res = await fetch(`http://programacao-para-redes-exa618-projeto.onrender.com/api/games/featured?type=${type}`);
 
   if (!res.ok) throw new Error("Erro ao buscar jogos");
 
