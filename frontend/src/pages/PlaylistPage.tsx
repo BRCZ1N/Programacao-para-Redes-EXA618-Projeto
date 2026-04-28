@@ -77,7 +77,7 @@ export function PlaylistPage() {
         );
 
         const json = await res.json();
-        setGames(json.results || []);
+        setGames(Array.isArray(json) ? json : json.results || []);
       } catch (err) {
         console.error("Erro games:", err);
       } finally {
