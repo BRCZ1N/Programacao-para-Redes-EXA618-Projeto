@@ -9,7 +9,7 @@ from .models import Game
 from .serializers import GameGridSerializer, GameViewSerializer
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def game_list(request):
     query = Game.objects.all().order_by("id")
 
