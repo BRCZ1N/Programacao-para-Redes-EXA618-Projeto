@@ -115,7 +115,7 @@ export function AppSidebar() {
   const deletePlaylist = async (id: string) => {
     try {
       const res = await fetch(
-        `https://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/${id}`,
+        `https://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/${id}/`,
         {
           method: "DELETE",
           credentials: "include",
