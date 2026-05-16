@@ -118,7 +118,7 @@ export function DialogConfiguration({
             <div className="h-full overflow-y-auto p-5 space-y-4 text-white">
               {tab === "account" && (
                 <div className="space-y-3">
-                  <h2 className="text-sm font-semibold">Conta</h2>
+                  <h2 className="text-sm font-semibold text-white">Conta</h2>
                   <PerfilData />
                 </div>
               )}

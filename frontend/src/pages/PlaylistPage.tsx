@@ -173,7 +173,7 @@ export function PlaylistPage() {
             {activePlaylist?.title ?? "Carregando playlist..."}
           </h1>
 
-          <span style={{ color: theme.muted, fontSize: 13 }}>
+          <span style={{ color: "#fff", fontSize: 13 }}>
             {playlistGames.length} jogos
           </span>
         </div>
