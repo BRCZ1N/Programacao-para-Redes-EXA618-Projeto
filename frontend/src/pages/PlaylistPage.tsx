@@ -41,7 +41,7 @@ export function PlaylistPage() {
 
     const fetchPlaylist = async () => {
       try {
-        const res = await fetch(`https://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/${id}`, {
+        const res = await fetch(`https://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/${id}/`, {
           credentials: "include",
         });
 
