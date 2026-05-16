@@ -11,6 +11,7 @@ import {
 import { Button } from "./ui/button";
 import { Field, FieldLabel } from "../components/ui/field";
 import { Input } from "../components/ui/input";
+import type { Playlist } from "../models/Playlist";
 
 const theme = {
   bg: "#000000",
@@ -18,12 +19,6 @@ const theme = {
   border: "#2A2A2A",
   text: "#FFFFFF",
   muted: "#A1A1A1",
-};
-
-type Playlist = {
-  id: string;
-  title: string;
-  description?: string;
 };
 
 export function DialogEditPlaylist({

@@ -1,13 +1,5 @@
 import { Button } from "./ui/button";
 
-const theme = {
-  text: "#FFFFFF",
-  muted: "rgba(255,255,255,0.55)",
-  border: "#2A2A2A",
-  hover: "#1A1A1A",
-  accent: "#FFFFFF",
-};
-
 export function EditableField({
   label,
   value,

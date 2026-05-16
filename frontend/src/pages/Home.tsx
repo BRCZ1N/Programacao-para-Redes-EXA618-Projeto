@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { GameCarousel } from "../components/GameCarousel";
 import { Header } from "../components/Header";
-import { Flame, Sparkles, TrendingUp, Trophy } from "lucide-react";
+import { Sparkles, TrendingUp, Trophy } from "lucide-react";
 import { useAuth } from "../utils/AuthProvider";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { DialogLogin } from "../components/DialogLogin";
 
 const theme = {
@@ -12,6 +12,13 @@ const theme = {
   muted: "#B3B3B3",
   surface: "#121212",
   accent: "#1DB954",
+};
+
+type SectionProps = {
+  icon: ReactNode;
+  title: string;
+  subtitle: string;
+  children: ReactNode;
 };
 
 export function Home() {
@@ -165,7 +172,12 @@ export function Home() {
   );
 }
 
-function Section({ icon, title, subtitle, children }) {
+function Section({
+  icon,
+  title,
+  subtitle,
+  children,
+}: SectionProps) {
   return (
     <section style={{ padding: "40px 24px" }}>
       <div

@@ -22,7 +22,7 @@ export function DialogConfiguration({
   onOpenChange: (open: boolean) => void;
 }) {
   const [tab, setTab] = useState<Tab>("account");
-  const [user, setUser] = useState<UserPerfil>();
+  const [,setUser] = useState<UserPerfil>();
 
   async function loadUser() {
     try {
