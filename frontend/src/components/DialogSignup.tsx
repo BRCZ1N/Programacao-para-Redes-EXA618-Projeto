@@ -48,7 +48,7 @@ export function DialogSignup({ open, onOpenChange, onGoToLogin }: Props) {
       setLoading(true);
       setError("");
 
-      const res = await fetch("http://127.0.0.1:8000/api/user/register/", {
+      const res = await fetch("https://programacao-para-redes-exa618-projeto.onrender.com/api/user/register/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
