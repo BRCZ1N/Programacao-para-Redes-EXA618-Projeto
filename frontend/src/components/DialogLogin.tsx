@@ -59,7 +59,7 @@ export function DialogLogin({
         await refreshUser();
         onOpenChange(false);
         
-        navigate("/dashboard/games");
+        navigate("/dashboard");
       } else if (response.status === 401) {
         setError("Email ou senha inválidos");
       } else {

@@ -88,7 +88,7 @@ export function Home() {
                 return;
               }
 
-              navigate("/dashboard/games");
+              navigate("/dashboard");
             }}
             style={{
               width: 220,
