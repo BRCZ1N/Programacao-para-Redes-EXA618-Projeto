@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
-import { AppBarMenu } from "../components/AppBarMenu";
 import { AppSidebar } from "../components/AppSidebar";
+import { Header } from "../components/Header";
 
 const theme = {
   bg: "#000000",
@@ -21,16 +21,7 @@ export function Dashboard() {
         overflow: "hidden",
       }}
     >
-      <header
-        style={{
-          height: 64,
-          flexShrink: 0,
-          background: theme.surface,
-          borderBottom: `1px solid ${theme.border}`,
-        }}
-      >
-        <AppBarMenu />
-      </header>
+      <Header />
 
       <div
         style={{

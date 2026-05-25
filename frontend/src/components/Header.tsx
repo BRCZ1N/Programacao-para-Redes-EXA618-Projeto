@@ -43,7 +43,7 @@ export function Header() {
     <>
       <header
         style={{
-          height: 64,
+          height: "5%",
           width: "100%",
           display: "flex",
           alignItems: "center",
@@ -53,11 +53,9 @@ export function Header() {
           background: theme.bg,
           color: theme.text,
           position: "sticky",
-          top: 0,
           zIndex: 50,
         }}
       >
-   
         <div
           onClick={() => navigate("/")}
           style={{
@@ -89,7 +87,6 @@ export function Header() {
           </div>
         </div>
 
-        
         {isLogged && (
           <nav className="hidden md:flex" style={{ gap: 16 }}>
             {pages.map((page) => (
@@ -111,13 +108,11 @@ export function Header() {
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.color = theme.text;
-                  e.currentTarget.style.background =
-                    "rgba(255,255,255,0.08)";
+                  e.currentTarget.style.background = "rgba(255,255,255,0.08)";
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.color = theme.muted;
-                  e.currentTarget.style.background =
-                    "rgba(255,255,255,0.04)";
+                  e.currentTarget.style.background = "rgba(255,255,255,0.04)";
                 }}
               >
                 <span style={{ display: "flex" }}>{page.icon}</span>
@@ -126,7 +121,6 @@ export function Header() {
           </nav>
         )}
 
-      
         <div
           style={{
             display: "flex",
@@ -185,7 +179,6 @@ export function Header() {
         </div>
       </header>
 
-   
       <DialogLogin
         open={loginOpen}
         onOpenChange={setLoginOpen}

@@ -24,7 +24,6 @@ type SectionProps = {
 export function Home() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
-
   const [loginOpen, setLoginOpen] = useState(false);
 
   const isLogged = !!user;
@@ -33,20 +32,23 @@ export function Home() {
     <main
       style={{
         minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
         background: theme.bg,
         color: theme.text,
       }}
     >
       <Header />
 
+      {/* HERO */}
       <section
         style={{
-          padding: "80px 24px",
+          padding: "clamp(40px, 6vw, 80px) 16px",
         }}
       >
         <div
           style={{
-            maxWidth: 900,
+            maxWidth: "min(900px, 100%)",
             margin: "0 auto",
             display: "flex",
             flexDirection: "column",
@@ -55,11 +57,10 @@ export function Home() {
         >
           <h1
             style={{
-              fontSize: 52,
+              fontSize: "clamp(28px, 5vw, 52px)",
               fontWeight: 900,
               lineHeight: 1.1,
               letterSpacing: "-1px",
-              color: "#fff",
             }}
           >
             Monte suas playlists com os melhores jogos
@@ -67,7 +68,7 @@ export function Home() {
 
           <p
             style={{
-              fontSize: 16,
+              fontSize: "clamp(14px, 2vw, 16px)",
               color: theme.muted,
               maxWidth: 600,
               lineHeight: 1.6,
@@ -91,8 +92,9 @@ export function Home() {
               navigate("/dashboard");
             }}
             style={{
-              width: 220,
-              padding: "12px 16px",
+              width: "fit-content",
+              minWidth: 180,
+              padding: "12px 20px",
               borderRadius: 999,
               background: isLogged ? theme.accent : theme.text,
               color: "#000",
@@ -112,7 +114,6 @@ export function Home() {
             {isLogged ? "Ir para dashboard" : "Começar agora"}
           </button>
 
-          
           {isLogged && (
             <div
               style={{
@@ -128,18 +129,18 @@ export function Home() {
               Bem-vindo de volta,{" "}
               <strong style={{ color: "#fff" }}>
                 {user?.first_name || user?.username}
-              </strong>{" "}
-              
+              </strong>
             </div>
           )}
         </div>
       </section>
 
-      <div style={{ color: "#fff" }}>
+      {/* SECTIONS */}
+      <div>
         <Section
           icon={<TrendingUp size={18} color="#ff7a00" />}
           title="Jogos em alta"
-          subtitle="Os jogos encontrados mais populares"
+          subtitle="Os jogos mais populares"
         >
           <GameCarousel title="" type="trending" />
         </Section>
@@ -155,7 +156,7 @@ export function Home() {
         <Section
           icon={<Trophy size={18} color="#FFD700" />}
           title="Mais bem avaliados"
-          subtitle="Os melhores jogos encontrados "
+          subtitle="Os melhores jogos"
         >
           <GameCarousel title="" type="top" />
         </Section>
@@ -164,56 +165,51 @@ export function Home() {
       <DialogLogin
         open={loginOpen}
         onOpenChange={setLoginOpen}
-        onGoToSignup={() => {
-          setLoginOpen(false);
-        }}
+        onGoToSignup={() => setLoginOpen(false)}
       />
     </main>
   );
 }
 
-function Section({
-  icon,
-  title,
-  subtitle,
-  children,
-}: SectionProps) {
+function Section({ icon, title, subtitle, children }: SectionProps) {
   return (
-    <section style={{ padding: "40px 24px" }}>
+    <section
+      style={{
+        padding: "clamp(24px, 4vw, 40px) 16px",
+      }}
+    >
       <div
         style={{
-          maxWidth: 1100,
+          maxWidth: "min(1100px, 100%)",
           margin: "0 auto",
           display: "flex",
           flexDirection: "column",
           gap: 16,
         }}
       >
+        {/* HEADER CENTRALIZADO */}
         <div
           style={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            gap: 6,
             textAlign: "center",
+            gap: 6,
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             {icon}
             <h2
               style={{
-                fontSize: 18,
+                fontSize: "clamp(16px, 2.2vw, 18px)",
                 fontWeight: 700,
-                color: "#fff",
               }}
             >
               {title}
             </h2>
           </div>
 
-          <p style={{ fontSize: 13, color: "#B3B3B3" }}>
-            {subtitle}
-          </p>
+          <p style={{ fontSize: 13, color: "#B3B3B3" }}>{subtitle}</p>
         </div>
 
         {children}

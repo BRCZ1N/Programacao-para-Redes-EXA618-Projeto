@@ -22,7 +22,7 @@ export function DialogConfiguration({
   onOpenChange: (open: boolean) => void;
 }) {
   const [tab, setTab] = useState<Tab>("account");
-  const [,setUser] = useState<UserPerfil>();
+  const [, setUser] = useState<UserPerfil>();
 
   async function loadUser() {
     try {
@@ -69,13 +69,16 @@ export function DialogConfiguration({
         background: tab === key ? "rgba(255,255,255,0.15)" : "transparent",
         color: tab === key ? "#fff" : "rgba(255,255,255,0.6)",
         border: tab === key ? "1px solid #444" : "1px solid transparent",
-        padding: "8px 12px",
+        padding: "10px 12px",
         borderRadius: 8,
         display: "flex",
         alignItems: "center",
         gap: 8,
         fontSize: 13,
         transition: "all 150ms ease",
+        width: "100%",
+        justifyContent: "flex-start",
+        whiteSpace: "nowrap",
       }}
       onMouseEnter={(e) => {
         if (tab !== key) {
@@ -99,26 +102,49 @@ export function DialogConfiguration({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-3xl p-0 overflow-hidden max-h-[90vh] bg-[#0A0A0A] border border-[#2A2A2A] [&>button]:text-white [&>button]:hover:text-white [&>button]:hover:bg-[#1A1A1A] [&>button]:border-[#2A2A2A] [&>button]:rounded-md [&>button]:transition">
-        <DialogTitle className="absolute w-0 h-0 overflow-hidden p-0 m-0">
-          Configurações
-        </DialogTitle>
+      <DialogContent
+            className="
+                      w-[95vw] sm:max-w-3xl 
+                      p-0 overflow-hidden 
+                      max-h-[90vh] sm:max-h-[85vh]
+                      bg-[#0A0A0A] border border-[#2A2A2A]
 
-        <DialogDescription className="absolute w-0 h-0 overflow-hidden p-0 m-0">
+                      pt-10 sm:pt-0
+
+                      [&>button]:text-white 
+                      [&>button]:hover:bg-[#1A1A1A]
+                      [&>button]:border-[#2A2A2A]
+                      [&>button]:rounded-md
+                      "
+      >
+        <DialogTitle className="sr-only">Configurações</DialogTitle>
+        <DialogDescription className="sr-only">
           Painel de configuração do usuário
         </DialogDescription>
+
         <div className="flex flex-col sm:flex-row h-full">
-          <div className="sm:w-56 w-full p-3 flex flex-col gap-2 border-r border-[#2A2A2A] bg-[#0A0A0A]">
-            <div className="flex flex-col gap-1">
-              {menuButton("account", "Conta")}
-            </div>
+
+          <div
+            className="
+              w-full sm:w-56 
+              flex sm:flex-col 
+              flex-row 
+              gap-2 
+              p-3 
+              border-b sm:border-b-0 sm:border-r 
+              border-[#2A2A2A] 
+              bg-[#0A0A0A]
+              overflow-x-auto sm:overflow-visible
+            "
+          >
+            {menuButton("account", "Conta")}
           </div>
 
-          <div className="flex-1 min-h-0 overflow-hidden bg-[#0A0A0A]">
-            <div className="h-full overflow-y-auto p-5 space-y-4 text-white">
+          <div className="flex-1 min-h-0 overflow-hidden">
+            <div className="h-full overflow-y-auto p-4 sm:p-6 space-y-4 text-white">
               {tab === "account" && (
                 <div className="space-y-3">
-                  <h2 className="text-sm font-semibold text-white">Conta</h2>
+                  <h2 className="text-sm font-semibold">Conta</h2>
                   <PerfilData />
                 </div>
               )}

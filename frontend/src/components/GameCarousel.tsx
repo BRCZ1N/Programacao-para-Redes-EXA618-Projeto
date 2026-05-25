@@ -24,8 +24,14 @@ type SkeletonItem = {
   isSkeleton: true;
 };
 
+const theme = {
+  text: "#FFFFFF",
+};
+
 async function fetchGames(type: string): Promise<Game[]> {
-  const res = await fetch(`http://127.0.0.1:8000/api/games/featured/?type=${type}`);
+  const res = await fetch(
+    `http://127.0.0.1:8000/api/games/featured/?type=${type}`
+  );
 
   if (!res.ok) throw new Error("Erro ao buscar jogos");
 
@@ -40,7 +46,7 @@ export function GameCarousel({
   type: "trending" | "new" | "top";
 }) {
   const plugin = React.useRef(
-    Autoplay({ delay: 3000, stopOnInteraction: true }),
+    Autoplay({ delay: 3000, stopOnInteraction: true })
   );
 
   const [games, setGames] = React.useState<Game[]>([]);
@@ -60,7 +66,7 @@ export function GameCarousel({
         id: `skeleton-${i}`,
         isSkeleton: true as const,
       })),
-    [],
+    []
   );
 
   const items = loading ? skeletons : games;
@@ -95,26 +101,6 @@ export function GameCarousel({
                         />
                       </div>
 
-                      <div className="p-2 space-y-1">
-                        <p className="text-sm font-medium truncate">
-                          {(item as Game).title}
-                        </p>
-
-                        <div className="flex justify-between text-xs">
-                          {(item as Game).discount_price ? (
-                            <>
-                              <span className="line-through text-muted-foreground">
-                                R$ {(item as Game).price}
-                              </span>
-                              <span className="text-green-500 font-semibold">
-                                R$ {(item as Game).discount_price}
-                              </span>
-                            </>
-                          ) : (
-                            <span>R$ {(item as Game).price}</span>
-                          )}
-                        </div>
-                      </div>
                     </CardContent>
                   </Card>
                 )}

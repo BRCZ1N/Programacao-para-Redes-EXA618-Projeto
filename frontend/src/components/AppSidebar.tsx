@@ -4,6 +4,7 @@ import { Search, Plus, Library } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import type { Playlist } from "../models/Playlist";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 import {
   ContextMenu,
@@ -42,7 +43,6 @@ export function AppSidebar() {
     null,
   );
 
-  // ✅ responsivo correto
   const isCompact = useMediaQuery("(max-width: 700px)");
 
   const normalize = (text: string) =>

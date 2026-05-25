@@ -93,7 +93,7 @@ export function GamesGrid() {
             onChange={(_, value) => {
               setPage(value);
             }}
-            size="large"
+            size="small"
             sx={{
               "& .MuiPaginationItem-root": {
                 color: "white",
