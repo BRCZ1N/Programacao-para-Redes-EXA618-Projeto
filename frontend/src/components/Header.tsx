@@ -43,139 +43,172 @@ export function Header() {
     <>
       <header
         style={{
-          height: "5%",
           width: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 16px",
           borderBottom: `1px solid ${theme.border}`,
           background: theme.bg,
           color: theme.text,
           position: "sticky",
+          top: 0,
           zIndex: 50,
         }}
       >
         <div
-          onClick={() => navigate("/")}
           style={{
+            width: "100%",
             display: "flex",
             alignItems: "center",
-            gap: 10,
-            cursor: "pointer",
-            userSelect: "none",
+            justifyContent: "space-between",
+            paddingBlock: "0.9rem",
+            paddingInline: "clamp(16px, 3vw, 40px)",
+            gap: "1rem",
           }}
         >
-          <img
-            src={logo}
-            alt="Logo"
+          <div
+            onClick={() => navigate("/")}
             style={{
-              width: 28,
-              height: 28,
-              objectFit: "contain",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.6rem",
+              cursor: "pointer",
+              userSelect: "none",
+              flexShrink: 0,
+              minWidth: 0,
             }}
-          />
+          >
+            <img
+              src={logo}
+              alt="Logo"
+              style={{
+                width: 28,
+                height: 28,
+                objectFit: "contain",
+                flexShrink: 0,
+              }}
+            />
+
+            <div
+              style={{
+                fontWeight: 900,
+                letterSpacing: "-0.5px",
+                color: theme.text,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              PlaylistDiscovery
+            </div>
+          </div>
+
+          {isLogged && (
+            <nav
+              className="hidden md:flex"
+              style={{
+                gap: "0.8rem",
+                flex: 1,
+                justifyContent: "center",
+                minWidth: 0,
+              }}
+            >
+              {pages.map((page) => (
+                <button
+                  key={page.path}
+                  onClick={() => navigate(page.path)}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 8,
+                    background: "rgba(255,255,255,0.04)",
+                    padding: "0.45rem 0.75rem",
+                    borderRadius: 999,
+                    border: "1px solid rgba(255,255,255,0.06)",
+                    color: theme.muted,
+                    cursor: "pointer",
+                    fontSize: 14,
+                    transition: "0.2s",
+                    flexShrink: 0,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = theme.text;
+                    e.currentTarget.style.background =
+                      "rgba(255,255,255,0.08)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = theme.muted;
+                    e.currentTarget.style.background =
+                      "rgba(255,255,255,0.04)";
+                  }}
+                >
+                  <span style={{ display: "flex" }}>{page.icon}</span>
+                </button>
+              ))}
+            </nav>
+          )}
 
           <div
             style={{
-              fontWeight: 900,
-              letterSpacing: "-0.5px",
-              color: theme.text,
+              display: "flex",
+              alignItems: "center",
+              gap: "0.8rem",
+              flexShrink: 0,
+              minWidth: 0,
             }}
           >
-            PlaylistDiscovery
+            {!isLogged ? (
+              <>
+                <button
+                  onClick={() => setLoginOpen(true)}
+                  style={{
+                    padding: "0.5rem 0.9rem",
+                    fontSize: 13,
+                    color: theme.muted,
+                    background: "transparent",
+                    border: "none",
+                    cursor: "pointer",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  Login
+                </button>
+
+                <button
+                  onClick={() => setSignupOpen(true)}
+                  style={{
+                    padding: "0.5rem 1rem",
+                    fontSize: 13,
+                    fontWeight: 700,
+                    borderRadius: 999,
+                    background: theme.text,
+                    color: "#000",
+                    border: "none",
+                    cursor: "pointer",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  Registro
+                </button>
+              </>
+            ) : (
+              <>
+                <span
+                  style={{
+                    color: "#fff",
+                    fontSize: 14,
+                    fontWeight: 600,
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    minWidth: 0,
+                  }}
+                >
+                  {user?.first_name || user?.username}
+                </span>
+
+                <UserDropdownMenu />
+              </>
+            )}
           </div>
-        </div>
-
-        {isLogged && (
-          <nav className="hidden md:flex" style={{ gap: 16 }}>
-            {pages.map((page) => (
-              <button
-                key={page.path}
-                onClick={() => navigate(page.path)}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  background: "rgba(255,255,255,0.04)",
-                  padding: "6px 10px",
-                  borderRadius: 999,
-                  border: "1px solid rgba(255,255,255,0.06)",
-                  color: theme.muted,
-                  cursor: "pointer",
-                  fontSize: 14,
-                  transition: "0.2s",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = theme.text;
-                  e.currentTarget.style.background = "rgba(255,255,255,0.08)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = theme.muted;
-                  e.currentTarget.style.background = "rgba(255,255,255,0.04)";
-                }}
-              >
-                <span style={{ display: "flex" }}>{page.icon}</span>
-              </button>
-            ))}
-          </nav>
-        )}
-
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 12,
-          }}
-        >
-          {!isLogged ? (
-            <>
-              <button
-                onClick={() => setLoginOpen(true)}
-                style={{
-                  padding: "8px 14px",
-                  fontSize: 13,
-                  color: theme.muted,
-                  background: "transparent",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-              >
-                Login
-              </button>
-
-              <button
-                onClick={() => setSignupOpen(true)}
-                style={{
-                  padding: "8px 16px",
-                  fontSize: 13,
-                  fontWeight: 700,
-                  borderRadius: 999,
-                  background: theme.text,
-                  color: "#000",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-              >
-                Registro
-              </button>
-            </>
-          ) : (
-            <>
-              <span
-                style={{
-                  color: "#fff",
-                  fontSize: 14,
-                  fontWeight: 600,
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {user?.first_name || user?.username}
-              </span>
-
-              <UserDropdownMenu />
-            </>
-          )}
         </div>
       </header>
 
