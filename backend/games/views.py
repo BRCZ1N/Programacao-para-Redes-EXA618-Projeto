@@ -6,7 +6,7 @@ from games.services.game_service import save_games
 from users.permissions import IsSuperUser
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Game
-from .serializers import GameGridSerializer, GameViewSerializer
+from .serializers import GameGridSerializer
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -14,7 +14,7 @@ def game_list(request):
     query = Game.objects.all().order_by("id")
 
     paginator = PageNumberPagination()
-    paginator.page_size = 10
+    paginator.page_size = 16
 
     result_page = paginator.paginate_queryset(query, request)
 
@@ -45,11 +45,11 @@ def game_list_featured(request):
 
     games = query[:10]
 
-    serializer = GameViewSerializer(games, many=True)
+    serializer = GameGridSerializer(games, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def search_games(request):
 
     title = request.query_params.get("title", "").strip()

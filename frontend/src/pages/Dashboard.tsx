@@ -14,22 +14,17 @@ export function Dashboard() {
     <div
       style={{
         height: "100vh",
-        display: "grid",
-        gridTemplateRows: "64px 1fr",
-        gridTemplateColumns: "260px 1fr",
-        gridTemplateAreas: `
-          "header header"
-          "sidebar content"
-        `,
+        display: "flex",
+        flexDirection: "column",
         background: theme.bg,
         color: theme.text,
         overflow: "hidden",
       }}
     >
-
       <header
         style={{
-          gridArea: "header",
+          height: 64,
+          flexShrink: 0,
           background: theme.surface,
           borderBottom: `1px solid ${theme.border}`,
         }}
@@ -37,26 +32,26 @@ export function Dashboard() {
         <AppBarMenu />
       </header>
 
-      <aside
+      <div
         style={{
-          gridArea: "sidebar",
-          background: theme.surface,
-          borderRight: `1px solid ${theme.border}`,
-          overflow: "hidden",
+          flex: 1,
+          display: "flex",
+          minHeight: 0,
         }}
       >
         <AppSidebar />
-      </aside>
 
-      <main
-        style={{
-          gridArea: "content",
-          background: theme.bg,
-          overflow: "auto",
-        }}
-      >
-        <Outlet />
-      </main>
+        <main
+          style={{
+            flex: 1,
+            overflow: "auto",
+            background: theme.bg,
+            minWidth: 0,
+          }}
+        >
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 }

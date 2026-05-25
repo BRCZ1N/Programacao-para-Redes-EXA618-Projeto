@@ -23,7 +23,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const refreshUser = async () => {
     try {
-      const res = await apiFetch("https://programacao-para-redes-exa618-projeto.onrender.com/api/user/me/");
+      const res = await apiFetch("http://127.0.0.1:8000/api/user/me/");
 
       if (res.ok) {
         const data = await res.json();

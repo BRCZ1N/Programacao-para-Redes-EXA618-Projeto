@@ -11,9 +11,9 @@ export function EditableField({
   hideEdit = false,
 }: any) {
   return (
-    <div className="flex items-start justify-between group pb-4 border-b border-[#2A2A2A]">
+    <div className="flex items-start justify-between group">
 
-      <div className="flex-1 space-y-1">
+      <div className="flex-1">
         <p className="text-[11px] tracking-widest uppercase text-white/40">
           {label}
         </p>
