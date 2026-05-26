@@ -86,7 +86,7 @@ ROOT_URLCONF = 'setup.urls'
 CORS_ALLOW_ALL_ORIGINS = False
 
 CORS_ALLOWED_ORIGINS = [
-    "https://programacao-para-redes-exa618-proje.vercel.app",
+    "https://programacao-para-redes-exa-618-proj.vercel.app",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
