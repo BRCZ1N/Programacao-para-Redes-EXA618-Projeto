@@ -4,6 +4,7 @@ import { Dashboard } from "./pages/Dashboard";
 import { GamesGrid } from "./pages/GamesGrid";
 import { PlaylistPage } from "./pages/PlaylistPage";
 import { AuthProvider } from "./utils/AuthProvider";
+import { GamesGridLegacy } from "./pages/GamesGridLegacy";
 
 function App() {
   return (
@@ -13,7 +14,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/dashboard" element={<Dashboard />}>
             <Route index element={<GamesGrid />} />
-            <Route path="games" element={<GamesGrid />} />
+            <Route path="games" element={<GamesGridLegacy />} />
             <Route path="playlist/:id" element={<PlaylistPage />} />
           </Route>
         </Routes>

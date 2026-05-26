@@ -75,7 +75,15 @@ export function GamesGrid() {
 
   return (
     <div className="flex flex-col min-h-screen w-full p-4 space-y-6">
-      <div className="flex justify-center">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3">
+        {games.length === 0 && isLoading
+          ? Array.from({ length: PAGE_SIZE }).map((_, i) => (
+              <Skeleton key={i} className="h-40 w-full rounded-xl" />
+            ))
+          : games.map((game) => <GameCard key={game.id} game={game} />)}
+      </div>
+
+      <div className="flex justify-center flex-1">
         <Stack spacing={2}>
           <Pagination
             page={page}
@@ -99,13 +107,6 @@ export function GamesGrid() {
             }}
           />
         </Stack>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3">
-        {games.length === 0 && isLoading
-          ? Array.from({ length: PAGE_SIZE }).map((_, i) => (
-              <Skeleton key={i} className="h-40 w-full rounded-xl" />
-            ))
-          : games.map((game) => <GameCard key={game.id} game={game} />)}
       </div>
     </div>
   );
