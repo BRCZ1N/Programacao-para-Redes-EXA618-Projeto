@@ -65,7 +65,7 @@ export function GamesGridLegacy() {
         return prev.concat(newItems);
       });
 
-      setNextUrl(json.next ? json.next.replace("http://", "http://") : null);
+      setNextUrl(json.next ? json.next.replace("http://", "https://") : null);
     } catch (err) {
       console.log("Erro:", err);
     } finally {
