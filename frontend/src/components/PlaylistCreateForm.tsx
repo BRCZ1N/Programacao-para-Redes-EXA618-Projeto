@@ -31,6 +31,7 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
 
   async function handleSubmit() {
     const payload = {
+      mode: "custom",
       title: form.title,
       description: form.description,
       tag: form.tag,
@@ -167,6 +168,7 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
           font-semibold 
           hover:bg-neutral-200 
           transition
+          cursor-pointer
         "
       >
         Gerar Playlist

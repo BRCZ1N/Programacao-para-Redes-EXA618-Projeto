@@ -50,6 +50,7 @@ export function TagsInput({ value, onChange }: Props) {
             text-black
             hover:bg-gray-200
             font-medium
+            cursor-pointer
           "
         >
           Adicionar

@@ -40,7 +40,7 @@ export function Home() {
     >
       <Header />
 
-      {/* HERO */}
+  
       <section
         style={{
           padding: "clamp(40px, 6vw, 80px) 16px",
@@ -135,7 +135,7 @@ export function Home() {
         </div>
       </section>
 
-      {/* SECTIONS */}
+   
       <div>
         <Section
           icon={<TrendingUp size={18} color="#ff7a00" />}
@@ -187,7 +187,7 @@ function Section({ icon, title, subtitle, children }: SectionProps) {
           gap: 16,
         }}
       >
-        {/* HEADER CENTRALIZADO */}
+   
         <div
           style={{
             display: "flex",

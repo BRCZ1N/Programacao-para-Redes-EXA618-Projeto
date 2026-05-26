@@ -46,13 +46,50 @@ def playlist(request):
 
     if request.method == "POST":
 
+        mode = request.data.get("mode", "empty")
+
         count = Playlist.objects.filter(user=request.user).count() + 1
 
-        playlist = Playlist.objects.create(
-            user=request.user,
-            title=f"Minha playlist {count}",
-            description=""
-        )
+        if mode == "empty":
+            playlist = Playlist.objects.create(
+                user=request.user,
+                title=f"Minha playlist {count}",
+                description=""
+            )
+
+        else:
+            tags = request.data.get("tag", [])
+            if isinstance(tags, str):
+                tags = [tags]
+
+            min_rating = request.data.get("min_rating", 0)
+            min_review = request.data.get("min_review", 0)
+            min_value = request.data.get("min_value", 0)
+
+            playlist = Playlist.objects.create(
+                user=request.user,
+                title=request.data.get("title", f"Minha playlist {count}"),
+                description=request.data.get("description", "")
+            )
+
+            games = Game.objects.all()
+
+            if tags:
+                games = games.filter(tag__name__in=tags)
+
+            if min_rating:
+                games = games.filter(review_rating__gte=min_rating)
+
+            if min_review:
+                games = games.filter(total_reviews__gte=min_review)
+
+            if min_value:
+                games = games.filter(price__gte=min_value)
+
+            
+            games = games.distinct()[:5]
+
+            playlist.games.set(games)
 
         serializer = PlaylistSerializer(playlist)
         return Response(serializer.data, status=201)

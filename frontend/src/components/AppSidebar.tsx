@@ -3,17 +3,9 @@
 import { Search, Plus, Library } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useCallback, useRef, useMemo } from "react";
+
 import type { Playlist } from "../models/Playlist";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
-
-import {
-  ContextMenu,
-  ContextMenuTrigger,
-  ContextMenuContent,
-  ContextMenuItem,
-} from "../components/ui/context-menu";
-
-import { DialogEditPlaylist } from "../components/DialogEditPlaylist";
+import { DialogCreatePlaylist } from "../components/DialogCreatePlaylist";
 import { useMediaQuery } from "../hooks/HookSearch";
 
 const theme = {
@@ -37,13 +29,13 @@ export function AppSidebar() {
   );
 
   const isFetchingRef = useRef(false);
-
-  const [openEdit, setOpenEdit] = useState(false);
-  const [selectedPlaylist, setSelectedPlaylist] = useState<Playlist | null>(
-    null,
-  );
-
+  const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const isCompact = useMediaQuery("(max-width: 700px)");
+
+  const resetAndReload = useCallback(() => {
+    setPlaylists([]);
+    setNextUrl("http://127.0.0.1:8000/api/playlist/");
+  }, []);
 
   const normalize = (text: string) =>
     text
@@ -60,11 +52,8 @@ export function AppSidebar() {
     return playlists
       .map((p) => {
         const title = normalize(p.title);
-
         let score = 0;
         if (title.startsWith(query)) score += 100;
-        if (title.includes(query)) score += 50;
-
         return { playlist: p, score };
       })
       .filter((i) => i.score > 0)
@@ -78,7 +67,10 @@ export function AppSidebar() {
     isFetchingRef.current = true;
 
     try {
-      const res = await fetch(nextUrl, { credentials: "include" });
+      const res = await fetch(nextUrl, {
+        credentials: "include",
+      });
+
       const json = await res.json();
 
       setPlaylists((prev) => {
@@ -97,46 +89,8 @@ export function AppSidebar() {
     loadPlaylists();
   }, [loadPlaylists]);
 
-  const createPlaylist = async () => {
-    const res = await fetch("http://127.0.0.1:8000/api/playlist/", {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        title: `Nova playlist ${playlists.length + 1}`,
-        description: "",
-      }),
-    });
-
-    const json = await res.json();
-    setPlaylists((prev) => [json, ...prev]);
-    navigate(`/dashboard/playlist/${json.id}`);
-  };
-
-  const deletePlaylist = async (id: string) => {
-    try {
-      const res = await fetch(`http://127.0.0.1:8000/api/playlist/${id}/`, {
-        method: "DELETE",
-        credentials: "include",
-      });
-
-      if (!res.ok) return;
-
-      setPlaylists((prev) => prev.filter((p) => p.id !== id));
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const editPlaylist = (playlist: Playlist) => {
-    setSelectedPlaylist(playlist);
-    setOpenEdit(true);
-  };
-
-  const handleUpdated = (updated: Playlist) => {
-    setPlaylists((prev) =>
-      prev.map((p) => (p.id === updated.id ? updated : p)),
-    );
+  const handleCreated = () => {
+    resetAndReload();
   };
 
   return (
@@ -161,7 +115,7 @@ export function AppSidebar() {
           }}
         >
           <button
-            onClick={createPlaylist}
+            onClick={() => setOpenCreateDialog(true)}
             style={{
               display: "flex",
               alignItems: "center",
@@ -173,12 +127,13 @@ export function AppSidebar() {
               background: theme.surface,
               color: theme.text,
               cursor: "pointer",
+              transition: "0.2s",
             }}
             onMouseEnter={(e) =>
               (e.currentTarget.style.background = theme.surfaceHover)
             }
             onMouseLeave={(e) =>
-              (e.currentTarget.style.background = "transparent")
+              (e.currentTarget.style.background = theme.surface)
             }
           >
             <Plus size={14} />
@@ -218,104 +173,88 @@ export function AppSidebar() {
           </div>
         )}
 
-        <div style={{ flex: 1, overflowY: "auto", padding: 6 }}>
+        <div
+          style={{
+            flex: 1,
+            overflowY: "auto",
+            padding: 6,
+          }}
+        >
           {filteredPlaylists.map((item) => (
-            <ContextMenu key={item.id}>
-              <ContextMenuTrigger asChild>
-                <div
-                  onClick={() => navigate(`/dashboard/playlist/${item.id}`)}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 10,
-                    padding: 10,
-                    borderRadius: 8,
-                    cursor: "pointer",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.background = theme.surfaceHover)
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.background = "transparent")
-                  }
-                >
-                  <div
-                    style={{
-                      width: 40,
-                      height: 40,
-                      borderRadius: 6,
-                      overflow: "hidden",
-                      background: theme.surface,
-                      flexShrink: 0,
-                    }}
-                  >
-                    {item.games?.[0]?.url_image ? (
-                      <img
-                        src={item.games[0].url_image}
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                        }}
-                      />
-                    ) : (
-                      <div
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <Library size={16} />
-                      </div>
-                    )}
-                  </div>
-
-                  {!isCompact && (
-                    <span
-                      style={{
-                        fontSize: 13,
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                      }}
-                    >
-                      {item.title}
-                    </span>
-                  )}
-                </div>
-              </ContextMenuTrigger>
-
-              <ContextMenuContent
+            <div
+              key={item.id}
+              onClick={() => navigate(`/dashboard/playlist/${item.id}`)}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                padding: 10,
+                borderRadius: 8,
+                cursor: "pointer",
+                transition: "background 0.15s ease",
+              }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.background = theme.surfaceHover)
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.background = "transparent")
+              }
+            >
+              <div
                 style={{
-                  background: "#121212",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  color: "#fff",
-                  width: 160,
+                  width: 40,
+                  height: 40,
+                  borderRadius: 6,
+                  overflow: "hidden",
+                  background: theme.surface,
+                  flexShrink: 0,
                 }}
               >
-                <ContextMenuItem onClick={() => editPlaylist(item)}>
-                  Editar
-                </ContextMenuItem>
-                <ContextMenuItem
-                  onClick={() => deletePlaylist(item.id)}
-                  style={{ color: "#ff4d4d" }}
+                {item.games?.[0]?.url_image ? (
+                  <img
+                    src={item.games[0].url_image}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                  />
+                ) : (
+                  <div
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Library size={16} />
+                  </div>
+                )}
+              </div>
+
+              {!isCompact && (
+                <span
+                  style={{
+                    fontSize: 13,
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
                 >
-                  Excluir
-                </ContextMenuItem>
-              </ContextMenuContent>
-            </ContextMenu>
+                  {item.title}
+                </span>
+              )}
+            </div>
           ))}
         </div>
       </aside>
 
-      <DialogEditPlaylist
-        open={openEdit}
-        onOpenChange={setOpenEdit}
-        playlist={selectedPlaylist}
-        onUpdated={handleUpdated}
+      <DialogCreatePlaylist
+        open={openCreateDialog}
+        onOpenChange={setOpenCreateDialog}
+        onCreated={handleCreated}
       />
     </>
   );
