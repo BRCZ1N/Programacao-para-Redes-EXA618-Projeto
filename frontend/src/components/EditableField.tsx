@@ -19,8 +19,10 @@ export function EditableField({
         </p>
 
         {editing ? (
-          <div className="space-y-3">
-            {children}
+          <div className="space-y-2">
+            <div className="[&>*]:h-8 [&>*]:text-sm">
+              {children}
+            </div>
 
             <div className="flex gap-2">
               <Button
@@ -30,6 +32,8 @@ export function EditableField({
                   bg-white text-black
                   hover:bg-white/90
                   transition
+                  cursor-pointer
+                  h-7 text-xs px-3
                 "
               >
                 Salvar
@@ -44,6 +48,8 @@ export function EditableField({
                   hover:text-white
                   hover:bg-[#1A1A1A]
                   transition
+                  cursor-pointer
+                  h-7 text-xs px-3
                 "
               >
                 Cancelar
@@ -61,13 +67,14 @@ export function EditableField({
         <button
           onClick={onEdit}
           className="
-            text-xs px-3 py-1 rounded-md
+            text-xs px-2 py-0.5 rounded-sm
             text-white/50
             border border-transparent
             hover:text-white
             hover:bg-[#1A1A1A]
             hover:border-[#2A2A2A]
             transition
+            cursor-pointer
           "
         >
           Editar

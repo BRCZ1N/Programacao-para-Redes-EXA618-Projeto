@@ -9,10 +9,18 @@ import {
 } from "./ui/dialog";
 
 import type { UserPerfil } from "../models/User";
-import { UserRound } from "lucide-react";
+import { UserRound, Lock } from "lucide-react";
 import { PerfilData } from "./PerfilData";
 
-type Tab = "account" | "profile" | "security" | "notifications" | "appearance";
+type Tab = "account" | "security";
+
+const theme = {
+  bg: "#000000",
+  surface: "#121212",
+  border: "#2A2A2A",
+  text: "#FFFFFF",
+  muted: "#A1A1A1",
+};
 
 export function DialogConfiguration({
   open,
@@ -61,94 +69,82 @@ export function DialogConfiguration({
     loadUser();
   }, []);
 
-  const menuButton = (key: Tab, label: string) => (
+  const tabButton = (key: Tab, label: string, icon: React.ReactNode) => (
     <button
       onClick={() => setTab(key)}
       style={{
         cursor: "pointer",
-        background: tab === key ? "rgba(255,255,255,0.15)" : "transparent",
-        color: tab === key ? "#fff" : "rgba(255,255,255,0.6)",
-        border: tab === key ? "1px solid #444" : "1px solid transparent",
-        padding: "10px 12px",
-        borderRadius: 8,
+        background: tab === key ? "rgba(255,255,255,0.1)" : "transparent",
+        color: tab === key ? "#fff" : theme.muted,
+        border: tab === key ? `1px solid #444` : "1px solid transparent",
+        padding: "6px 12px",
+        borderRadius: 4,
         display: "flex",
         alignItems: "center",
         gap: 8,
         fontSize: 13,
         transition: "all 150ms ease",
-        width: "100%",
-        justifyContent: "flex-start",
-        whiteSpace: "nowrap",
-      }}
-      onMouseEnter={(e) => {
-        if (tab !== key) {
-          e.currentTarget.style.background = "rgba(255,255,255,0.10)";
-          e.currentTarget.style.color = "#fff";
-          e.currentTarget.style.borderColor = "#333";
-        }
-      }}
-      onMouseLeave={(e) => {
-        if (tab !== key) {
-          e.currentTarget.style.background = "transparent";
-          e.currentTarget.style.color = "rgba(255,255,255,0.6)";
-          e.currentTarget.style.borderColor = "transparent";
-        }
+        fontWeight: tab === key ? 500 : 400,
       }}
     >
-      <UserRound className="h-4 w-4" />
-      {label}
+      {icon}
+      <span>{label}</span>
     </button>
   );
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-            className="
-                      w-[95vw] sm:max-w-3xl 
-                      p-0 overflow-hidden 
-                      max-h-[90vh] sm:max-h-[85vh]
-                      bg-[#0A0A0A] border border-[#2A2A2A]
-
-                      pt-10 sm:pt-0
-
-                      [&>button]:text-white 
-                      [&>button]:hover:bg-[#1A1A1A]
-                      [&>button]:border-[#2A2A2A]
-                      [&>button]:rounded-md
-                      "
+        style={{
+          width: "92%",
+          maxWidth: "400px",
+          background: theme.surface,
+          border: `1px solid ${theme.border}`,
+          borderRadius: 12,
+          padding: "24px",
+          color: theme.text,
+          overflow: "hidden",
+          boxSizing: "border-box",
+        }}
+        onKeyDown={(e) => {
+          e.stopPropagation();
+        }}
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
       >
         <DialogTitle className="sr-only">Configurações</DialogTitle>
         <DialogDescription className="sr-only">
           Painel de configuração do usuário
         </DialogDescription>
 
-        <div className="flex flex-col sm:flex-row h-full">
-
+        <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+          {/* Abas */}
           <div
-            className="
-              w-full sm:w-56 
-              flex sm:flex-col 
-              flex-row 
-              gap-2 
-              p-3 
-              border-b sm:border-b-0 sm:border-r 
-              border-[#2A2A2A] 
-              bg-[#0A0A0A]
-              overflow-x-auto sm:overflow-visible
-            "
+            style={{
+              display: "flex",
+              gap: 8,
+              marginBottom: "20px",
+              paddingBottom: "16px",
+              borderBottom: `1px solid ${theme.border}`,
+              overflowX: "auto",
+            }}
           >
-            {menuButton("account", "Conta")}
+            {tabButton("account", "Conta", <UserRound size={16} />)}
+          
           </div>
 
-          <div className="flex-1 min-h-0 overflow-hidden">
-            <div className="h-full overflow-y-auto p-4 sm:p-6 space-y-4 text-white">
-              {tab === "account" && (
-                <div className="space-y-3">
-                  <h2 className="text-sm font-semibold">Conta</h2>
-                  <PerfilData />
-                </div>
-              )}
-            </div>
+          {/* Conteúdo */}
+          <div
+            style={{
+              overflow: "y-auto",
+              maxHeight: "55vh",
+            }}
+            onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => e.stopPropagation()}
+          >
+            {tab === "account" && <PerfilData />}
+            
           </div>
         </div>
       </DialogContent>

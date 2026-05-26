@@ -67,6 +67,14 @@ export function PerfilData() {
     handleUpdateUser({ [field]: form[field] });
   }
 
+  const handleInputClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
+  const handleInputKeyDown = (e: React.KeyboardEvent) => {
+    e.stopPropagation();
+  };
+
   return (
     <div className="space-y-6 text-white">
       <EditableField
@@ -81,6 +89,10 @@ export function PerfilData() {
           value={form.username}
           onChange={(e) => setForm({ ...form, username: e.target.value })}
           className={inputClass}
+          onClick={handleInputClick}
+          onKeyDown={handleInputKeyDown}
+          autoComplete="off"
+          data-form="false"
         />
       </EditableField>
 
@@ -96,6 +108,10 @@ export function PerfilData() {
           value={form.first_name}
           onChange={(e) => setForm({ ...form, first_name: e.target.value })}
           className={inputClass}
+          onClick={handleInputClick}
+          onKeyDown={handleInputKeyDown}
+          autoComplete="off"
+          data-form="false"
         />
       </EditableField>
 
@@ -111,6 +127,10 @@ export function PerfilData() {
           value={form.last_name}
           onChange={(e) => setForm({ ...form, last_name: e.target.value })}
           className={inputClass}
+          onClick={handleInputClick}
+          onKeyDown={handleInputKeyDown}
+          autoComplete="off"
+          data-form="false"
         />
       </EditableField>
 
@@ -128,6 +148,12 @@ export function PerfilData() {
           value={form.password}
           onChange={(e) => setForm({ ...form, password: e.target.value })}
           className={inputClass}
+          onClick={handleInputClick}
+          onKeyDown={handleInputKeyDown}
+          autoComplete="new-password"
+          data-form="false"
+          data-lpignore="true"
+          data-1p-ignore="true"
         />
       </EditableField>
 
