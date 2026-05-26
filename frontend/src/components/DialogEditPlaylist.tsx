@@ -52,7 +52,7 @@ export function DialogEditPlaylist({
       setLoading(true);
       setError("");
 
-      const res = await fetch(`https://programacao-para-redes-exa618-projeto.onrender.comapi/playlist/${playlist.id}/`, {
+      const res = await fetch(`https://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/${playlist.id}/`, {
         method: "PUT",
         credentials: "include",
         headers: {

@@ -42,7 +42,7 @@ export function DialogCreatePlaylist({
     try {
       setLoading(true);
 
-      const res = await fetch("https://programacao-para-redes-exa618-projeto.onrender.comapi/playlist/", {
+      const res = await fetch("https://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/", {
         method: "POST",
         credentials: "include",
         headers: {

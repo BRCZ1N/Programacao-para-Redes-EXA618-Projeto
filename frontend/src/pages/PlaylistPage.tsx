@@ -79,7 +79,7 @@ export function PlaylistPage() {
   const fetchPlaylist = async () => {
     if (!id) return;
     try {
-      const res = await fetch(`https://programacao-para-redes-exa618-projeto.onrender.comapi/playlist/${id}/`, {
+      const res = await fetch(`https://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/${id}/`, {
         credentials: "include",
       });
       const json = await res.json();
@@ -99,7 +99,7 @@ export function PlaylistPage() {
       try {
         if (!search.trim()) {
           const res = await fetch(
-            `https://programacao-para-redes-exa618-projeto.onrender.comapi/games/featured/?type=new`,
+            `https://programacao-para-redes-exa618-projeto.onrender.com/api/games/featured/?type=new`,
             { credentials: "include" },
           );
           const json = await res.json();
@@ -108,7 +108,7 @@ export function PlaylistPage() {
         }
 
         const res = await fetch(
-          `https://programacao-para-redes-exa618-projeto.onrender.comapi/games/search/?title=${encodeURIComponent(
+          `https://programacao-para-redes-exa618-projeto.onrender.com/api/games/search/?title=${encodeURIComponent(
             search,
           )}`,
           { credentials: "include" },
@@ -133,7 +133,7 @@ export function PlaylistPage() {
     const alreadyAdded = playlistGameIds.has(game.id);
 
     const res = await fetch(
-      `https://programacao-para-redes-exa618-projeto.onrender.comapi/playlist/${activePlaylist.id}/`,
+      `https://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/${activePlaylist.id}/`,
       {
         method: "PUT",
         credentials: "include",
@@ -153,7 +153,7 @@ export function PlaylistPage() {
     if (!activePlaylist) return;
     try {
       const res = await fetch(
-        `https://programacao-para-redes-exa618-projeto.onrender.comapi/playlist/${activePlaylist.id}/`,
+        `https://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/${activePlaylist.id}/`,
         {
           method: "DELETE",
           credentials: "include",
