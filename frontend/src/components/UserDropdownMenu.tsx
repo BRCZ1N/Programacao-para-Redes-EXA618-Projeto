@@ -23,7 +23,7 @@ export function UserDropdownMenu() {
 
   async function handleLogout() {
     try {
-      await fetch("http://127.0.0.1:8000/api/auth/logout/", {
+      await fetch("https://programacao-para-redes-exa618-proje.vercel.app/api/auth/logout/", {
         method: "POST",
         credentials: "include",
       });

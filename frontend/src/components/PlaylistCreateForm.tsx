@@ -41,7 +41,7 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
     };
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/playlist/", {
+      const res = await fetch("https://programacao-para-redes-exa618-proje.vercel.app/api/playlist/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

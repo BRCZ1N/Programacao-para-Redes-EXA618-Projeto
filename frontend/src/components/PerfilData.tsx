@@ -35,7 +35,7 @@ export function PerfilData() {
 
   async function handleUpdateUser(data: Partial<typeof form>) {
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/user/update/", {
+      const res = await fetch("https://programacao-para-redes-exa618-proje.vercel.app/api/user/update/", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

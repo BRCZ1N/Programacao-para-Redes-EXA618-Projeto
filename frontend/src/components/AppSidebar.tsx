@@ -25,7 +25,7 @@ export function AppSidebar() {
   const [search, setSearch] = useState("");
 
   const [nextUrl, setNextUrl] = useState<string | null>(
-    "http://127.0.0.1:8000/api/playlist/",
+    "https://programacao-para-redes-exa618-proje.vercel.app/api/playlist/",
   );
 
   const isFetchingRef = useRef(false);
@@ -34,7 +34,7 @@ export function AppSidebar() {
 
   const resetAndReload = useCallback(() => {
     setPlaylists([]);
-    setNextUrl("http://127.0.0.1:8000/api/playlist/");
+    setNextUrl("https://programacao-para-redes-exa618-proje.vercel.app/api/playlist/");
   }, []);
 
   const normalize = (text: string) =>

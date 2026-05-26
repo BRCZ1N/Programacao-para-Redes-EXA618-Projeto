@@ -84,9 +84,9 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'setup.urls'
 CORS_ALLOW_ALL_ORIGINS = False
-#https://programacao-para-redes-exa618-proje.vercel.app
+
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
+    "https://programacao-para-redes-exa618-proje.vercel.app",
 ]
 
 CORS_ALLOW_CREDENTIALS = True

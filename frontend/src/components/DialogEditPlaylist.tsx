@@ -52,7 +52,7 @@ export function DialogEditPlaylist({
       setLoading(true);
       setError("");
 
-      const res = await fetch(`http://127.0.0.1:8000/api/playlist/${playlist.id}/`, {
+      const res = await fetch(`https://programacao-para-redes-exa618-proje.vercel.app/api/playlist/${playlist.id}/`, {
         method: "PUT",
         credentials: "include",
         headers: {

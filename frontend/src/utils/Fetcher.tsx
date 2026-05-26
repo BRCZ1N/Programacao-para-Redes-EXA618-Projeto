@@ -9,7 +9,7 @@ export async function apiFetch(url: string, options: RequestInit = {}) {
 
   if (response.status === 401) {
     const refresh = await fetch(
-      "http://127.0.0.1:8000/api/auth/refresh/",
+      "https://programacao-para-redes-exa618-proje.vercel.app/api/auth/refresh/",
       {
         method: "POST",
         credentials: "include",
