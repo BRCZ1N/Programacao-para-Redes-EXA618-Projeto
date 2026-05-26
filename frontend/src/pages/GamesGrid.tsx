@@ -75,7 +75,7 @@ export function GamesGrid() {
 
   return (
     <div className="flex flex-col min-h-screen w-full p-4 space-y-6">
-      <div className="flex justify-center flex-1">
+      <div className="flex justify-center">
         <Stack spacing={2}>
           <Pagination
             page={page}
