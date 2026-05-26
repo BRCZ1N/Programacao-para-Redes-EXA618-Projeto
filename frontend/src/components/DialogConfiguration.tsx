@@ -9,7 +9,7 @@ import {
 } from "./ui/dialog";
 
 import type { UserPerfil } from "../models/User";
-import { UserRound, Lock } from "lucide-react";
+import { UserRound} from "lucide-react";
 import { PerfilData } from "./PerfilData";
 
 type Tab = "account" | "security";

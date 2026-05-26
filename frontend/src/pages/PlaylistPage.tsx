@@ -60,7 +60,6 @@ export function PlaylistPage() {
   const [activePlaylist, setActivePlaylist] = useState<Playlist | null>(null);
   const [search, setSearch] = useState("");
   const [games, setGames] = useState<any[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
   const [openCreate, setOpenCreate] = useState(false);
 
   const [openEdit, setOpenEdit] = useState(false);
@@ -97,7 +96,6 @@ export function PlaylistPage() {
 
   useEffect(() => {
     const fetchGames = async () => {
-      setIsSearching(true);
       try {
         if (!search.trim()) {
           const res = await fetch(
@@ -121,7 +119,7 @@ export function PlaylistPage() {
       } catch (err) {
         console.error("Erro games:", err);
       } finally {
-        setIsSearching(false);
+       
       }
     };
 

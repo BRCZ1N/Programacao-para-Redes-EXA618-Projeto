@@ -24,10 +24,6 @@ type SkeletonItem = {
   isSkeleton: true;
 };
 
-const theme = {
-  text: "#FFFFFF",
-};
-
 async function fetchGames(type: string): Promise<Game[]> {
   const res = await fetch(
     `http://127.0.0.1:8000/api/games/featured/?type=${type}`
