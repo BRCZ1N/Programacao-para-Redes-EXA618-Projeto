@@ -7,7 +7,7 @@ export function GamesGridLegacy() {
   const [data, setData] = useState<Game[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [nextUrl, setNextUrl] = useState<string | null>(
-    "https://programacao-para-redes-exa618-proje.vercel.app/api/games/"
+    "https://programacao-para-redes-exa618-projeto.onrender.comapi/games/"
   );
 
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
@@ -28,7 +28,7 @@ export function GamesGridLegacy() {
 
       if (response.status === 401) {
         const refresh = await fetch(
-          "https://programacao-para-redes-exa618-proje.vercel.app/api/auth/refresh/",
+          "https://programacao-para-redes-exa618-projeto.onrender.comapi/auth/refresh/",
           {
             method: "POST",
             credentials: "include",

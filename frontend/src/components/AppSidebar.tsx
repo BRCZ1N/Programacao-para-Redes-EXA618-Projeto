@@ -25,7 +25,7 @@ export function AppSidebar() {
   const [search, setSearch] = useState("");
 
   const [nextUrl, setNextUrl] = useState<string | null>(
-    "https://programacao-para-redes-exa618-proje.vercel.app/api/playlist/",
+    "https://programacao-para-redes-exa618-projeto.onrender.comapi/playlist/",
   );
 
   const isFetchingRef = useRef(false);
@@ -34,7 +34,7 @@ export function AppSidebar() {
 
   const resetAndReload = useCallback(() => {
     setPlaylists([]);
-    setNextUrl("https://programacao-para-redes-exa618-proje.vercel.app/api/playlist/");
+    setNextUrl("https://programacao-para-redes-exa618-projeto.onrender.comapi/playlist/");
   }, []);
 
   const normalize = (text: string) =>

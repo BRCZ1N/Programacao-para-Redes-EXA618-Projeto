@@ -30,7 +30,7 @@ export function GamesGrid() {
 
     try {
       let response = await fetch(
-        `https://programacao-para-redes-exa618-proje.vercel.app/api/games/?page=${currentPage}`,
+        `https://programacao-para-redes-exa618-projeto.onrender.comapi/games/?page=${currentPage}`,
         {
           method: "GET",
           credentials: "include",
@@ -38,14 +38,14 @@ export function GamesGrid() {
       );
 
       if (response.status === 401) {
-        const refresh = await fetch("https://programacao-para-redes-exa618-proje.vercel.app/api/auth/refresh/", {
+        const refresh = await fetch("https://programacao-para-redes-exa618-projeto.onrender.comapi/auth/refresh/", {
           method: "POST",
           credentials: "include",
         });
 
         if (refresh.ok) {
           response = await fetch(
-            `https://programacao-para-redes-exa618-proje.vercel.app/api/games/?page=${currentPage}`,
+            `https://programacao-para-redes-exa618-projeto.onrender.comapi/games/?page=${currentPage}`,
             {
               method: "GET",
               credentials: "include",
