@@ -132,7 +132,7 @@ export function Header() {
                   onSelect={(e) => {
                     e.currentTarget.style.color = theme.text;
                     e.currentTarget.style.background =
-                      "rgba(255,255,255,0.08)";
+                      "rgba(255, 255, 255, 0.86)";
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.color = theme.text;
