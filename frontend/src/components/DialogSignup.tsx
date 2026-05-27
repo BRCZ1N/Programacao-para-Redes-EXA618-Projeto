@@ -36,7 +36,7 @@ export function DialogSignup({ open, onOpenChange, onGoToLogin }: Props) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
 
     if (password !== confirmPassword) {
@@ -65,6 +65,7 @@ export function DialogSignup({ open, onOpenChange, onGoToLogin }: Props) {
       } else {
         const data = await res.json();
         setError(data.message);
+        console.log(error)
       }
     } catch {
       setError("Erro de conexão");
