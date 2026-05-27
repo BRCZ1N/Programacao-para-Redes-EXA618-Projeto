@@ -13,15 +13,16 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route element={<PublicRoutes />}></Route>
-          <Route path="/" element={<Home />} />
+          <Route element={<PublicRoutes />}>
+            <Route path="/" element={<Home />} />
+          </Route>
           <Route element={<PrivateRoutes />}>
             <Route path="/dashboard" element={<Dashboard />}>
               <Route index element={<GamesGridLegacy />} />
               <Route path="games" element={<GamesGridLegacy />} />
               <Route path="playlist/:id" element={<PlaylistPage />} />
             </Route>
-         </Route>
+          </Route>
         </Routes>
       </BrowserRouter>
     </AuthProvider>
