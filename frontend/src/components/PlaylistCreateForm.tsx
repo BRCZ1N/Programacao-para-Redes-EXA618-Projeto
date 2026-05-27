@@ -147,6 +147,7 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
 
         <Autocomplete
             multiple
+            disablePortal
             limitTags={2}
             id="multiple-limit-tags"
             options={tags}
