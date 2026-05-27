@@ -42,7 +42,7 @@ export function GameCarousel({
   type: "trending" | "new" | "top";
 }) {
   const plugin = React.useRef(
-    Autoplay({ delay: 1500, stopOnInteraction: true })
+    Autoplay({ delay: 3000, stopOnInteraction: true })
   );
 
   const [games, setGames] = React.useState<Game[]>([]);

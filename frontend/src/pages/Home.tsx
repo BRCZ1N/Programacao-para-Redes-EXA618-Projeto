@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { GameCarousel } from "../components/GameCarousel";
 import { Header } from "../components/Header";
 import { Sparkles, TrendingUp, Trophy } from "lucide-react";
-import { useAuth } from "../utils/Auth";
+import { useAuth } from "../utils/AuthProvider";
 import { useState, type ReactNode } from "react";
 import { DialogLogin } from "../components/DialogLogin";
 

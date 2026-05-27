@@ -14,7 +14,7 @@ import {
 import { Button } from "../components/ui/button";
 import { User, Settings, LogOut } from "lucide-react";
 import { DialogConfiguration } from "../components/DialogConfiguration";
-import { useAuth } from "../utils/Auth";
+import { useAuth } from "../utils/AuthProvider";
 
 export function UserDropdownMenu() {
   const [openConfig, setOpenConfig] = useState(false);
