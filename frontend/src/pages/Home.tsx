@@ -96,7 +96,7 @@ export function Home() {
               minWidth: 180,
               padding: "12px 20px",
               borderRadius: 999,
-              background: isLogged ? theme.accent : theme.text,
+              background: theme.text,
               color: "#000",
               fontWeight: 700,
               border: "none",
