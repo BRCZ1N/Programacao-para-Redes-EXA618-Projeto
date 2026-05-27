@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Input } from "./ui/input";
 import { EditableField } from "./EditableField";
-import { useAuth } from "../utils/AuthProvider";
+import { useAuth } from "../utils/Auth";
 
 const inputClass =
   "bg-[#121212] border border-[#2A2A2A] text-white placeholder:text-white/30 " +

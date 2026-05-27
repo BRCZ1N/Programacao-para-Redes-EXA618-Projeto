@@ -12,7 +12,7 @@ import { Button } from "./ui/button";
 import { Field, FieldLabel } from "../components/ui/field";
 import { Input } from "../components/ui/input";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../utils/AuthProvider";
+import { useAuth } from "../utils/Auth";
 
 const theme = {
   surface: "#121212",

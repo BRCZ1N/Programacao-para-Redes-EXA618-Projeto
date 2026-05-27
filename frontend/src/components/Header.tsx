@@ -4,7 +4,7 @@ import { useState } from "react";
 import { HomeIcon, Gamepad2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
-import { useAuth } from "../utils/AuthProvider";
+import { useAuth } from "../utils/Auth";
 import { UserDropdownMenu } from "../components/UserDropdownMenu";
 import { DialogLogin } from "../components/DialogLogin";
 import { DialogSignup } from "../components/DialogSignup";
