@@ -11,11 +11,11 @@ type Game = {
 
 export function GameCard({ game }: { game: Game }) {
   return (
-    <Card sx={{ maxWidth: 500 }}>
+    <Card>
       <CardMedia
         sx={{
-            height: "100%",
-            width: "100%",
+            height: "75%",
+            width: "75%",
             objectFit: "cover",
             transition: "0.3s",
             display: "block",
