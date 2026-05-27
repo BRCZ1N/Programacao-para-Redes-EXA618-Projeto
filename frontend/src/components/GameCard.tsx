@@ -11,15 +11,17 @@ type Game = {
 
 export function GameCard({ game }: { game: Game }) {
   return (
-    <Card>
+    <Card sx={{
+        width: "100%",
+        maxWidth: 500,
+        borderRadius: 3,
+      }}>
       <CardMedia
-        sx={{
-            height: "75%",
-            width: "75%",
-            objectFit: "cover",
-            transition: "0.3s",
-            display: "block",
-          }}
+       sx={{
+          width: "100%",
+          aspectRatio: "16 / 9",
+          objectFit: "cover",
+        }}
         image={game.url_image}
       />
       <CardActions>
