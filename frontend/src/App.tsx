@@ -5,15 +5,17 @@ import { Dashboard } from "./pages/Dashboard";
 import { PlaylistPage } from "./pages/PlaylistPage";
 import { AuthProvider } from "./utils/AuthProvider";
 import { GamesGridLegacy } from "./pages/GamesGridLegacy";
-import { PrivateRoute } from "./utils/PrivateRoute";
+import { PrivateRoutes } from "./utils/PrivateRoutes";
+import { PublicRoutes } from "./utils/PublicRoutes";
 
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+          <Route element={<PublicRoutes />}></Route>
           <Route path="/" element={<Home />} />
-          <Route element={<PrivateRoute />}>
+          <Route element={<PrivateRoutes />}>
             <Route path="/dashboard" element={<Dashboard />}>
               <Route index element={<GamesGridLegacy />} />
               <Route path="games" element={<GamesGridLegacy />} />
