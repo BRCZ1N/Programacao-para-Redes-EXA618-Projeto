@@ -12,8 +12,6 @@ import {
 
 import { PlaylistCreateForm } from "./PlaylistCreateForm";
 
-import { Plus, Sparkles, ArrowLeft } from "lucide-react";
-
 type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
