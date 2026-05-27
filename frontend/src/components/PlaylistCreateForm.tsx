@@ -150,6 +150,7 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
             limitTags={2}
             id="multiple-limit-tags"
             options={tags}
+            value={selectedTags}
             onChange={(_, value) => {
               setSelectedTags(value);
             }}
