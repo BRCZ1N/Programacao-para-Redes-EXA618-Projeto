@@ -159,7 +159,7 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
             option.name === value.name
           }
           renderInput={(params) => (
-            <TextField {...params} label="Tags" />
+            <TextField {...params} />
           )}
           sx={{
             width: "100%",

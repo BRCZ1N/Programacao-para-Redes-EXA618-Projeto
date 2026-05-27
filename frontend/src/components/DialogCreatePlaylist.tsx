@@ -103,14 +103,6 @@ export function DialogCreatePlaylist({
                 "
               >
                 <div className="flex items-start gap-4">
-                  <div
-                    className="
-                      flex h-11 w-11 items-center justify-center
-                      rounded-xl border border-white/5 bg-white/5
-                    "
-                  >
-                    <Plus size={18} />
-                  </div>
 
                   <div className="min-w-0">
                     <div className="font-medium text-white">
@@ -135,14 +127,6 @@ export function DialogCreatePlaylist({
                 "
               >
                 <div className="flex items-start gap-4">
-                  <div
-                    className="
-                      flex h-11 w-11 items-center justify-center
-                      rounded-xl border border-white/5 bg-white/5
-                    "
-                  >
-                    <Sparkles size={18} />
-                  </div>
 
                   <div className="min-w-0">
                     <div className="font-medium text-white">
