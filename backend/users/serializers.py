@@ -4,6 +4,11 @@ from .models import CustomUser
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
+        email = serializers.EmailField(
+            error_messages={
+                "unique": "Email já está cadastrado."
+            }
+        )
         fields = ['email', 'password', 'first_name', 'last_name', 'username']
         extra_kwargs = {
             'password': {'write_only': True},
