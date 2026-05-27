@@ -11,13 +11,13 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route element={<PrivateRoute />}>
+        <PrivateRoute>
           <Route path="/dashboard" element={<Dashboard />}>
             <Route index element={<GamesGridLegacy />} />
             <Route path="games" element={<GamesGridLegacy />} />
             <Route path="playlist/:id" element={<PlaylistPage />} />
           </Route>
-        </Route>
+        </PrivateRoute>
       </Routes>
     </BrowserRouter>
   );

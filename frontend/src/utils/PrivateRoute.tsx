@@ -1,7 +1,11 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useAuth } from "../utils/AuthContext";
 
-export function PrivateRoute() {
+export function PrivateRoute({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const { authenticated, loading } = useAuth();
 
   if (loading) {
@@ -12,5 +16,5 @@ export function PrivateRoute() {
     return <Navigate to="/" replace />;
   }
 
-  return <Outlet />;
+  return children;
 }
