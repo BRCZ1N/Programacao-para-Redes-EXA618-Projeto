@@ -6,7 +6,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         model = CustomUser
         email = serializers.EmailField(
             error_messages={
-                "unique": "Email já está cadastrado."
+                "unique": "Email já cadastrado."
             }
         )
         fields = ['email', 'password', 'first_name', 'last_name', 'username']
