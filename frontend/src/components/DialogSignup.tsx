@@ -48,17 +48,20 @@ export function DialogSignup({ open, onOpenChange, onGoToLogin }: Props) {
       setLoading(true);
       setError("");
 
-      const res = await fetch("https://programacao-para-redes-exa618-projeto.onrender.com/api/user/register/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username,
-          first_name,
-          last_name,
-          email,
-          password,
-        }),
-      });
+      const res = await fetch(
+        "https://programacao-para-redes-exa618-projeto.onrender.com/api/user/register/",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username,
+            first_name,
+            last_name,
+            email,
+            password,
+          }),
+        },
+      );
 
       if (res.ok) {
         onOpenChange(false);
@@ -66,7 +69,6 @@ export function DialogSignup({ open, onOpenChange, onGoToLogin }: Props) {
         const data = await res.json();
         setError(Object.values(data.message)[0] as string[][0]);
         console.log(Object.values(data.message)[0] as string[][0]);
-
       }
     } catch {
       setError("Erro de conexão");
@@ -76,8 +78,8 @@ export function DialogSignup({ open, onOpenChange, onGoToLogin }: Props) {
   }
 
   function handleGoToLogin() {
-    onOpenChange(false); 
-    onGoToLogin(); 
+    onOpenChange(false);
+    onGoToLogin();
   }
 
   return (
