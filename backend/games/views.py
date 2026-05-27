@@ -28,7 +28,7 @@ def tag_list(request):
     
     query = Tag.objects.all()
 
-    serializer = TagSerializer(query, many=True)
+    serializer = TagSerializer(query)
 
     return Response(serializer.data)
 
