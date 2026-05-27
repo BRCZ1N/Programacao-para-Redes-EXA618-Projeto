@@ -11,6 +11,7 @@ import {
 } from "../components/ui/dialog";
 
 import { PlaylistCreateForm } from "./PlaylistCreateForm";
+import { ArrowLeft } from "lucide-react";
 
 type Props = {
   open: boolean;
