@@ -30,6 +30,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(data);
       } else {
         setUser(null);
+        
       }
     } catch (err) {
       console.error("Erro ao buscar usuário:", err);

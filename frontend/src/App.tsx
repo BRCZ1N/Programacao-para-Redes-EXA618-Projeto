@@ -5,6 +5,7 @@ import { Dashboard } from "./pages/Dashboard";
 import { PlaylistPage } from "./pages/PlaylistPage";
 import { AuthProvider } from "./utils/AuthProvider";
 import { GamesGridLegacy } from "./pages/GamesGridLegacy";
+import { PrivateRoute } from "./utils/PrivateRoute";
 
 function App() {
   return (
@@ -12,11 +13,13 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/dashboard" element={<Dashboard />}>
-            <Route index element={<GamesGridLegacy />} />
-            <Route path="games" element={<GamesGridLegacy />} />
-            <Route path="playlist/:id" element={<PlaylistPage />} />
-          </Route>
+          <Route element={<PrivateRoute />}>
+            <Route path="/dashboard" element={<Dashboard />}>
+              <Route index element={<GamesGridLegacy />} />
+              <Route path="games" element={<GamesGridLegacy />} />
+              <Route path="playlist/:id" element={<PlaylistPage />} />
+            </Route>
+         </Route>
         </Routes>
       </BrowserRouter>
     </AuthProvider>
