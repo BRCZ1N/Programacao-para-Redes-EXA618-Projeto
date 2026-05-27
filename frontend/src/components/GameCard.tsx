@@ -14,6 +14,7 @@ export function GameCard({ game }: { game: Game }) {
     <Card sx={{
         width: "100%",
         maxWidth: 500,
+        backgroundColor: "black",
       }}>
       <CardMedia
        sx={{
