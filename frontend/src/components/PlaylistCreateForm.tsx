@@ -146,26 +146,65 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
       >
 
         <Autocomplete
-            multiple
-            disablePortal
-            limitTags={2}
-            id="multiple-limit-tags"
-            options={tags}
-            value={selectedTags}
-            onChange={(_, value) => {
-              setSelectedTags(value);
-            }}
-            getOptionLabel={(option) => option.name}
-            renderInput={(params) => (
-            <TextField
-              {...params}
-              variant="outlined"
-              fullWidth
-            />
-             )}
-            sx={{
-                  width: "100%",
-            }}
+          disablePortal
+          multiple
+          limitTags={2}
+          options={tags}
+          value={selectedTags}
+          onChange={(_, value) => {
+            setSelectedTags(value);
+          }}
+          getOptionLabel={(option) => option.name}
+          isOptionEqualToValue={(option, value) =>
+            option.name === value.name
+          }
+          renderInput={(params) => (
+            <TextField {...params} label="Tags" />
+          )}
+          sx={{
+            width: "100%",
+
+            "& .MuiInputBase-input": {
+              color: "white",
+            },
+
+            "& .MuiInputLabel-root": {
+              color: "#aaa",
+            },
+
+            "& .MuiInputLabel-root.Mui-focused": {
+              color: "white",
+            },
+
+            "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#444",
+            },
+
+         
+            "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
+              borderColor: "white",
+            },
+
+            "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              borderColor: "white",
+            },
+
+           
+            "& .MuiChip-root": {
+              backgroundColor: "white",
+              color: "black",
+              fontWeight: 600,
+            },
+
+           
+            "& .MuiChip-deleteIcon": {
+              color: "black",
+            },
+
+            "& .MuiChip-deleteIcon:hover": {
+              color: "#333",
+            },
+          }}
         />
 
         <SliderBlock
