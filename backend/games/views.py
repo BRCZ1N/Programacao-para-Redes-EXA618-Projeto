@@ -23,7 +23,7 @@ def game_list(request):
     return paginator.get_paginated_response(serializer.data)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def tag_list(request):
     
     query = Tag.objects.all()
