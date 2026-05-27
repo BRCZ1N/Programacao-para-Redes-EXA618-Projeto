@@ -64,7 +64,7 @@ export function DialogSignup({ open, onOpenChange, onGoToLogin }: Props) {
         onOpenChange(false);
       } else {
         const data = await res.json();
-        setError(data.message || "Erro ao criar conta");
+        setError(data.message);
       }
     } catch {
       setError("Erro de conexão");
