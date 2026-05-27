@@ -1,4 +1,7 @@
-import { Card, Box } from "@mui/material";
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardMedia from '@mui/material/CardMedia';
+import Button from '@mui/material/Button';
 
 type Game = {
   id: string;
@@ -8,46 +11,20 @@ type Game = {
 
 export function GameCard({ game }: { game: Game }) {
   return (
-    <Card
-      sx={{
-        position: "relative",
-        overflow: "hidden",
-        pt: 0,
-        "&:hover img": {
-          transform: "scale(1.05)",
-        },
-      }}
-    >
-        <Box
-          component="img"
-          src={game.url_image}
-          alt={game.title}
-          sx={{
+    <Card sx={{ maxWidth: 500 }}>
+      <CardMedia
+        sx={{
             height: "100%",
             width: "100%",
             objectFit: "cover",
             transition: "0.3s",
             display: "block",
           }}
-        />
-
-        <Box
-          sx={{
-            position: "absolute",
-            inset: 0,
-            backgroundColor: "rgba(0,0,0,0.3)",
-            zIndex: 1,
-          }}
-        />
-
-        <Box
-          sx={{
-            position: "absolute",
-            bottom: 0,
-            zIndex: 2,
-            p: 2,
-          }}
-        ></Box>
+        image={game.url_image}
+      />
+      <CardActions>
+        <Button size="small">Learn More</Button>
+      </CardActions>
     </Card>
   );
 }
