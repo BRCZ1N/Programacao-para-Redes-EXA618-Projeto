@@ -65,7 +65,7 @@ export function DialogSignup({ open, onOpenChange, onGoToLogin }: Props) {
       } else {
         const data = await res.json();
         setError(data.message);
-        console.log(error)
+        console.log("Esse é o erro:"+error)
       }
     } catch {
       setError("Erro de conexão");
