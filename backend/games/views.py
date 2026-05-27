@@ -23,12 +23,12 @@ def game_list(request):
     return paginator.get_paginated_response(serializer.data)
 
 @api_view(['GET'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def tag_list(request):
     
     query = Tag.objects.all()
 
-    serializer = Tag(query, many=True)
+    serializer = TagSerializer(query, many=True)
 
     return Response(serializer.data)
 
