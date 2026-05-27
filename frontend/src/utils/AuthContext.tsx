@@ -1,9 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 type User = {
   username: string;
@@ -16,42 +11,45 @@ type AuthContextType = {
   user: User | null;
   authenticated: boolean;
   loading: boolean;
+  refreshUser: () => Promise<void>;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
 };
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
+  setUser: () => {},
   authenticated: false,
   loading: true,
+  refreshUser: async () => {},
 });
 
-export function AuthProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [authenticated, setAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function checkAuth() {
-      try {
-        const res = await fetch("https://programacao-para-redes-exa618-projeto.onrender.com/api/user/me", {
+  async function refreshUser() {
+    try {
+      const res = await fetch(
+        "https://programacao-para-redes-exa618-projeto.onrender.com/api/user/me",
+        {
           credentials: "include",
-        });
+        },
+      );
 
-        if (res.ok) {
-          const data = await res.json();
+      if (res.ok) {
+        const data = await res.json();
 
-          setUser(data);
-          setAuthenticated(true);
-        }
-      } finally {
-        setLoading(false);
+        setUser(data);
+        setAuthenticated(true);
       }
+    } finally {
+      setLoading(false);
     }
+  }
 
-    checkAuth();
+  useEffect(() => {
+    refreshUser();
   }, []);
 
   return (
@@ -60,6 +58,8 @@ export function AuthProvider({
         user,
         authenticated,
         loading,
+        refreshUser,
+        setUser,
       }}
     >
       {children}

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Input } from "./ui/input";
 import { EditableField } from "./EditableField";
-import { useAuth } from "../utils/Auth";
+import { useAuth } from "../utils/AuthContext";
 
 const inputClass =
   "bg-[#121212] border border-[#2A2A2A] text-white placeholder:text-white/30 " +
@@ -35,7 +35,7 @@ export function PerfilData() {
 
   async function handleUpdateUser(data: Partial<typeof form>) {
     try {
-      const res = await fetch("https://programacao-para-redes-exa618-projeto.onrender.com/api/user/update/", {
+      const res = await fetch("http://127.0.0.1:8000/api/user/update/", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
