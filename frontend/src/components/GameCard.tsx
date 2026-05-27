@@ -14,13 +14,11 @@ export function GameCard({ game }: { game: Game }) {
     <Card sx={{
         width: "100%",
         maxWidth: 500,
-        borderRadius: 3,
       }}>
       <CardMedia
        sx={{
           width: "100%",
           aspectRatio: "16 / 9",
-          objectFit: "cover",
         }}
         image={game.url_image}
       />
