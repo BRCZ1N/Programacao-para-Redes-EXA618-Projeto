@@ -80,7 +80,6 @@ export function Home() {
           </p>
 
           <button
-            disabled={loading}
             onClick={() => {
               if (loading) return;
 
