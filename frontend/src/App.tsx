@@ -4,7 +4,7 @@ import { Dashboard } from "./pages/Dashboard";
 /*import { GamesGrid } from "./pages/GamesGrid";*/
 import { PlaylistPage } from "./pages/PlaylistPage";
 import { GamesGridLegacy } from "./pages/GamesGridLegacy";
-import { PrivateRoute } from "./utils/PrivateRoute";
+import { PrivateRoute } from "./components/PrivateRoute";
 
 function App() {
   return (

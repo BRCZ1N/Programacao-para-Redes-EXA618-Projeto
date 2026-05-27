@@ -7,13 +7,11 @@ export const verifyAuth = async () => {
     );
 
     if (res.ok) {
-  
-      return res;
-      
+      return true;
     } else {
-      return null;
+      return false;
     }
   } catch (err) {
-    return null;
+    return false;
   }
 };

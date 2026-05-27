@@ -12,6 +12,7 @@ import { Button } from "./ui/button";
 import { Field, FieldLabel } from "../components/ui/field";
 import { Input } from "../components/ui/input";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../utils/Auth";
 
 const theme = {
   surface: "#121212",
@@ -37,6 +38,7 @@ export function DialogLogin({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { refreshUser } = useAuth();
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -54,6 +56,7 @@ export function DialogLogin({
       });
 
       if (response.ok) {
+        await refreshUser();
         onOpenChange(false);
         
         navigate("/dashboard");
