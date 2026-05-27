@@ -81,7 +81,7 @@ def register_user(request):
     serializer = RegisterSerializer(data=request.data)
 
     if not serializer.is_valid():
-        return Response(serializer.errors.data, status=400)
+        return Response(serializer.errors, status=400)
 
     serializer.save()
     return Response({"status": "Cadastro realizado com sucesso"}, status=201)
