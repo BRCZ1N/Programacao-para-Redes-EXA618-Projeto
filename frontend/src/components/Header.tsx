@@ -35,8 +35,6 @@ export function Header() {
   const { user } = useAuth();
   const location = useLocation();
 
-  const isActive = location.pathname
-
   const [loginOpen, setLoginOpen] = useState(false);
   const [signupOpen, setSignupOpen] = useState(false);
 
