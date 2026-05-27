@@ -1,14 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { SliderBlock } from "./SliderBlock";
-import { TagsInput } from "./TagsInput";
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
 
 type Props = {
   onSuccess?: (playlist: any) => void;
 };
+
+type Tag = {
+
+  name: string
+
+}
 
 const theme = {
   bg: "#000000",
@@ -20,21 +27,43 @@ const theme = {
 };
 
 export function PlaylistCreateForm({ onSuccess }: Props) {
+
+  const[tags, setTags] = useState<Tag[]>([]);
+  const[selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const [form, setForm] = useState({
     title: "",
     description: "",
-    tag: [] as string[],
+    tags: selectedTags,
     rating: [5],
     price: [0],
     reviews: [0],
   });
+
+
+  async function fetchTags() {
+
+    try {
+      const res = await fetch("https://programacao-para-redes-exa618-projeto.onrender.com/api/games/tag/", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+
+      if (!res.ok) throw new Error("Erro ao buscar as tags");
+
+      setTags(await res.json())
+
+    } catch (err) {
+      console.log("Erro:", err);
+    }
+  }
 
   async function handleSubmit() {
     const payload = {
       mode: "custom",
       title: form.title,
       description: form.description,
-      tag: form.tag,
+      tag: form.tags,
       min_rating: form.rating[0],
       min_value: form.price[0],
       min_review: form.reviews[0],
@@ -56,7 +85,7 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
       setForm({
         title: "",
         description: "",
-        tag: [],
+        tags: [],
         rating: [5],
         price: [0],
         reviews: [0],
@@ -65,6 +94,10 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
       console.log("Erro:", err);
     }
   }
+
+   useEffect(() => {
+    fetchTags();
+  }, []);
 
   return (
     <div className="flex flex-col gap-5 text-white">
@@ -118,11 +151,19 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
           </p>
         </div>
 
-        <TagsInput
-          value={form.tag}
-          onChange={(tag) =>
-            setForm((prev) => ({ ...prev, tag }))
-          }
+        <Autocomplete
+            multiple
+            limitTags={2}
+            id="multiple-limit-tags"
+            options={tags}
+            onChange={(_, value) => {
+              setSelectedTags(value);
+            }}
+            getOptionLabel={(option) => option.name}
+            renderInput={(params) => (
+              <TextField {...params} />
+            )}
+            sx={{ width: '500px' }}
         />
 
         <SliderBlock
