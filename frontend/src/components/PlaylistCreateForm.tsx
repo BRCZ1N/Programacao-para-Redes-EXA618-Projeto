@@ -156,12 +156,15 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
             }}
             getOptionLabel={(option) => option.name}
             renderInput={(params) => (
-              <TextField {...params} />
-            )}
+            <TextField
+              {...params}
+              variant="outlined"
+              fullWidth
+            />
+             )}
             sx={{
-            display: "flex",
-            flexDirection: "column",
-          }}
+                  width: "100%",
+            }}
         />
 
         <SliderBlock
