@@ -38,6 +38,13 @@ class GameGridSerializer(serializers.ModelSerializer):
             'title',
             'url_image',
         ]
+        
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = [
+            'name',
+        ]
 
 class GameViewSerializer(serializers.ModelSerializer):
     class Meta:

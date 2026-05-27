@@ -5,8 +5,8 @@ from games.services.crawler_service import start_crawler
 from games.services.game_service import save_games
 from users.permissions import IsSuperUser
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .models import Game
-from .serializers import GameGridSerializer
+from .models import Game, Tag
+from .serializers import GameGridSerializer, TagSerializer
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -22,6 +22,15 @@ def game_list(request):
 
     return paginator.get_paginated_response(serializer.data)
 
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def tag_list(request):
+    
+    query = Tag.objects.all()
+
+    serializer = Tag(query, many=True)
+
+    return Response(serializer.data)
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
