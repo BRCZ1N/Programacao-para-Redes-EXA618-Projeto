@@ -144,12 +144,6 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
         }}
         className="flex flex-col gap-4 p-4 rounded-lg"
       >
-        <div>
-          <h3 className="text-sm font-medium">Filtros</h3>
-          <p className="text-xs text-neutral-500">
-            Refine os jogos da sua playlist
-          </p>
-        </div>
 
         <Autocomplete
             multiple
@@ -163,7 +157,10 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
             renderInput={(params) => (
               <TextField {...params} />
             )}
-            sx={{ width: '500px' }}
+            sx={{
+            display: "flex",
+            flexDirection: "column",
+          }}
         />
 
         <SliderBlock
