@@ -8,7 +8,7 @@ export function PrivateRoute() {
 
   if (loading) {
     return (
-      <div className="flex items-center gap-6 bg-black w-full">
+      <div className="flex items-center justify-center w-full h-screen bg-black">
         <Spinner className="size-8 bg-white" />
       </div>
     );
