@@ -1,7 +1,5 @@
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
 import CardActionArea from '@mui/material/CardActionArea';
 
 type Game = {
@@ -18,7 +16,6 @@ export function GameCard({ game }: { game: Game }) {
         backgroundColor: "black",
       }}>
       <CardActionArea>
-
         <CardMedia
           sx={{
               width: "100%",
@@ -26,7 +23,6 @@ export function GameCard({ game }: { game: Game }) {
             }}
             image={game.url_image}
         />
-        
       </CardActionArea>
       
     </Card>
