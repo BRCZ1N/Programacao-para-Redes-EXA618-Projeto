@@ -16,14 +16,14 @@ def playlist(request):
 
     if request.method == "GET":
 
-        query = request.query_params.get("title")
-        
-        query = (
-            Playlist.objects
-            .filter(user=request.user)
-            .prefetch_related("games")
-            .order_by("-updated_at")  
-        )
+        title = request.query_params.get("title")
+
+        query = Playlist.objects.filter(user=request.user).prefetch_related("games")
+
+        if title:
+            query = query.filter(title__istartswith=title)
+
+        query = query.order_by("-updated_at")
 
         paginator = PageNumberPagination()
         paginator.page_size = 12
