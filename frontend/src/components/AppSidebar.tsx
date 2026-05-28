@@ -25,7 +25,6 @@ export function AppSidebar() {
 
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [search, setSearch] = useState("");
-
   const [nextUrl, setNextUrl] = useState<string | null>(BASE_URL);
 
   const isFetchingRef = useRef(false);
@@ -211,19 +210,21 @@ export function AppSidebar() {
                 )}
               </div>
 
+              {/* 🔥 FIX DEFINITIVO DO ELLIPSIS */}
               {!isCompact && (
-                <span
-                  style={{
-                    fontSize: 13,
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    minWidth: 0,
-                    flex: 1,
-                  }}
-                >
-                  {item.title}
-                </span>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <span
+                    style={{
+                      fontSize: 13,
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "block",
+                    }}
+                  >
+                    {item.title}
+                  </span>
+                </div>
               )}
             </div>
           ))}
