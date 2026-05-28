@@ -2,7 +2,7 @@
 
 import { Search, Plus, Library } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState, useCallback, useRef, useMemo } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 
 import type { Playlist } from "../models/Playlist";
 import { DialogCreatePlaylist } from "../components/DialogCreatePlaylist";
@@ -15,45 +15,37 @@ const theme = {
   border: "#2A2A2A",
   text: "#FFFFFF",
   muted: "#B3B3B3",
-  accent: "#1DB954",
 };
+
+const BASE_URL =
+  "https://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/";
 
 export function AppSidebar() {
   const navigate = useNavigate();
 
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
 
-  const [nextUrl, setNextUrl] = useState<string | null>(
-    "https://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/"
-  );
+  const [nextUrl, setNextUrl] = useState<string | null>(BASE_URL);
 
   const isFetchingRef = useRef(false);
-  const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const isCompact = useMediaQuery("(max-width: 700px)");
+  const [openCreateDialog, setOpenCreateDialog] = useState(false);
 
   const resetAndReload = useCallback(() => {
     setPlaylists([]);
-    setNextUrl(
-      "https://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/"
-    );
+    setNextUrl(BASE_URL);
   }, []);
 
-  const normalize = (text: string) =>
-    text
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .trim();
+  // 🔥 debounce (evita flicker e requests em excesso)
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 300);
 
-  const filteredPlaylists = useMemo(() => {
-    const query = normalize(search);
-    if (!query) return playlists;
-
-    return playlists.filter((p) =>
-      normalize(p.title).startsWith(query)
-    );
-  }, [playlists, search]);
+    return () => clearTimeout(t);
+  }, [search]);
 
   const loadPlaylists = useCallback(async () => {
     if (!nextUrl || isFetchingRef.current) return;
@@ -61,7 +53,14 @@ export function AppSidebar() {
     isFetchingRef.current = true;
 
     try {
-      const res = await fetch(nextUrl, {
+      const url = new URL(nextUrl);
+
+      // 🔥 filtro SÓ no backend
+      if (debouncedSearch) {
+        url.searchParams.set("title", debouncedSearch);
+      }
+
+      const res = await fetch(url.toString(), {
         credentials: "include",
       });
 
@@ -77,15 +76,17 @@ export function AppSidebar() {
     } finally {
       isFetchingRef.current = false;
     }
-  }, [nextUrl]);
+  }, [nextUrl, debouncedSearch]);
+
+  // 🔥 reset quando search muda (backend controlado)
+  useEffect(() => {
+    setPlaylists([]);
+    setNextUrl(BASE_URL);
+  }, [debouncedSearch]);
 
   useEffect(() => {
     loadPlaylists();
   }, [loadPlaylists]);
-
-  const handleCreated = () => {
-    resetAndReload();
-  };
 
   return (
     <>
@@ -100,6 +101,7 @@ export function AppSidebar() {
           overflow: "hidden",
         }}
       >
+        {/* HEADER */}
         <div
           style={{
             padding: 12,
@@ -128,6 +130,7 @@ export function AppSidebar() {
           </button>
         </div>
 
+        {/* SEARCH */}
         {!isCompact && (
           <div style={{ padding: "0 12px 12px" }}>
             <div
@@ -160,6 +163,7 @@ export function AppSidebar() {
           </div>
         )}
 
+        {/* LISTA */}
         <div
           style={{
             flex: 1,
@@ -167,7 +171,7 @@ export function AppSidebar() {
             padding: 6,
           }}
         >
-          {filteredPlaylists.map((item) => (
+          {playlists.map((item) => (
             <div
               key={item.id}
               onClick={() => navigate(`/dashboard/playlist/${item.id}`)}
@@ -179,7 +183,6 @@ export function AppSidebar() {
                 borderRadius: 8,
                 cursor: "pointer",
                 transition: "background 0.15s ease",
-
                 minWidth: 0, // 🔥 ESSENCIAL
               }}
               onMouseEnter={(e) =>
@@ -189,6 +192,7 @@ export function AppSidebar() {
                 (e.currentTarget.style.background = "transparent")
               }
             >
+              {/* IMAGE FIXA */}
               <div
                 style={{
                   width: 40,
@@ -223,6 +227,7 @@ export function AppSidebar() {
                 )}
               </div>
 
+              {/* TEXTO ESTÁVEL */}
               {!isCompact && (
                 <div
                   style={{
@@ -251,7 +256,7 @@ export function AppSidebar() {
       <DialogCreatePlaylist
         open={openCreateDialog}
         onOpenChange={setOpenCreateDialog}
-        onCreated={handleCreated}
+        onCreated={resetAndReload}
       />
     </>
   );
