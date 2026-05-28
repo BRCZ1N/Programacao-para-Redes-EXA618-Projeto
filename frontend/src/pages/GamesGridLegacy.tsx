@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { GameCard } from "../components/GameCard";
 import { Skeleton } from "../components/ui/skeleton";
+import { DialogGame } from "../components/DialogGame";
+
 import type { Game } from "../models/Game";
 
 export function GamesGridLegacy() {
@@ -10,9 +12,17 @@ export function GamesGridLegacy() {
     "https://programacao-para-redes-exa618-projeto.onrender.com/api/games/"
   );
 
+  const [open, setOpen] = useState(false);
+  const [selectedGameId, setSelectedGameId] = useState<string | null>(null);
+
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
   const isFetchingRef = useRef(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
+
+  const handleOpenGame = (id: string) => {
+    setSelectedGameId(id);
+    setOpen(true);
+  };
 
   const loadMore = useCallback(async () => {
     if (!nextUrl || isFetchingRef.current) return;
@@ -51,6 +61,7 @@ export function GamesGridLegacy() {
         const existingIds = new Set(prev.map((p) => p.id));
 
         const newItems: Game[] = [];
+
         for (const item of json.results) {
           if (!existingIds.has(item.id)) {
             newItems.push(item);
@@ -105,20 +116,32 @@ export function GamesGridLegacy() {
   }, [nextUrl, loadMore]);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 p-4">
-      {data.map((game) => (
-        <GameCard key={game.id} game={game} />
-      ))}
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 p-4">
+        {data.map((game) => (
+          <GameCard
+            key={game.id}
+            game={game}
+            onSelect={handleOpenGame}
+          />
+        ))}
 
-      <div ref={loadMoreRef} className="h-10 col-span-full" />
+        <div ref={loadMoreRef} className="h-10 col-span-full" />
 
-      {isLoading && (
-        <div className="col-span-full grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-40 w-full rounded-xl" />
-          ))}
-        </div>
-      )}
-    </div>
+        {isLoading && (
+          <div className="col-span-full grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton key={i} className="h-40 w-full rounded-xl" />
+            ))}
+          </div>
+        )}
+      </div>
+
+      <DialogGame
+        open={open}
+        onOpenChange={setOpen}
+        gameId={selectedGameId}
+      />
+    </>
   );
 }
