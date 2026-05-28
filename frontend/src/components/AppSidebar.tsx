@@ -112,6 +112,13 @@ export function AppSidebar() {
               background: theme.surface,
               color: theme.text,
               cursor: "pointer",
+              transition: "0.2s",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = theme.surfaceHover;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = theme.surface;
             }}
           >
             <Plus size={14} />
@@ -179,6 +186,7 @@ export function AppSidebar() {
                   border: "1px solid rgba(255,255,255,0.06)",
                   color: theme.muted,
                   cursor: "pointer",
+                  transition: "0.2s",
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.color = theme.text;
@@ -209,6 +217,13 @@ export function AppSidebar() {
                 padding: 10,
                 borderRadius: 8,
                 cursor: "pointer",
+                transition: "0.15s",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = theme.surfaceHover;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "transparent";
               }}
             >
               <div
