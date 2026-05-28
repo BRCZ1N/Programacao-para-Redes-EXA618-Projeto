@@ -29,12 +29,10 @@ export function AppSidebar() {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
 
-  // 🔥 FETCH centralizado
   const fetchPlaylists = async (query = debouncedSearch) => {
     try {
       const url = new URL(API_URL);
 
-      // ⚠️ backend usa "title", não "search"
       if (query.trim()) {
         url.searchParams.append("title", query.trim());
       }
@@ -50,7 +48,6 @@ export function AppSidebar() {
     }
   };
 
-  // ⏱️ debounce (evita spam de request)
   useEffect(() => {
     const timeout = setTimeout(() => {
       setDebouncedSearch(search);
@@ -59,14 +56,12 @@ export function AppSidebar() {
     return () => clearTimeout(timeout);
   }, [search]);
 
-  // 🔁 busca quando debounce estabiliza
   useEffect(() => {
     fetchPlaylists(debouncedSearch);
   }, [debouncedSearch]);
 
-  // ➕ atualiza lista após criação
   const handlePlaylistCreated = async () => {
-    await fetchPlaylists(""); // força reload geral
+    await fetchPlaylists("");
   };
 
   return (
@@ -85,7 +80,6 @@ export function AppSidebar() {
           boxSizing: "border-box",
         }}
       >
-        {/* HEADER */}
         <div
           style={{
             padding: 12,
@@ -114,7 +108,6 @@ export function AppSidebar() {
           </button>
         </div>
 
-        {/* SEARCH */}
         {!isCompact && (
           <div
             style={{
@@ -155,7 +148,6 @@ export function AppSidebar() {
           </div>
         )}
 
-        {/* LISTA */}
         <div style={{ flex: 1, overflowY: "auto", padding: 6 }}>
           {playlists.map((item) => (
             <div
@@ -205,17 +197,81 @@ export function AppSidebar() {
                 )}
               </div>
 
-              {!isCompact && (
-                <span
+              {isCompact ? (
+                <div
                   style={{
-                    fontSize: 13,
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
+                    padding: "0 12px 12px",
+                    display: "flex",
+                    justifyContent: "space-around",
+                    alignItems: "center",
                   }}
                 >
-                  {item.title}
-                </span>
+                  <button
+                    onClick={() => navigate("/home")}
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      color: theme.text,
+                      cursor: "pointer",
+                    }}
+                  >
+                    Home
+                  </button>
+
+                  <button
+                    onClick={() => navigate("/dashboard/gamepad")}
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      color: theme.text,
+                      cursor: "pointer",
+                    }}
+                  >
+                    Joystick
+                  </button>
+                </div>
+              ) : (
+                <div
+                  style={{
+                    padding: "0 12px 12px",
+                    display: "flex",
+                    flexShrink: 0,
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                      background: theme.surface,
+                      padding: "8px 10px",
+                      borderRadius: 8,
+                      border: `1px solid ${theme.border}`,
+                      width: "100%",
+                    }}
+                  >
+                    <Search
+                      size={14}
+                      color={theme.muted}
+                      style={{ flexShrink: 0 }}
+                    />
+
+                    <input
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                      placeholder="Buscar playlist..."
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        outline: "none",
+                        color: theme.text,
+                        width: "100%",
+                        fontSize: 13,
+                        minWidth: 0,
+                      }}
+                    />
+                  </div>
+                </div>
               )}
             </div>
           ))}
