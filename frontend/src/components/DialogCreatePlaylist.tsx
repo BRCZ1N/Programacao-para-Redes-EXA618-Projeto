@@ -155,7 +155,7 @@ export function DialogCreatePlaylist({
                 Voltar
               </button>
 
-              <DialogTitle className="text-lg font-semibold">
+              <DialogTitle className="text-lg font-semibold !text-white">
                 Playlist baseada em filtros
               </DialogTitle>
 
