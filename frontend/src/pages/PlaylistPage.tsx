@@ -271,6 +271,7 @@ export function PlaylistPage() {
                 wordBreak: "break-word",
                 overflowWrap: "anywhere",
                 flex: 1,
+                color:"#fff"
               }}
             >
               {activePlaylist?.title ?? "Carregando playlist..."}
