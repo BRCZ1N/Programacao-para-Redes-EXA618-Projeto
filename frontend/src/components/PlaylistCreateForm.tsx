@@ -137,9 +137,6 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
       </div>
 
       <div
-        style={{
-          background: theme.card,
-        }}
         className="flex flex-col gap-4 p-4 rounded-lg"
       >
         <Autocomplete
