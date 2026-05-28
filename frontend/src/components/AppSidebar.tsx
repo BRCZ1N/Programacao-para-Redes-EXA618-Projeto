@@ -218,7 +218,8 @@ export function AppSidebar() {
                     whiteSpace: "nowrap",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
-                    minWidth: 0, // 🔥 ESSENCIAL
+                    minWidth: 0,
+                    flex: 1,
                   }}
                 >
                   {item.title}
