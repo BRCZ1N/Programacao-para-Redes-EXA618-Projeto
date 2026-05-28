@@ -59,6 +59,7 @@ export function Home() {
             style={{
               fontSize: "clamp(28px, 5vw, 52px)",
               fontWeight: 900,
+              color: theme.text,
               lineHeight: 1.1,
               letterSpacing: "-1px",
             }}
@@ -195,7 +196,7 @@ function Section({ icon, title, subtitle, children }: SectionProps) {
             gap: 6,
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, color: "#ffffff" }}>
             {icon}
             <h2
               style={{
