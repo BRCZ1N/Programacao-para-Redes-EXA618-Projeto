@@ -12,10 +12,8 @@ type Props = {
 };
 
 type Tag = {
-
-  name: string
-
-}
+  name: string;
+};
 
 const theme = {
   bg: "#000000",
@@ -27,9 +25,8 @@ const theme = {
 };
 
 export function PlaylistCreateForm({ onSuccess }: Props) {
-
-  const[tags, setTags] = useState<Tag[]>([]);
-  const[selectedTags, setSelectedTags] = useState<Tag[]>([]);
+  const [tags, setTags] = useState<Tag[]>([]);
+  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -39,20 +36,20 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
     reviews: [0],
   });
 
-
   async function fetchTags() {
-
     try {
-      const res = await fetch("https://programacao-para-redes-exa618-projeto.onrender.com/api/games/tag/", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-      });
+      const res = await fetch(
+        "https://programacao-para-redes-exa618-projeto.onrender.com/api/games/tag/",
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+        },
+      );
 
       if (!res.ok) throw new Error("Erro ao buscar as tags");
 
-      setTags(await res.json())
-
+      setTags(await res.json());
     } catch (err) {
       console.log("Erro:", err);
     }
@@ -70,12 +67,15 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
     };
 
     try {
-      const res = await fetch("https://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(payload),
-      });
+      const res = await fetch(
+        "https://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(payload),
+        },
+      );
 
       if (!res.ok) throw new Error("Erro ao criar playlist");
 
@@ -95,13 +95,12 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
     }
   }
 
-   useEffect(() => {
+  useEffect(() => {
     fetchTags();
   }, []);
 
   return (
     <div className="flex flex-col gap-5 text-white">
-
       <div>
         <h2 className="text-base font-semibold">Criar playlist</h2>
         <p className="text-xs text-neutral-400">
@@ -112,7 +111,6 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
       <div
         style={{
           background: theme.card,
-          
         }}
         className="flex flex-col gap-3 p-4 rounded-lg"
       >
@@ -144,7 +142,6 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
         }}
         className="flex flex-col gap-4 p-4 rounded-lg"
       >
-
         <Autocomplete
           disablePortal
           multiple
@@ -155,53 +152,35 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
             setSelectedTags(value);
           }}
           getOptionLabel={(option) => option.name}
-          isOptionEqualToValue={(option, value) =>
-            option.name === value.name
-          }
-          renderInput={(params) => (
-            <TextField {...params} />
-          )}
+          isOptionEqualToValue={(option, value) => option.name === value.name}
+          renderInput={(params) => <TextField {...params} />}
           sx={{
             width: "100%",
 
-            "& .MuiInputBase-input": {
-              color: "white",
+            "& .MuiOutlinedInput-root": {
+              backgroundColor: "#0f0f0f",
+              color: "#fff",
             },
 
-            "& .MuiInputLabel-root": {
-              color: "#aaa",
+            "& .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#2a2a2a",
             },
 
-            "& .MuiInputLabel-root.Mui-focused": {
-              color: "white",
-            },
-
-            "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+            "&:hover .MuiOutlinedInput-notchedOutline": {
               borderColor: "#444",
             },
 
-         
-            "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
-              borderColor: "white",
+            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#fff",
             },
-
-            "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-              borderColor: "white",
-            },
-           
-            "& .MuiChip-root": {
-              backgroundColor: "white",
-              color: "black",
-              fontWeight: 600,
-            },
-
-           
-            "& .MuiChip-deleteIcon": {
-              color: "white",
-            },
-
-            "& .MuiChip-deleteIcon:hover": {
-              color: "#333",
+          }}
+          slotProps={{
+            paper: {
+              sx: {
+                backgroundColor: "#0f0f0f",
+                color: "#fff",
+                border: "1px solid #2a2a2a",
+              },
             },
           }}
         />
@@ -209,9 +188,7 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
         <SliderBlock
           label="Rating mínimo"
           value={form.rating}
-          onChange={(value) =>
-            setForm((prev) => ({ ...prev, rating: value }))
-          }
+          onChange={(value) => setForm((prev) => ({ ...prev, rating: value }))}
           min={0}
           max={10}
         />
@@ -219,9 +196,7 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
         <SliderBlock
           label="Preço mínimo"
           value={form.price}
-          onChange={(value) =>
-            setForm((prev) => ({ ...prev, price: value }))
-          }
+          onChange={(value) => setForm((prev) => ({ ...prev, price: value }))}
           min={0}
           max={1000}
           step={1}
@@ -231,9 +206,7 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
         <SliderBlock
           label="Reviews mínimo"
           value={form.reviews}
-          onChange={(value) =>
-            setForm((prev) => ({ ...prev, reviews: value }))
-          }
+          onChange={(value) => setForm((prev) => ({ ...prev, reviews: value }))}
           min={0}
           max={100000}
           step={1}
