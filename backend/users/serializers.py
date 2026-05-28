@@ -2,13 +2,15 @@ from rest_framework import serializers
 from .models import CustomUser
 
 class RegisterSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CustomUser
-        email = serializers.EmailField(
+    
+    email = serializers.EmailField(
             error_messages={
                 "unique": "Email já cadastrado."
             }
         )
+    class Meta:
+        model = CustomUser
+    
         fields = ['email', 'password', 'first_name', 'last_name', 'username']
         extra_kwargs = {
             'password': {'write_only': True},
