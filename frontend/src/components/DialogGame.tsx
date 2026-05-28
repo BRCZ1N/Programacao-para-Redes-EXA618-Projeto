@@ -41,7 +41,7 @@ export function DialogGame({
 
     async function loadGame() {
       const res = await fetch(
-        `https://programacao-para-redes-exa618-projeto.onrender.com/api/game/${gameId}/`,
+        `https://programacao-para-redes-exa618-projeto.onrender.com/api/games/${gameId}/`,
         { credentials: "include" },
       );
 
