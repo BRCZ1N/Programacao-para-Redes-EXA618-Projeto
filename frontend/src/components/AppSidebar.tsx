@@ -219,6 +219,7 @@ export function AppSidebar() {
                     whiteSpace: "nowrap",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
+                    maxWidth: 500,
                   }}
                 >
                   {item.title}
