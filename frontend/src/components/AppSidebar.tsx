@@ -38,10 +38,12 @@ export function AppSidebar() {
     setNextUrl(BASE_URL);
   }, []);
 
+ 
   useEffect(() => {
     const t = setTimeout(() => setDebouncedSearch(search), 300);
     return () => clearTimeout(t);
   }, [search]);
+
 
   const loadPlaylists = useCallback(async () => {
     if (!nextUrl || isFetchingRef.current) return;
@@ -61,7 +63,11 @@ export function AppSidebar() {
 
       const json = await res.json();
 
+     
       setPlaylists((prev) => {
+        if (debouncedSearch) {
+          return json.results;
+        }
         const ids = new Set(prev.map((p) => p.id));
         const newItems = json.results.filter((p: Playlist) => !ids.has(p.id));
         return [...prev, ...newItems];
@@ -74,7 +80,6 @@ export function AppSidebar() {
   }, [nextUrl, debouncedSearch]);
 
   useEffect(() => {
-    setPlaylists([]);
     setNextUrl(BASE_URL);
   }, [debouncedSearch]);
 
@@ -92,10 +97,9 @@ export function AppSidebar() {
           background: theme.bg,
           color: theme.text,
           borderRight: `1px solid ${theme.border}`,
-          overflow: "hidden",
+          overflow: "auto", 
         }}
       >
- 
         <div style={{ padding: 12 }}>
           <button
             onClick={() => setOpenCreateDialog(true)}
@@ -117,7 +121,6 @@ export function AppSidebar() {
           </button>
         </div>
 
-       
         {!isCompact && (
           <div style={{ padding: "0 12px 12px" }}>
             <div
@@ -138,11 +141,11 @@ export function AppSidebar() {
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Buscar playlist..."
                 style={{
+                  flex: 1, 
                   background: "transparent",
                   border: "none",
                   outline: "none",
                   color: theme.text,
-                  width: "100%",
                   fontSize: 13,
                 }}
               />
@@ -150,7 +153,6 @@ export function AppSidebar() {
           </div>
         )}
 
-     
         <div style={{ flex: 1, overflowY: "auto", padding: 6 }}>
           {playlists.map((item) => (
             <div
@@ -163,7 +165,7 @@ export function AppSidebar() {
                 padding: 10,
                 borderRadius: 8,
                 cursor: "pointer",
-                minWidth: 0, // 🔥 CRÍTICO
+                minWidth: 0, 
               }}
               onMouseEnter={(e) =>
                 (e.currentTarget.style.background = theme.surfaceHover)
@@ -172,7 +174,6 @@ export function AppSidebar() {
                 (e.currentTarget.style.background = "transparent")
               }
             >
-            
               <div
                 style={{
                   width: 40,
@@ -207,12 +208,11 @@ export function AppSidebar() {
                 )}
               </div>
 
-             
               {!isCompact && (
                 <div
                   style={{
                     flex: 1,
-                    minWidth: 0, 
+                    minWidth: 0, // 🔥 evita quebra
                   }}
                 >
                   <span
