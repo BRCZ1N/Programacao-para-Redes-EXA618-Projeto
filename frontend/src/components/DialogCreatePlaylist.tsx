@@ -19,11 +19,7 @@ type Props = {
   onCreated?: (playlist: any) => void;
 };
 
-export function DialogCreatePlaylist({
-  open,
-  onOpenChange,
-  onCreated,
-}: Props) {
+export function DialogCreatePlaylist({ open, onOpenChange, onCreated }: Props) {
   const [mode, setMode] = useState<"select" | "filters">("select");
   const [loading, setLoading] = useState(false);
 
@@ -41,16 +37,19 @@ export function DialogCreatePlaylist({
     try {
       setLoading(true);
 
-      const res = await fetch("https://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        "https://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/",
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            mode: "empty",
+          }),
         },
-        body: JSON.stringify({
-          mode: "empty",
-        }),
-      });
+      );
 
       const playlist = await res.json();
 
@@ -79,9 +78,7 @@ export function DialogCreatePlaylist({
         {mode === "select" ? (
           <>
             <DialogHeader className="space-y-1 border-b border-zinc-800 px-6 py-5">
-              <DialogTitle className="text-lg font-semibold text-zinc-400">
-                Criar playlist
-              </DialogTitle>
+              <DialogTitle style={{ color: "red" }}>Criar playlist</DialogTitle>
 
               <DialogDescription className="text-sm text-zinc-400">
                 Escolha como deseja criar sua playlist.
@@ -89,7 +86,6 @@ export function DialogCreatePlaylist({
             </DialogHeader>
 
             <div className="flex flex-col gap-3 p-4">
-         
               <button
                 onClick={handleCreateEmpty}
                 disabled={loading}
@@ -102,11 +98,8 @@ export function DialogCreatePlaylist({
                 "
               >
                 <div className="flex items-start gap-4">
-
                   <div className="min-w-0">
-                    <div className="font-medium text-white">
-                      Playlist vazia
-                    </div>
+                    <div className="font-medium text-white">Playlist vazia</div>
 
                     <div className="mt-1 text-sm text-zinc-400">
                       Monte manualmente sua playlist adicionando jogos.
@@ -115,7 +108,6 @@ export function DialogCreatePlaylist({
                 </div>
               </button>
 
-            
               <button
                 onClick={() => setMode("filters")}
                 className="
@@ -126,15 +118,14 @@ export function DialogCreatePlaylist({
                 "
               >
                 <div className="flex items-start gap-4">
-
                   <div className="min-w-0">
                     <div className="font-medium text-white">
                       Baseada em filtros
                     </div>
 
                     <div className="mt-1 text-sm text-zinc-400">
-                      Gere playlists automaticamente com base em
-                      gênero, nota, preço e reviews.
+                      Gere playlists automaticamente com base em gênero, nota,
+                      preço e reviews.
                     </div>
                   </div>
                 </div>
