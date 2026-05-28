@@ -172,22 +172,6 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
               color: "#333",
             },
 
-            "& .MuiOutlinedInput-root": {
-              backgroundColor: "#0f0f0f",
-              color: "#fff",
-            },
-
-            "& .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#2a2a2a",
-            },
-
-            "&:hover .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#444",
-            },
-
-            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#fff",
-            },
           }}
   
         />
