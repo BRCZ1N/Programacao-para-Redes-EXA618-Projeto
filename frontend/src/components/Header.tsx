@@ -202,7 +202,7 @@ export function Header() {
                     minWidth: 0,
                   }}
                 >
-                  {user?.first_name || user?.username}
+                  {user?.username}
                 </span>
 
                 <UserDropdownMenu />
