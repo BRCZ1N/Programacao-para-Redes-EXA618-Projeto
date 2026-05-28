@@ -155,7 +155,7 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
                   color: "#000", // texto digitado
                 },
                 "& .MuiInputBase-input": {
-                  color: "#000", // texto interno
+                  color: "#ffffff", // texto interno
                 },
                 "& .MuiInputLabel-root": {
                   color: "#666", // label normal
@@ -181,7 +181,7 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
             width: "100%",
 
             "& .MuiChip-root": {
-              backgroundColor: "black",
+              backgroundColor: "white",
               color: "black",
               fontWeight: 600,
             },
