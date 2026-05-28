@@ -1,12 +1,11 @@
-import {Outlet, useNavigate } from "react-router-dom";
+import { Outlet, Navigate } from "react-router-dom";
 import { useAuth } from "./AuthProvider";
 
 export function PrivateRoutes() {
-  const { user} = useAuth();
-  const navigate = useNavigate();
+  const { user } = useAuth();
 
   if (!user) {
-    navigate("/");
+    return <Navigate to="/" replace />;
   }
 
   return <Outlet />;
