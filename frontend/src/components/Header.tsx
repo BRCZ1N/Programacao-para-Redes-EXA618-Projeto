@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { HomeIcon, Gamepad2 } from "lucide-react";
-import { useLocation, useNavigate } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import { useAuth } from "../utils/AuthProvider";
 import { UserDropdownMenu } from "../components/UserDropdownMenu";
@@ -33,7 +33,6 @@ const pages = [
 export function Header() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const location = useLocation();
 
   const [loginOpen, setLoginOpen] = useState(false);
   const [signupOpen, setSignupOpen] = useState(false);
@@ -120,9 +119,7 @@ export function Header() {
                     alignItems: "center",
                     justifyContent: "center",
                     gap: 8,
-                    background: location.pathname === page.path
-                    ? "rgba(250, 249, 249, 0.16)"
-                    : "rgba(255,255,255,0.04)",
+                    background: "rgba(255,255,255,0.04)",
                     padding: "0.45rem 0.75rem",
                     borderRadius: 999,
                     border: "1px solid rgba(255,255,255,0.06)",
