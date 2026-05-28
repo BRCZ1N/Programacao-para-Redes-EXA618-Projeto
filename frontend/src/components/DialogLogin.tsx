@@ -30,11 +30,7 @@ type Props = {
   onGoToSignup: () => void;
 };
 
-export function DialogLogin({
-  open,
-  onOpenChange,
-  onGoToSignup,
-}: Props) {
+export function DialogLogin({ open, onOpenChange, onGoToSignup }: Props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -44,24 +40,26 @@ export function DialogLogin({
   const [loading, setLoading] = useState(false);
 
   async function handleLogin(e: React.SubmitEvent<HTMLFormElement>) {
-
     e.preventDefault();
-    
+
     try {
       setLoading(true);
       setError("");
 
-      const response = await fetch("https://programacao-para-redes-exa618-projeto.onrender.com/api/auth/login/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-        credentials: "include",
-      });
+      const response = await fetch(
+        "https://programacao-para-redes-exa618-projeto.onrender.com/api/auth/login/",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+          credentials: "include",
+        },
+      );
 
       if (response.ok) {
         await refreshUser();
         onOpenChange(false);
-        
+
         navigate("/dashboard");
       } else if (response.status === 401) {
         setError("Email ou senha inválidos");
@@ -109,57 +107,51 @@ export function DialogLogin({
         </DialogDescription>
 
         <div className="space-y-3">
+          <form onSubmit={handleLogin} className="space-y-3">
+            <Field>
+              <FieldLabel className="text-slate-200 text-xs font-semibold">
+                Email
+              </FieldLabel>
 
-      
-          <Field>
-            <FieldLabel className="text-slate-200 text-xs font-semibold">
-              Email
-            </FieldLabel>
+              <Input
+                type="email"
+                placeholder="seu_email@gmail.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className={fieldClass}
+                required
+              />
+            </Field>
 
-            <Input
-              type="email"
-              placeholder="seu_email@gmail.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className={fieldClass}
-              required
-            />
-          </Field>
+            <Field>
+              <FieldLabel className="text-slate-200 text-xs font-semibold">
+                Senha
+              </FieldLabel>
 
-        
-          <Field>
-            <FieldLabel className="text-slate-200 text-xs font-semibold">
-              Senha
-            </FieldLabel>
+              <Input
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className={fieldClass}
+                required
+              />
+            </Field>
 
-            <Input
-              type="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className={fieldClass}
-              required
-            />
-          </Field>
+            {error && (
+              <div className="bg-red-900/30 border border-red-700 text-red-400 px-3 py-2 rounded text-xs">
+                {error}
+              </div>
+            )}
 
-        
-          {error && (
-            <div className="bg-red-900/30 border border-red-700 text-red-400 px-3 py-2 rounded text-xs">
-              {error}
-            </div>
-          )}
-
-          
-          <Button
-            type="button"
-            onClick={handleLogin}
-            disabled={loading}
-            className="w-full bg-white text-black hover:bg-gray-200 font-bold h-9 text-sm"
-          >
-            {loading ? "Entrando..." : "Entrar"}
-          </Button>
-
-      
+            <Button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-white text-black hover:bg-gray-200 font-bold h-9 text-sm"
+            >
+              {loading ? "Entrando..." : "Entrar"}
+            </Button>
+          </form>
           <div
             style={{
               textAlign: "center",
@@ -186,7 +178,6 @@ export function DialogLogin({
               Cadastre-se
             </button>
           </div>
-
         </div>
       </DialogContent>
     </Dialog>
