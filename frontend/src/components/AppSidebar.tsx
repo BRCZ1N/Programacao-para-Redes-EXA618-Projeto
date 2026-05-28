@@ -24,8 +24,9 @@ export function AppSidebar() {
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [search, setSearch] = useState("");
 
+  // 🌐 Nova URL do Render configurada aqui:
   const [nextUrl, setNextUrl] = useState<string | null>(
-    "https://programacao-para-redes-exa618-proje.vercel.app/api/playlist/"
+    "https://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/"
   );
 
   const isFetchingRef = useRef(false);
@@ -35,7 +36,7 @@ export function AppSidebar() {
   const resetAndReload = useCallback(() => {
     setPlaylists([]);
     setNextUrl(
-      "https://programacao-para-redes-exa618-proje.vercel.app/api/playlist/"
+      "https://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/"
     );
   }, []);
 
@@ -92,7 +93,6 @@ export function AppSidebar() {
       <aside
         style={{
           height: "100%",
-          // 💡 DEFINA A LARGURA DA SIDEBAR AQUI PARA CONTROLAR O LAYOUT GERAL
           width: isCompact ? "70px" : "280px", 
           minWidth: isCompact ? "70px" : "280px",
           display: "flex",
@@ -132,13 +132,12 @@ export function AppSidebar() {
           </button>
         </div>
 
-        {/* 🔥 SEARCH AJUSTADO PARA NÃO MOVER O LAYOUT */}
         {!isCompact && (
           <div
             style={{
               padding: "0 12px 12px",
               display: "flex",
-              flexShrink: 0, // 💡 Garante que a barra de busca nunca encolha ou quebre
+              flexShrink: 0,
             }}
           >
             <div
@@ -167,7 +166,7 @@ export function AppSidebar() {
                   color: theme.text,
                   width: "100%",
                   fontSize: 13,
-                  minWidth: 0, // 💡 Crucial para o Flexbox aceitar que o input diminua se necessário
+                  minWidth: 0,
                 }}
               />
             </div>
