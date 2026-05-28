@@ -180,14 +180,38 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
           sx={{
             width: "100%",
 
+            // CHIPS
             "& .MuiChip-root": {
-              backgroundColor: "#666",
-              color: "white",
+              backgroundColor: "white",
+              color: "black",
               fontWeight: 600,
             },
 
             "& .MuiChip-deleteIcon": {
-              color: "#ffffff",
+              color: "#000",
+            },
+
+            // INPUT BACKGROUND
+            "& .MuiOutlinedInput-root": {
+              backgroundColor: "#fff",
+            },
+
+            // 🔽 ÍCONE DE ABRIR (seta)
+            "& .MuiAutocomplete-popupIndicator": {
+              color: "#fff",
+            },
+
+            "& .MuiAutocomplete-popupIndicator:hover": {
+              color: "#333",
+            },
+
+            // ❌ ÍCONE DE LIMPAR (X)
+            "& .MuiAutocomplete-clearIndicator": {
+              color: "#fff",
+            },
+
+            "& .MuiAutocomplete-clearIndicator:hover": {
+              color: "#333",
             },
           }}
         />
