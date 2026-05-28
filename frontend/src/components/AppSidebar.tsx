@@ -38,7 +38,7 @@ export function AppSidebar() {
     setNextUrl(BASE_URL);
   }, []);
 
-  // 🔥 debounce search (evita reflow durante digitação)
+  // debounce
   useEffect(() => {
     const t = setTimeout(() => {
       setDebouncedSearch(search);
@@ -99,15 +99,8 @@ export function AppSidebar() {
           overflow: "hidden",
         }}
       >
-    
-        <div
-          style={{
-            padding: 12,
-            display: "flex",
-            justifyContent: isCompact ? "center" : "space-between",
-            alignItems: "center",
-          }}
-        >
+        {/* HEADER */}
+        <div style={{ padding: 12, display: "flex", justifyContent: "center" }}>
           <button
             onClick={() => setOpenCreateDialog(true)}
             style={{
@@ -121,6 +114,8 @@ export function AppSidebar() {
               background: theme.surface,
               color: theme.text,
               cursor: "pointer",
+              width: "100%",
+              justifyContent: "center",
             }}
           >
             <Plus size={14} />
@@ -128,7 +123,7 @@ export function AppSidebar() {
           </button>
         </div>
 
-     
+        {/* SEARCH */}
         {!isCompact && (
           <div style={{ padding: "0 12px 12px" }}>
             <div
@@ -161,29 +156,21 @@ export function AppSidebar() {
           </div>
         )}
 
-      
-        <div
-          style={{
-            flex: 1,
-            overflowY: "auto",
-            padding: 6,
-          }}
-        >
+        {/* LISTA */}
+        <div style={{ flex: 1, overflowY: "auto", padding: 6 }}>
           {playlists.map((item) => (
             <div
               key={item.id}
               onClick={() => navigate(`/dashboard/playlist/${item.id}`)}
               style={{
-                display: "grid",
-                gridTemplateColumns: "40px 1fr",
+                display: "flex",
                 alignItems: "center",
-                gap: 10,
-                padding: 10,
+                height: 56, // 🔥 TRAVA ALTURA (evita layout shift)
+                padding: "0 10px",
                 borderRadius: 8,
                 cursor: "pointer",
                 transition: "background 0.15s ease",
-                width: "100%",
-                boxSizing: "border-box",
+                overflow: "hidden",
               }}
               onMouseEnter={(e) =>
                 (e.currentTarget.style.background = theme.surfaceHover)
@@ -192,7 +179,7 @@ export function AppSidebar() {
                 (e.currentTarget.style.background = "transparent")
               }
             >
-          
+              {/* IMAGE FIXA */}
               <div
                 style={{
                   width: 40,
@@ -200,6 +187,7 @@ export function AppSidebar() {
                   borderRadius: 6,
                   overflow: "hidden",
                   background: theme.surface,
+                  flexShrink: 0,
                 }}
               >
                 {item.games?.[0]?.url_image ? (
@@ -226,19 +214,28 @@ export function AppSidebar() {
                 )}
               </div>
 
-              
+              {/* TEXTO 100% CONTROLADO */}
               {!isCompact && (
-                <span
+                <div
                   style={{
-                    fontSize: 13,
-                    whiteSpace: "nowrap",
+                    marginLeft: 10,
+                    flex: 1,
+                    minWidth: 0,
                     overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    display: "block",
                   }}
                 >
-                  {item.title}
-                </span>
+                  <div
+                    style={{
+                      fontSize: 13,
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      lineHeight: "40px", // 🔥 centraliza vertical
+                    }}
+                  >
+                    {item.title}
+                  </div>
+                </div>
               )}
             </div>
           ))}
