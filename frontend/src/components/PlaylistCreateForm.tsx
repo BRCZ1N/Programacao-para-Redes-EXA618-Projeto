@@ -102,7 +102,7 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
   return (
     <div className="flex flex-col gap-5 text-white">
       <div>
-        <h2 className="text-base font-semibold text-white">Criar playlist</h2>
+        <h2 className="text-base font-semibold !text-white">Criar playlist</h2>
         <p className="text-xs text-neutral-400">
           Configure os filtros da sua playlist
         </p>
