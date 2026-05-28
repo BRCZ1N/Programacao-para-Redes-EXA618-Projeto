@@ -134,11 +134,7 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
           }
           className="bg-black border border-neutral-800 text-white placeholder:text-neutral-500"
         />
-      </div>
 
-      <div
-        className="flex flex-col gap-4 p-4 rounded-lg"
-      >
         <Autocomplete
           disablePortal
           multiple
@@ -160,7 +156,6 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
               fontWeight: 600,
             },
 
-           
             "& .MuiChip-deleteIcon": {
               color: "black",
             },
@@ -168,9 +163,7 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
             "& .MuiChip-deleteIcon:hover": {
               color: "#333",
             },
-
           }}
-  
         />
 
         <SliderBlock
