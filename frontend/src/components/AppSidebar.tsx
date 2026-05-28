@@ -57,9 +57,7 @@ export function AppSidebar() {
 
       setPlaylists((prev) => {
         const ids = new Set(prev.map((p) => p.id));
-        const newItems = json.results.filter(
-          (p: Playlist) => !ids.has(p.id),
-        );
+        const newItems = json.results.filter((p: Playlist) => !ids.has(p.id));
         return [...prev, ...newItems];
       });
 
@@ -170,6 +168,7 @@ export function AppSidebar() {
                 borderRadius: 8,
                 cursor: "pointer",
                 transition: "background 0.15s ease",
+                minWidth: 0,
               }}
               onMouseEnter={(e) =>
                 (e.currentTarget.style.background = theme.surfaceHover)
@@ -219,7 +218,7 @@ export function AppSidebar() {
                     whiteSpace: "nowrap",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
-                    maxWidth: 500,
+                    minWidth: 0, // 🔥 ESSENCIAL
                   }}
                 >
                   {item.title}
