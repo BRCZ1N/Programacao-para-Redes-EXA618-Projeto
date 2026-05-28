@@ -7,6 +7,7 @@ from users.permissions import IsSuperUser
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Game, Tag
 from .serializers import GameGridSerializer, TagSerializer, GameViewSerializer
+from django.shortcuts import get_object_or_404
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -73,16 +74,11 @@ def search_games_per_title(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def search_games_per_id(request):
+def search_games_per_id(request, pk):
 
-    game_id = request.query_params.get("id", "").strip()
+    game = get_object_or_404(Game, id=pk)
 
-    query = Game.objects.all()
-
-    if game_id:
-        query = query.filter(id=game_id)
-
-    serializer = GameViewSerializer(query, many=True)
+    serializer = GameViewSerializer(game)
     return Response(serializer.data)
 
 @api_view(["POST"])
