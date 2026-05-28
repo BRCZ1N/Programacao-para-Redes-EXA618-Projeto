@@ -1,17 +1,9 @@
-import { useState, useEffect } from "react";
-import { Input } from "./ui/input";
+import { useEffect, useState } from "react";
 import { EditableField } from "./EditableField";
 import { useAuth } from "../utils/AuthProvider";
 
-const inputClass =
-  "bg-[#121212] border border-[#2A2A2A] text-white placeholder:text-white/30 " +
-  "hover:bg-[#161616] focus:bg-[#161616] focus:border-[#3A3A3A] " +
-  "focus:ring-0 transition rounded-md";
-
 export function PerfilData() {
   const { user, refreshUser, setUser } = useAuth();
-
-  const [editing, setEditing] = useState<string | null>(null);
 
   const [form, setForm] = useState({
     username: "",
@@ -33,28 +25,24 @@ export function PerfilData() {
 
   if (!user) return null;
 
-  async function handleUpdateUser(data: Partial<typeof form>) {
+  async function handleUpdateUser(field: string, value: string) {
     try {
-      const res = await fetch("https://programacao-para-redes-exa618-projeto.onrender.com/api/user/update/", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(data),
-      });
+      const res = await fetch(
+        "https://programacao-para-redes-exa618-projeto.onrender.com/api/user/update/",
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ [field]: value }),
+        }
+      );
 
       if (res.ok) {
         const updated = await res.json();
 
         setUser((prev) =>
-          prev
-            ? {
-                ...prev,
-                ...updated,
-              }
-            : prev,
+          prev ? { ...prev, ...updated } : prev
         );
-
-        setEditing(null);
 
         refreshUser();
       }
@@ -63,108 +51,48 @@ export function PerfilData() {
     }
   }
 
-  function handleSave(field: keyof typeof form) {
-    handleUpdateUser({ [field]: form[field] });
-  }
-
-  const handleInputClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-  };
-
-  const handleInputKeyDown = (e: React.KeyboardEvent) => {
-    e.stopPropagation();
-  };
-
   return (
     <div className="space-y-6 text-white">
       <EditableField
         label="Nome de usuário"
+        field="username"
         value={form.username}
-        editing={editing === "username"}
-        onEdit={() => setEditing("username")}
-        onCancel={() => setEditing(null)}
-        onSave={() => handleSave("username")}
-      >
-        <Input
-          value={form.username}
-          onChange={(e) => setForm({ ...form, username: e.target.value })}
-          className={inputClass}
-          onClick={handleInputClick}
-          onKeyDown={handleInputKeyDown}
-          autoComplete="off"
-          data-form="false"
-        />
-      </EditableField>
+        form={form}
+        setForm={setForm}
+        onSave={handleUpdateUser}
+      />
 
       <EditableField
         label="Primeiro nome"
+        field="first_name"
         value={form.first_name}
-        editing={editing === "first_name"}
-        onEdit={() => setEditing("first_name")}
-        onCancel={() => setEditing(null)}
-        onSave={() => handleSave("first_name")}
-      >
-        <Input
-          value={form.first_name}
-          onChange={(e) => setForm({ ...form, first_name: e.target.value })}
-          className={inputClass}
-          onClick={handleInputClick}
-          onKeyDown={handleInputKeyDown}
-          autoComplete="off"
-          data-form="false"
-        />
-      </EditableField>
+        form={form}
+        setForm={setForm}
+        onSave={handleUpdateUser}
+      />
 
       <EditableField
         label="Último nome"
+        field="last_name"
         value={form.last_name}
-        editing={editing === "last_name"}
-        onEdit={() => setEditing("last_name")}
-        onCancel={() => setEditing(null)}
-        onSave={() => handleSave("last_name")}
-      >
-        <Input
-          value={form.last_name}
-          onChange={(e) => setForm({ ...form, last_name: e.target.value })}
-          className={inputClass}
-          onClick={handleInputClick}
-          onKeyDown={handleInputKeyDown}
-          autoComplete="off"
-          data-form="false"
-        />
-      </EditableField>
+        form={form}
+        setForm={setForm}
+        onSave={handleUpdateUser}
+      />
 
       <EditableField
         label="Senha"
+        field="password"
+        type="password"
         value="************"
-        editing={editing === "password"}
-        onEdit={() => setEditing("password")}
-        onCancel={() => setEditing(null)}
-        onSave={() => handleSave("password")}
-        required
-      >
-        <Input
-          type="password"
-          placeholder="Nova senha"
-          value={form.password}
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
-          className={inputClass}
-          onClick={handleInputClick}
-          onKeyDown={handleInputKeyDown}
-          autoComplete="new-password"
-          data-form="false"
-          data-lpignore="true"
-          data-1p-ignore="true"
-        />
-      </EditableField>
-
-      <EditableField
-        label="Email"
-        value={user.email}
-        editing={false}
-        onEdit={() => {}}
-        hideEdit
+        form={form}
+        setForm={setForm}
+        onSave={handleUpdateUser}
       />
+
+      <div className="text-sm text-white/70">
+        Email: {user.email}
+      </div>
     </div>
   );
 }
