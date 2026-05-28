@@ -188,7 +188,6 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
             "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
               borderColor: "white",
             },
-
            
             "& .MuiChip-root": {
               backgroundColor: "white",
@@ -198,7 +197,7 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
 
            
             "& .MuiChip-deleteIcon": {
-              color: "black",
+              color: "white",
             },
 
             "& .MuiChip-deleteIcon:hover": {
