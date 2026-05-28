@@ -382,7 +382,7 @@ export function PlaylistPage() {
               overflowWrap: "anywhere",
             }}
           >
-            {activePlaylist?.description || "Sem descrição"}
+            {activePlaylist?.description}
           </p>
 
           <div style={{ fontSize: 13, color: theme.muted, fontWeight: 500 }}>

@@ -51,6 +51,7 @@ def playlist(request):
         count = Playlist.objects.filter(user=request.user).count() + 1
 
         if mode == "empty":
+            
             playlist = Playlist.objects.create(
                 user=request.user,
                 title=f"Minha playlist {count}",
@@ -65,11 +66,21 @@ def playlist(request):
             min_rating = request.data.get("min_rating", 0)
             min_review = request.data.get("min_review", 0)
             min_value = request.data.get("min_value", 0)
+            
+            title = request.data.get("title")
+
+            if not title:
+                title = f"Minha playlist {count}"
+                
+            description = request.data.get("description")
+                
+            if not description:
+                description = "Sem descrição"
 
             playlist = Playlist.objects.create(
                 user=request.user,
-                title=request.data.get("title", f"Minha playlist {count}"),
-                description=request.data.get("description", "")
+                title=title,
+                description=description
             )
 
             games = Game.objects.all()
