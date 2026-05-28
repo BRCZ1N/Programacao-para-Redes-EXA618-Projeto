@@ -206,6 +206,7 @@ export function PerfilData() {
             setDraft({ ...draft, password: e.target.value })
           }
           className={inputClass}
+          autoComplete="off"
         />
       </EditableField>
 

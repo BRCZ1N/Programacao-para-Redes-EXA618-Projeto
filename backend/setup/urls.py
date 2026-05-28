@@ -1,6 +1,6 @@
 from django.urls import path
 from playlists.views import playlist_detail, playlist
-from games.views import game_list,crawl_games, game_list_featured,search_games, tag_list
+from games.views import game_list,crawl_games, game_list_featured, search_games_per_title , tag_list, search_games_per_id
 from users.views import register_user,me,delete_user, logout, update_user
 from users.cookies import CookieTokenObtainPairView, CookieTokenRefreshView
 
@@ -8,10 +8,11 @@ urlpatterns = [
    
     path('api/crawler/', crawl_games),
 
-    path('api/games/search/', search_games),
+    path('api/games/search/', search_games_per_title),
     path('api/games/featured/', game_list_featured),
     path('api/games/', game_list),
     path('api/games/tag/', tag_list),
+    path('api/games/<uuid:pk>/', search_games_per_id),
 
     path('api/playlist/', playlist),
     path('api/playlist/<uuid:pk>/', playlist_detail),

@@ -6,7 +6,7 @@ from games.services.game_service import save_games
 from users.permissions import IsSuperUser
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Game, Tag
-from .serializers import GameGridSerializer, TagSerializer
+from .serializers import GameGridSerializer, TagSerializer, GameViewSerializer
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -59,7 +59,7 @@ def game_list_featured(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def search_games(request):
+def search_games_per_title(request):
 
     title = request.query_params.get("title", "").strip()
 
@@ -71,6 +71,19 @@ def search_games(request):
     serializer = GameGridSerializer(query, many=True)
     return Response(serializer.data)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def search_games_per_id(request):
+
+    game_id = request.query_params.get("id", "").strip()
+
+    query = Game.objects.all()
+
+    if game_id:
+        query = query.filter(id=game_id)
+
+    serializer = GameViewSerializer(query, many=True)
+    return Response(serializer.data)
 
 @api_view(["POST"])
 @permission_classes([IsSuperUser])
