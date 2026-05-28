@@ -181,7 +181,7 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
             width: "100%",
 
             "& .MuiChip-root": {
-              backgroundColor: "#110f0f",
+              backgroundColor: "#666",
               color: "white",
               fontWeight: 600,
             },
