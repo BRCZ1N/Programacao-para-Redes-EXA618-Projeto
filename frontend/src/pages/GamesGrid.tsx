@@ -5,6 +5,7 @@ import Stack from "@mui/material/Stack";
 
 import { GameCard } from "../components/GameCard";
 import { Skeleton } from "../components/ui/skeleton";
+import { DialogGame } from "../components/DialogGame";
 
 import type { Game } from "../models/Game";
 
@@ -22,8 +23,10 @@ export function GamesGrid() {
   const [count, setCount] = useState(0);
 
   const [page, setPage] = useState(1);
-
   const [isLoading, setIsLoading] = useState(true);
+
+  const [open, setOpen] = useState(false);
+  const [selectedGameId, setSelectedGameId] = useState<string | null>(null);
 
   async function fetchGames(currentPage: number) {
     setIsLoading(true);
@@ -34,14 +37,17 @@ export function GamesGrid() {
         {
           method: "GET",
           credentials: "include",
-        },
+        }
       );
 
       if (response.status === 401) {
-        const refresh = await fetch("https://programacao-para-redes-exa618-projeto.onrender.com/api/auth/refresh/", {
-          method: "POST",
-          credentials: "include",
-        });
+        const refresh = await fetch(
+          "https://programacao-para-redes-exa618-projeto.onrender.com/api/auth/refresh/",
+          {
+            method: "POST",
+            credentials: "include",
+          }
+        );
 
         if (refresh.ok) {
           response = await fetch(
@@ -49,7 +55,7 @@ export function GamesGrid() {
             {
               method: "GET",
               credentials: "include",
-            },
+            }
           );
         }
       }
@@ -73,41 +79,57 @@ export function GamesGrid() {
 
   const totalPages = Math.ceil(count / PAGE_SIZE);
 
+  const handleOpenGame = (id: string) => {
+    setSelectedGameId(id);
+    setOpen(true);
+  };
+
   return (
-    <div className="flex flex-col min-h-screen w-full p-4 space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3">
-        {games.length === 0 && isLoading
-          ? Array.from({ length: PAGE_SIZE }).map((_, i) => (
-              <Skeleton key={i} className="h-40 w-full rounded-xl" />
-            ))
-          : games.map((game) => <GameCard key={game.id} game={game} />)}
+    <>
+      <div className="flex flex-col min-h-screen w-full p-4 space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          {games.length === 0 && isLoading
+            ? Array.from({ length: PAGE_SIZE }).map((_, i) => (
+                <Skeleton key={i} className="h-40 w-full rounded-xl" />
+              ))
+            : games.map((game) => (
+                <GameCard
+                  key={game.id}
+                  game={game}
+                  onSelect={handleOpenGame}
+                />
+              ))}
+        </div>
+
+        <div className="flex justify-center flex-1">
+          <Stack spacing={2}>
+            <Pagination
+              page={page}
+              siblingCount={0}
+              boundaryCount={1}
+              count={totalPages}
+              onChange={(_, value) => setPage(value)}
+              size="small"
+              sx={{
+                "& .MuiPaginationItem-root": {
+                  color: "white",
+                  borderColor: "white",
+                },
+                "& .Mui-selected": {
+                  backgroundColor: "white !important",
+                  color: "black",
+                },
+              }}
+            />
+          </Stack>
+        </div>
       </div>
 
-      <div className="flex justify-center flex-1">
-        <Stack spacing={2}>
-          <Pagination
-            page={page}
-            siblingCount={0} 
-            boundaryCount={1}
-            count={totalPages}
-            onChange={(_, value) => {
-              setPage(value);
-            }}
-            size="small"
-            sx={{
-              "& .MuiPaginationItem-root": {
-                color: "white",
-                borderColor: "white",
-              },
-
-              "& .Mui-selected": {
-                backgroundColor: "white !important",
-                color: "black",
-              },
-            }}
-          />
-        </Stack>
-      </div>
-    </div>
+      <DialogGame
+        open={open}
+        onOpenChange={setOpen}
+        gameId={selectedGameId}
+      />
+    </>
   );
 }
