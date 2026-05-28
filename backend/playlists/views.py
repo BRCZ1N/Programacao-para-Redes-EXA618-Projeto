@@ -2,6 +2,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
+from django.utils.timezone import now
 
 from django.shortcuts import get_object_or_404
 
@@ -140,8 +141,9 @@ def playlist_detail(request, pk):
 
         elif action == "set":
             playlist.games.set(games)
-
-        playlist.refresh_from_db()
+        
+        playlist.updated_at = now()
+        playlist.save(update_fields=["updated_at"])
 
         return Response(PlaylistSerializer(playlist).data)
 

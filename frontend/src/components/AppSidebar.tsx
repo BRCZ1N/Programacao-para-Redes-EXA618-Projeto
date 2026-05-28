@@ -45,7 +45,6 @@ export function AppSidebar() {
     try {
       const url = new URL(nextUrl);
 
-      // manda search pro backend
       if (search) {
         url.searchParams.set("title", search);
       }
@@ -70,13 +69,11 @@ export function AppSidebar() {
     }
   }, [nextUrl, search]);
 
-  // reload quando search muda
   useEffect(() => {
     setPlaylists([]);
     setNextUrl(BASE_URL);
   }, [search]);
 
-  // primeira carga + scroll infinito
   useEffect(() => {
     loadPlaylists();
   }, [loadPlaylists]);
@@ -94,7 +91,6 @@ export function AppSidebar() {
           overflow: "hidden",
         }}
       >
-        {/* HEADER */}
         <div
           style={{
             padding: 12,
@@ -123,7 +119,6 @@ export function AppSidebar() {
           </button>
         </div>
 
-        {/* SEARCH */}
         {!isCompact && (
           <div style={{ padding: "0 12px 12px" }}>
             <div
@@ -156,7 +151,6 @@ export function AppSidebar() {
           </div>
         )}
 
-        {/* LISTA */}
         <div
           style={{
             flex: 1,
