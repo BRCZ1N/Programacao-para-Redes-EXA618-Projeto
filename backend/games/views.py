@@ -12,7 +12,7 @@ from django.shortcuts import get_object_or_404
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def game_list(request):
-    query = Game.objects.all().order_by("id")
+    query = Game.objects.all().order_by("-total_reviews")
 
     paginator = PageNumberPagination()
     paginator.page_size = 16

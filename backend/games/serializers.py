@@ -51,8 +51,9 @@ class GameViewSerializer(serializers.ModelSerializer):
         model = Game
         fields = [
             'title',
-            'price',
             'discount_price',
+            'description',
+            'price',
             'review_rating',
             'total_reviews',
             'url_image',
