@@ -151,14 +151,15 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
             width: "100%",
 
             "& .MuiChip-root": {
-              backgroundColor: "red",
-              color: "black",
+              backgroundColor: "white",
+              color: "black", 
               fontWeight: 600,
             },
 
-            "& .MuiChip-deleteIcon:hover": {
-              color: "#333",
+            "& .MuiChip-deleteIcon": {
+              color: "#000000",
             },
+
           }}
         />
 
