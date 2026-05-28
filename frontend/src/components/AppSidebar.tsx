@@ -38,6 +38,7 @@ export function AppSidebar() {
     setNextUrl(BASE_URL);
   }, []);
 
+  // 🔥 debounce search (evita reflow durante digitação)
   useEffect(() => {
     const t = setTimeout(() => {
       setDebouncedSearch(search);
@@ -98,6 +99,7 @@ export function AppSidebar() {
           overflow: "hidden",
         }}
       >
+    
         <div
           style={{
             padding: 12,
@@ -126,6 +128,7 @@ export function AppSidebar() {
           </button>
         </div>
 
+     
         {!isCompact && (
           <div style={{ padding: "0 12px 12px" }}>
             <div
@@ -158,6 +161,7 @@ export function AppSidebar() {
           </div>
         )}
 
+      
         <div
           style={{
             flex: 1,
@@ -170,14 +174,14 @@ export function AppSidebar() {
               key={item.id}
               onClick={() => navigate(`/dashboard/playlist/${item.id}`)}
               style={{
-                display: "flex",
+                display: "grid",
+                gridTemplateColumns: "40px 1fr",
                 alignItems: "center",
                 gap: 10,
                 padding: 10,
                 borderRadius: 8,
                 cursor: "pointer",
                 transition: "background 0.15s ease",
-                minWidth: 0,
                 width: "100%",
                 boxSizing: "border-box",
               }}
@@ -188,6 +192,7 @@ export function AppSidebar() {
                 (e.currentTarget.style.background = "transparent")
               }
             >
+          
               <div
                 style={{
                   width: 40,
@@ -195,7 +200,6 @@ export function AppSidebar() {
                   borderRadius: 6,
                   overflow: "hidden",
                   background: theme.surface,
-                  flexShrink: 0,
                 }}
               >
                 {item.games?.[0]?.url_image ? (
@@ -222,20 +226,19 @@ export function AppSidebar() {
                 )}
               </div>
 
+              
               {!isCompact && (
-                <div style={{ flex: 1, minWidth: 0, overflow: "hidden" }}>
-                  <span
-                    style={{
-                      display: "block",
-                      fontSize: 13,
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                    }}
-                  >
-                    {item.title}
-                  </span>
-                </div>
+                <span
+                  style={{
+                    fontSize: 13,
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    display: "block",
+                  }}
+                >
+                  {item.title}
+                </span>
               )}
             </div>
           ))}
