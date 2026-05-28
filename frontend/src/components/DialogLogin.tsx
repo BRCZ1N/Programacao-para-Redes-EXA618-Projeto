@@ -43,7 +43,10 @@ export function DialogLogin({
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function handleLogin() {
+  async function handleLogin(e: React.SubmitEvent<HTMLFormElement>) {
+
+    e.preventDefault();
+    
     try {
       setLoading(true);
       setError("");
@@ -115,7 +118,7 @@ export function DialogLogin({
 
             <Input
               type="email"
-              placeholder="seu_email@exemplo.com"
+              placeholder="seu_email@gmail.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className={fieldClass}
