@@ -25,6 +25,8 @@ export function AppSidebar() {
 
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
   const [nextUrl, setNextUrl] = useState<string | null>(BASE_URL);
 
   const isFetchingRef = useRef(false);
@@ -36,6 +38,14 @@ export function AppSidebar() {
     setNextUrl(BASE_URL);
   }, []);
 
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 300);
+
+    return () => clearTimeout(t);
+  }, [search]);
+
   const loadPlaylists = useCallback(async () => {
     if (!nextUrl || isFetchingRef.current) return;
 
@@ -44,8 +54,8 @@ export function AppSidebar() {
     try {
       const url = new URL(nextUrl);
 
-      if (search) {
-        url.searchParams.set("title", search);
+      if (debouncedSearch) {
+        url.searchParams.set("title", debouncedSearch);
       }
 
       const res = await fetch(url.toString(), {
@@ -64,12 +74,12 @@ export function AppSidebar() {
     } finally {
       isFetchingRef.current = false;
     }
-  }, [nextUrl, search]);
+  }, [nextUrl, debouncedSearch]);
 
   useEffect(() => {
     setPlaylists([]);
     setNextUrl(BASE_URL);
-  }, [search]);
+  }, [debouncedSearch]);
 
   useEffect(() => {
     loadPlaylists();
@@ -168,6 +178,8 @@ export function AppSidebar() {
                 cursor: "pointer",
                 transition: "background 0.15s ease",
                 minWidth: 0,
+                width: "100%",
+                boxSizing: "border-box",
               }}
               onMouseEnter={(e) =>
                 (e.currentTarget.style.background = theme.surfaceHover)
@@ -210,16 +222,15 @@ export function AppSidebar() {
                 )}
               </div>
 
-              {/* 🔥 FIX DEFINITIVO DO ELLIPSIS */}
               {!isCompact && (
-                <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ flex: 1, minWidth: 0, overflow: "hidden" }}>
                   <span
                     style={{
+                      display: "block",
                       fontSize: 13,
                       whiteSpace: "nowrap",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
-                      display: "block",
                     }}
                   >
                     {item.title}
