@@ -196,12 +196,13 @@ function Section({ icon, title, subtitle, children }: SectionProps) {
             gap: 6,
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 8, color: "#ffffff" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             {icon}
             <h2
               style={{
                 fontSize: "clamp(16px, 2.2vw, 18px)",
                 fontWeight: 700,
+                color: "#ffffff",
               }}
             >
               {title}
