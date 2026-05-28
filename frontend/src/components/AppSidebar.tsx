@@ -35,7 +35,7 @@ export function AppSidebar() {
   const resetAndReload = useCallback(() => {
     setPlaylists([]);
     setNextUrl(
-      "https://programacao-para-redes-exa618-proje.vercel.app/api/playlist/"
+      "https://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/"
     );
   }, []);
 
