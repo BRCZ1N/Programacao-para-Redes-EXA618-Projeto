@@ -157,6 +157,21 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
           sx={{
             width: "100%",
 
+            "& .MuiChip-root": {
+              backgroundColor: "white",
+              color: "black",
+              fontWeight: 600,
+            },
+
+           
+            "& .MuiChip-deleteIcon": {
+              color: "black",
+            },
+
+            "& .MuiChip-deleteIcon:hover": {
+              color: "#333",
+            },
+
             "& .MuiOutlinedInput-root": {
               backgroundColor: "#0f0f0f",
               color: "#fff",
@@ -174,15 +189,7 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
               borderColor: "#fff",
             },
           }}
-          slotProps={{
-            paper: {
-              sx: {
-                backgroundColor: "#0f0f0f",
-                color: "#fff",
-                border: "1px solid #2a2a2a",
-              },
-            },
-          }}
+  
         />
 
         <SliderBlock
