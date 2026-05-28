@@ -20,15 +20,14 @@ const theme = {
   muted: "#B3B3B3",
 };
 
-// 📌 páginas do modo compacto
 const pages = [
   {
     path: "/",
-    icon: <Home size={18} />,
+    icon: <Home size={16} />,
   },
   {
     path: "/dashboard/games",
-    icon: <Gamepad2 size={18} />,
+    icon: <Gamepad2 size={16} />,
   },
 ];
 
@@ -41,7 +40,6 @@ export function AppSidebar() {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
 
-  // 🔥 fetch centralizado
   const fetchPlaylists = async (query = debouncedSearch) => {
     try {
       const url = new URL(API_URL);
@@ -57,11 +55,10 @@ export function AppSidebar() {
       const json = await res.json();
       setPlaylists(json.results || []);
     } catch (err) {
-      console.error("Erro ao buscar playlists:", err);
+      console.error(err);
     }
   };
 
-  // ⏱ debounce da search
   useEffect(() => {
     const timeout = setTimeout(() => {
       setDebouncedSearch(search);
@@ -70,12 +67,10 @@ export function AppSidebar() {
     return () => clearTimeout(timeout);
   }, [search]);
 
-  // 🔁 busca quando debounce muda
   useEffect(() => {
     fetchPlaylists(debouncedSearch);
   }, [debouncedSearch]);
 
-  // ➕ atualiza após criar playlist
   const handlePlaylistCreated = async () => {
     await fetchPlaylists("");
   };
@@ -96,7 +91,6 @@ export function AppSidebar() {
           boxSizing: "border-box",
         }}
       >
-        {/* HEADER */}
         <div
           style={{
             padding: 12,
@@ -125,9 +119,7 @@ export function AppSidebar() {
           </button>
         </div>
 
-        {/* SEARCH OU BOTÕES (RESPONSIVO) */}
         {!isCompact ? (
-          // 💻 DESKTOP: SEARCH
           <div
             style={{
               padding: "0 12px 12px",
@@ -147,8 +139,7 @@ export function AppSidebar() {
                 width: "100%",
               }}
             >
-              <Search size={14} color={theme.muted} style={{ flexShrink: 0 }} />
-
+              <Search size={14} color={theme.muted} />
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -160,18 +151,17 @@ export function AppSidebar() {
                   color: theme.text,
                   width: "100%",
                   fontSize: 13,
-                  minWidth: 0,
                 }}
               />
             </div>
           </div>
         ) : (
-          // 📱 MOBILE: BOTÕES
           <div
             style={{
               padding: "0 12px 12px",
               display: "flex",
-              justifyContent: "space-around",
+              flexDirection: "column",
+              gap: 10,
               alignItems: "center",
             }}
           >
@@ -180,10 +170,25 @@ export function AppSidebar() {
                 key={page.path}
                 onClick={() => navigate(page.path)}
                 style={{
-                  background: "transparent",
-                  border: "none",
-                  color: theme.text,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: "rgba(255,255,255,0.04)",
+                  padding: "0.5rem",
+                  borderRadius: 999,
+                  border: "1px solid rgba(255,255,255,0.06)",
+                  color: theme.muted,
                   cursor: "pointer",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = theme.text;
+                  e.currentTarget.style.background =
+                    "rgba(255,255,255,0.08)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = theme.muted;
+                  e.currentTarget.style.background =
+                    "rgba(255,255,255,0.04)";
                 }}
               >
                 {page.icon}
@@ -192,7 +197,6 @@ export function AppSidebar() {
           </div>
         )}
 
-        {/* LISTA */}
         <div style={{ flex: 1, overflowY: "auto", padding: 6 }}>
           {playlists.map((item) => (
             <div
@@ -205,15 +209,7 @@ export function AppSidebar() {
                 padding: 10,
                 borderRadius: 8,
                 cursor: "pointer",
-                transition: "background 0.15s ease",
-                minWidth: 0,
               }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.background = theme.surfaceHover)
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.background = "transparent")
-              }
             >
               <div
                 style={{
@@ -222,10 +218,10 @@ export function AppSidebar() {
                   borderRadius: 6,
                   overflow: "hidden",
                   background: theme.surface,
-                  flexShrink: 0,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
+                  flexShrink: 0,
                 }}
               >
                 {item.games?.[0]?.url_image ? (
