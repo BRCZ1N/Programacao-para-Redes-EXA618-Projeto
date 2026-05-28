@@ -151,7 +151,7 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
               {...params}
               sx={{
                 "& .MuiOutlinedInput-root": {
-                  backgroundColor: "#fff", // fundo branco do field
+                  backgroundColor: "#000", // fundo branco do field
                   color: "#000", // texto digitado
                 },
                 "& .MuiInputBase-input": {
@@ -181,7 +181,7 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
             width: "100%",
 
             "& .MuiChip-root": {
-              backgroundColor: "white",
+              backgroundColor: "black",
               color: "black",
               fontWeight: 600,
             },
