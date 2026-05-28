@@ -2,7 +2,7 @@
 
 import { Search, Plus, Library } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState, useCallback, useRef, useMemo } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 
 import type { Playlist } from "../models/Playlist";
 import { DialogCreatePlaylist } from "../components/DialogCreatePlaylist";
@@ -15,8 +15,10 @@ const theme = {
   border: "#2A2A2A",
   text: "#FFFFFF",
   muted: "#B3B3B3",
-  accent: "#1DB954",
 };
+
+const BASE_URL =
+  "https://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/";
 
 export function AppSidebar() {
   const navigate = useNavigate();
@@ -24,42 +26,16 @@ export function AppSidebar() {
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [search, setSearch] = useState("");
 
-  const [nextUrl, setNextUrl] = useState<string | null>(
-    "https://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/",
-  );
+  const [nextUrl, setNextUrl] = useState<string | null>(BASE_URL);
 
   const isFetchingRef = useRef(false);
-  const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const isCompact = useMediaQuery("(max-width: 700px)");
+  const [openCreateDialog, setOpenCreateDialog] = useState(false);
 
   const resetAndReload = useCallback(() => {
     setPlaylists([]);
-    setNextUrl("https://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/");
+    setNextUrl(BASE_URL);
   }, []);
-
-  const normalize = (text: string) =>
-    text
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .trim();
-
-  const filteredPlaylists = useMemo(() => {
-    const query = normalize(search);
-
-    if (!query) return playlists;
-
-    return playlists
-      .map((p) => {
-        const title = normalize(p.title);
-        let score = 0;
-        if (title.startsWith(query)) score += 100;
-        return { playlist: p, score };
-      })
-      .filter((i) => i.score > 0)
-      .sort((a, b) => b.score - a.score)
-      .map((i) => i.playlist);
-  }, [playlists, search]);
 
   const loadPlaylists = useCallback(async () => {
     if (!nextUrl || isFetchingRef.current) return;
@@ -67,7 +43,14 @@ export function AppSidebar() {
     isFetchingRef.current = true;
 
     try {
-      const res = await fetch(nextUrl, {
+      const url = new URL(nextUrl);
+
+      // manda search pro backend
+      if (search) {
+        url.searchParams.set("title", search);
+      }
+
+      const res = await fetch(url.toString(), {
         credentials: "include",
       });
 
@@ -75,7 +58,9 @@ export function AppSidebar() {
 
       setPlaylists((prev) => {
         const ids = new Set(prev.map((p) => p.id));
-        const newItems = json.results.filter((p: Playlist) => !ids.has(p.id));
+        const newItems = json.results.filter(
+          (p: Playlist) => !ids.has(p.id),
+        );
         return [...prev, ...newItems];
       });
 
@@ -83,15 +68,18 @@ export function AppSidebar() {
     } finally {
       isFetchingRef.current = false;
     }
-  }, [nextUrl]);
+  }, [nextUrl, search]);
 
+  // reload quando search muda
+  useEffect(() => {
+    setPlaylists([]);
+    setNextUrl(BASE_URL);
+  }, [search]);
+
+  // primeira carga + scroll infinito
   useEffect(() => {
     loadPlaylists();
   }, [loadPlaylists]);
-
-  const handleCreated = () => {
-    resetAndReload();
-  };
 
   return (
     <>
@@ -106,6 +94,7 @@ export function AppSidebar() {
           overflow: "hidden",
         }}
       >
+        {/* HEADER */}
         <div
           style={{
             padding: 12,
@@ -127,20 +116,14 @@ export function AppSidebar() {
               background: theme.surface,
               color: theme.text,
               cursor: "pointer",
-              transition: "0.2s",
             }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.background = theme.surfaceHover)
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.background = theme.surface)
-            }
           >
             <Plus size={14} />
             {!isCompact && "Criar"}
           </button>
         </div>
 
+        {/* SEARCH */}
         {!isCompact && (
           <div style={{ padding: "0 12px 12px" }}>
             <div
@@ -173,6 +156,7 @@ export function AppSidebar() {
           </div>
         )}
 
+        {/* LISTA */}
         <div
           style={{
             flex: 1,
@@ -180,7 +164,7 @@ export function AppSidebar() {
             padding: 6,
           }}
         >
-          {filteredPlaylists.map((item) => (
+          {playlists.map((item) => (
             <div
               key={item.id}
               onClick={() => navigate(`/dashboard/playlist/${item.id}`)}
@@ -254,7 +238,7 @@ export function AppSidebar() {
       <DialogCreatePlaylist
         open={openCreateDialog}
         onOpenChange={setOpenCreateDialog}
-        onCreated={handleCreated}
+        onCreated={resetAndReload}
       />
     </>
   );
