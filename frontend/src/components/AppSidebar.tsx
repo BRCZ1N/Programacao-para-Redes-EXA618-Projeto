@@ -38,12 +38,8 @@ export function AppSidebar() {
     setNextUrl(BASE_URL);
   }, []);
 
-  // debounce
   useEffect(() => {
-    const t = setTimeout(() => {
-      setDebouncedSearch(search);
-    }, 300);
-
+    const t = setTimeout(() => setDebouncedSearch(search), 300);
     return () => clearTimeout(t);
   }, [search]);
 
@@ -99,8 +95,8 @@ export function AppSidebar() {
           overflow: "hidden",
         }}
       >
-        {/* HEADER */}
-        <div style={{ padding: 12, display: "flex", justifyContent: "center" }}>
+ 
+        <div style={{ padding: 12 }}>
           <button
             onClick={() => setOpenCreateDialog(true)}
             style={{
@@ -114,8 +110,6 @@ export function AppSidebar() {
               background: theme.surface,
               color: theme.text,
               cursor: "pointer",
-              width: "100%",
-              justifyContent: "center",
             }}
           >
             <Plus size={14} />
@@ -123,7 +117,7 @@ export function AppSidebar() {
           </button>
         </div>
 
-        {/* SEARCH */}
+       
         {!isCompact && (
           <div style={{ padding: "0 12px 12px" }}>
             <div
@@ -156,7 +150,7 @@ export function AppSidebar() {
           </div>
         )}
 
-        {/* LISTA */}
+     
         <div style={{ flex: 1, overflowY: "auto", padding: 6 }}>
           {playlists.map((item) => (
             <div
@@ -165,12 +159,11 @@ export function AppSidebar() {
               style={{
                 display: "flex",
                 alignItems: "center",
-                height: 56, // 🔥 TRAVA ALTURA (evita layout shift)
-                padding: "0 10px",
+                gap: 10,
+                padding: 10,
                 borderRadius: 8,
                 cursor: "pointer",
-                transition: "background 0.15s ease",
-                overflow: "hidden",
+                minWidth: 0, // 🔥 CRÍTICO
               }}
               onMouseEnter={(e) =>
                 (e.currentTarget.style.background = theme.surfaceHover)
@@ -179,7 +172,7 @@ export function AppSidebar() {
                 (e.currentTarget.style.background = "transparent")
               }
             >
-              {/* IMAGE FIXA */}
+            
               <div
                 style={{
                   width: 40,
@@ -214,27 +207,25 @@ export function AppSidebar() {
                 )}
               </div>
 
-              {/* TEXTO 100% CONTROLADO */}
+             
               {!isCompact && (
                 <div
                   style={{
-                    marginLeft: 10,
                     flex: 1,
-                    minWidth: 0,
-                    overflow: "hidden",
+                    minWidth: 0, 
                   }}
                 >
-                  <div
+                  <span
                     style={{
-                      fontSize: 13,
+                      display: "block",
                       whiteSpace: "nowrap",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
-                      lineHeight: "40px", // 🔥 centraliza vertical
+                      fontSize: 13,
                     }}
                   >
                     {item.title}
-                  </div>
+                  </span>
                 </div>
               )}
             </div>
