@@ -141,6 +141,7 @@ export function PerfilData() {
         onEdit={() => setEditing("password")}
         onCancel={() => setEditing(null)}
         onSave={() => handleSave("password")}
+        required
       >
         <Input
           type="password"

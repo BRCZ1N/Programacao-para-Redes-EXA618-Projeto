@@ -119,7 +119,7 @@ export function DialogConfiguration({
         </DialogDescription>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
-          {/* Abas */}
+
           <div
             style={{
               display: "flex",
@@ -134,7 +134,6 @@ export function DialogConfiguration({
           
           </div>
 
-          {/* Conteúdo */}
           <div
             style={{
               overflow: "y-auto",
