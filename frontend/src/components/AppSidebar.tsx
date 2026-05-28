@@ -8,15 +8,6 @@ import type { Playlist } from "../models/Playlist";
 import { DialogCreatePlaylist } from "../components/DialogCreatePlaylist";
 import { useMediaQuery } from "../hooks/HookSearch";
 
-const theme = {
-  bg: "#000000",
-  surface: "#121212",
-  surfaceHover: "#1A1A1A",
-  border: "#2A2A2A",
-  text: "#FFFFFF",
-  muted: "#B3B3B3",
-};
-
 const BASE_URL =
   "https://programacao-para-redes-exa618-projeto.onrender.com/api/playlist/";
 
@@ -26,7 +17,6 @@ export function AppSidebar() {
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-
   const [nextUrl, setNextUrl] = useState<string | null>(BASE_URL);
 
   const isFetchingRef = useRef(false);
@@ -38,32 +28,26 @@ export function AppSidebar() {
     setNextUrl(BASE_URL);
   }, []);
 
- 
+  // debounce da busca
   useEffect(() => {
     const t = setTimeout(() => setDebouncedSearch(search), 300);
     return () => clearTimeout(t);
   }, [search]);
 
-
+  // carregar playlists
   const loadPlaylists = useCallback(async () => {
     if (!nextUrl || isFetchingRef.current) return;
-
     isFetchingRef.current = true;
 
     try {
       const url = new URL(nextUrl);
-
       if (debouncedSearch) {
         url.searchParams.set("title", debouncedSearch);
       }
 
-      const res = await fetch(url.toString(), {
-        credentials: "include",
-      });
-
+      const res = await fetch(url.toString(), { credentials: "include" });
       const json = await res.json();
 
-     
       setPlaylists((prev) => {
         if (debouncedSearch) {
           return json.results;
@@ -89,32 +73,11 @@ export function AppSidebar() {
 
   return (
     <>
-      <aside
-        style={{
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          background: theme.bg,
-          color: theme.text,
-          borderRight: `1px solid ${theme.border}`,
-          overflow: "auto", 
-        }}
-      >
-        <div style={{ padding: 12 }}>
+      <aside className="sidebar">
+        <div className="sidebar-header">
           <button
             onClick={() => setOpenCreateDialog(true)}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-              padding: "6px 10px",
-              fontSize: 12,
-              borderRadius: 8,
-              border: `1px solid ${theme.border}`,
-              background: theme.surface,
-              color: theme.text,
-              cursor: "pointer",
-            }}
+            className="btn-create"
           >
             <Plus size={14} />
             {!isCompact && "Criar"}
@@ -122,110 +85,42 @@ export function AppSidebar() {
         </div>
 
         {!isCompact && (
-          <div style={{ padding: "0 12px 12px" }}>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                background: theme.surface,
-                padding: "8px 10px",
-                borderRadius: 8,
-                border: `1px solid ${theme.border}`,
-              }}
-            >
-              <Search size={14} color={theme.muted} />
-
+          <div className="sidebar-search">
+            <div className="search-box">
+              <Search size={14} className="search-icon" />
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Buscar playlist..."
-                style={{
-                  flex: 1, 
-                  background: "transparent",
-                  border: "none",
-                  outline: "none",
-                  color: theme.text,
-                  fontSize: 13,
-                }}
+                className="search-input"
               />
             </div>
           </div>
         )}
 
-        <div style={{ flex: 1, overflowY: "auto", padding: 6 }}>
+        <div className="sidebar-list">
           {playlists.map((item) => (
             <div
               key={item.id}
               onClick={() => navigate(`/dashboard/playlist/${item.id}`)}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                padding: 10,
-                borderRadius: 8,
-                cursor: "pointer",
-                minWidth: 0, 
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.background = theme.surfaceHover)
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.background = "transparent")
-              }
+              className="playlist-item"
             >
-              <div
-                style={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: 6,
-                  overflow: "hidden",
-                  background: theme.surface,
-                  flexShrink: 0,
-                }}
-              >
+              <div className="playlist-thumb">
                 {item.games?.[0]?.url_image ? (
                   <img
                     src={item.games[0].url_image}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                    }}
+                    className="playlist-img"
                   />
                 ) : (
-                  <div
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
+                  <div className="playlist-fallback">
                     <Library size={16} />
                   </div>
                 )}
               </div>
 
               {!isCompact && (
-                <div
-                  style={{
-                    flex: 1,
-                    minWidth: 0, // 🔥 evita quebra
-                  }}
-                >
-                  <span
-                    style={{
-                      display: "block",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      fontSize: 13,
-                    }}
-                  >
-                    {item.title}
-                  </span>
+                <div className="playlist-title">
+                  <span>{item.title}</span>
                 </div>
               )}
             </div>
