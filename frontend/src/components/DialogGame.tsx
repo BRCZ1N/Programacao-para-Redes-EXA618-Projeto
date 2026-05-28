@@ -40,20 +40,13 @@ export function DialogGame({
     if (!gameId || !open) return;
 
     async function loadGame() {
-      try {
-        const res = await fetch(
-          `https://programacao-para-redes-exa618-projeto.onrender.com/api/games/${gameId}/`,
-          {
-            credentials: "include",
-          }
-        );
+      const res = await fetch(
+        `https://programacao-para-redes-exa618-projeto.onrender.com/api/game/${gameId}/`,
+        { credentials: "include" },
+      );
 
-        if (res.ok) {
-          const data = await res.json();
-          setGame(data);
-        }
-      } catch (err) {
-        console.log(err);
+      if (res.ok) {
+        setGame(await res.json());
       }
     }
 
@@ -65,58 +58,92 @@ export function DialogGame({
       <DialogContent
         style={{
           width: "92%",
-          maxWidth: "420px",
-          background: theme.surface,
+          maxWidth: "520px",
+          background: "rgba(18,18,18,0.95)",
           border: `1px solid ${theme.border}`,
-          borderRadius: 12,
-          padding: "24px",
+          borderRadius: 16,
+          padding: 0,
+          overflow: "hidden",
           color: theme.text,
+          backdropFilter: "blur(12px)",
         }}
       >
         <DialogTitle className="sr-only">Game</DialogTitle>
-        <DialogDescription className="sr-only">
-          Detalhes do jogo
-        </DialogDescription>
+        <DialogDescription className="sr-only" />
 
         {!game ? (
-          <p style={{ color: theme.muted }}>Carregando...</p>
+          <div style={{ padding: 24, color: theme.muted }}>Carregando...</div>
         ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            <img
-              src={game.url_image}
-              style={{
-                width: "100%",
-                borderRadius: 8,
-                objectFit: "cover",
-              }}
-            />
+          <div>
+            <div style={{ position: "relative" }}>
+              <img
+                src={game.url_image}
+                style={{
+                  width: "100%",
+                  height: 220,
+                  objectFit: "cover",
+                }}
+              />
 
-            <h2 style={{ fontSize: 18, fontWeight: 600 }}>
-              {game.title}
-            </h2>
-
-            <div style={{ display: "flex", gap: 10 }}>
-              <span>⭐ {game.review_rating}</span>
-              <span>{game.total_reviews} reviews</span>
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  background:
+                    "linear-gradient(to top, rgba(0,0,0,0.8), transparent)",
+                }}
+              />
             </div>
 
-            <div>
-              <span>
-                {game.discount_price || game.price}
-              </span>
-            </div>
-
-            <a
-              href={game.url_steam}
-              target="_blank"
+            <div
               style={{
-                marginTop: 10,
-                color: "#1DB954",
-                textDecoration: "underline",
+                padding: 20,
+                display: "flex",
+                flexDirection: "column",
+                gap: 10,
               }}
             >
-              Abrir na Steam
-            </a>
+              <h2 style={{ fontSize: 20, fontWeight: 700 }}>{game.title}</h2>
+
+              <div
+                style={{
+                  display: "flex",
+                  gap: 10,
+                  color: theme.muted,
+                  fontSize: 13,
+                }}
+              >
+                <span>⭐ {game.review_rating}</span>
+                <span>{game.total_reviews} reviews</span>
+              </div>
+
+              <div
+                style={{
+                  marginTop: 6,
+                  fontSize: 18,
+                  fontWeight: 600,
+                }}
+              >
+                {game.discount_price || game.price}
+              </div>
+
+              <a
+                href={game.url_steam}
+                target="_blank"
+                style={{
+                  marginTop: 12,
+                  padding: "10px 14px",
+                  borderRadius: 10,
+                  background: "#1DB954",
+                  color: "#000",
+                  fontWeight: 600,
+                  textAlign: "center",
+                  textDecoration: "none",
+                }}
+              >
+                Abrir na Steam
+              </a>
+            </div>
           </div>
         )}
       </DialogContent>
