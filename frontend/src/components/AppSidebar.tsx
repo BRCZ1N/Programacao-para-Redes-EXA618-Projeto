@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, Plus, Library } from "lucide-react";
+import { Search, Plus, Library, Home, Gamepad2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
@@ -20,6 +20,18 @@ const theme = {
   muted: "#B3B3B3",
 };
 
+// 📌 páginas do modo compacto
+const pages = [
+  {
+    path: "/",
+    icon: <Home size={18} />,
+  },
+  {
+    path: "/dashboard/games",
+    icon: <Gamepad2 size={18} />,
+  },
+];
+
 export function AppSidebar() {
   const navigate = useNavigate();
   const isCompact = useMediaQuery("(max-width: 700px)");
@@ -29,6 +41,7 @@ export function AppSidebar() {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
 
+  // 🔥 fetch centralizado
   const fetchPlaylists = async (query = debouncedSearch) => {
     try {
       const url = new URL(API_URL);
@@ -48,6 +61,7 @@ export function AppSidebar() {
     }
   };
 
+  // ⏱ debounce da search
   useEffect(() => {
     const timeout = setTimeout(() => {
       setDebouncedSearch(search);
@@ -56,10 +70,12 @@ export function AppSidebar() {
     return () => clearTimeout(timeout);
   }, [search]);
 
+  // 🔁 busca quando debounce muda
   useEffect(() => {
     fetchPlaylists(debouncedSearch);
   }, [debouncedSearch]);
 
+  // ➕ atualiza após criar playlist
   const handlePlaylistCreated = async () => {
     await fetchPlaylists("");
   };
@@ -80,6 +96,7 @@ export function AppSidebar() {
           boxSizing: "border-box",
         }}
       >
+        {/* HEADER */}
         <div
           style={{
             padding: 12,
@@ -108,7 +125,9 @@ export function AppSidebar() {
           </button>
         </div>
 
-        {!isCompact && (
+        {/* SEARCH OU BOTÕES (RESPONSIVO) */}
+        {!isCompact ? (
+          // 💻 DESKTOP: SEARCH
           <div
             style={{
               padding: "0 12px 12px",
@@ -146,8 +165,34 @@ export function AppSidebar() {
               />
             </div>
           </div>
+        ) : (
+          // 📱 MOBILE: BOTÕES
+          <div
+            style={{
+              padding: "0 12px 12px",
+              display: "flex",
+              justifyContent: "space-around",
+              alignItems: "center",
+            }}
+          >
+            {pages.map((page) => (
+              <button
+                key={page.path}
+                onClick={() => navigate(page.path)}
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  color: theme.text,
+                  cursor: "pointer",
+                }}
+              >
+                {page.icon}
+              </button>
+            ))}
+          </div>
         )}
 
+        {/* LISTA */}
         <div style={{ flex: 1, overflowY: "auto", padding: 6 }}>
           {playlists.map((item) => (
             <div
@@ -197,81 +242,17 @@ export function AppSidebar() {
                 )}
               </div>
 
-              {isCompact ? (
-                <div
+              {!isCompact && (
+                <span
                   style={{
-                    padding: "0 12px 12px",
-                    display: "flex",
-                    justifyContent: "space-around",
-                    alignItems: "center",
+                    fontSize: 13,
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
                   }}
                 >
-                  <button
-                    onClick={() => navigate("/home")}
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      color: theme.text,
-                      cursor: "pointer",
-                    }}
-                  >
-                    Home
-                  </button>
-
-                  <button
-                    onClick={() => navigate("/dashboard/gamepad")}
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      color: theme.text,
-                      cursor: "pointer",
-                    }}
-                  >
-                    Joystick
-                  </button>
-                </div>
-              ) : (
-                <div
-                  style={{
-                    padding: "0 12px 12px",
-                    display: "flex",
-                    flexShrink: 0,
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 8,
-                      background: theme.surface,
-                      padding: "8px 10px",
-                      borderRadius: 8,
-                      border: `1px solid ${theme.border}`,
-                      width: "100%",
-                    }}
-                  >
-                    <Search
-                      size={14}
-                      color={theme.muted}
-                      style={{ flexShrink: 0 }}
-                    />
-
-                    <input
-                      value={search}
-                      onChange={(e) => setSearch(e.target.value)}
-                      placeholder="Buscar playlist..."
-                      style={{
-                        background: "transparent",
-                        border: "none",
-                        outline: "none",
-                        color: theme.text,
-                        width: "100%",
-                        fontSize: 13,
-                        minWidth: 0,
-                      }}
-                    />
-                  </div>
-                </div>
+                  {item.title}
+                </span>
               )}
             </div>
           ))}
