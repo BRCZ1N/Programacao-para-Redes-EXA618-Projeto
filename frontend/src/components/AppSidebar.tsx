@@ -27,42 +27,35 @@ export function AppSidebar() {
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [search, setSearch] = useState("");
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
-  const [reloadTrigger, setReloadTrigger] = useState(0);
+
+  
+  const fetchPlaylists = async (searchValue = search) => {
+    try {
+      const url = new URL(API_URL);
+
+      if (searchValue.trim()) {
+        url.searchParams.append("search", searchValue.trim());
+      }
+
+      const res = await fetch(url.toString(), {
+        credentials: "include",
+      });
+
+      const json = await res.json();
+      setPlaylists(json.results || []);
+    } catch (err) {
+      console.error("Erro ao buscar playlists:", err);
+    }
+  };
+
 
   useEffect(() => {
-    let isMounted = true;
-
-    async function fetchPlaylists() {
-      try {
-        const url = new URL(API_URL);
-
-        if (search.trim()) {
-          url.searchParams.append("search", search.trim());
-        }
-
-        const res = await fetch(url.toString(), {
-          credentials: "include",
-        });
-
-        const json = await res.json();
-
-        if (isMounted) {
-          setPlaylists(json.results || []);
-        }
-      } catch (err) {
-        console.error("Erro ao buscar playlists:", err);
-      }
-    }
-
     fetchPlaylists();
+  }, [search]);
 
-    return () => {
-      isMounted = false;
-    };
-  }, [search, reloadTrigger]);
 
-  const handlePlaylistCreated = () => {
-    setReloadTrigger((prev) => prev + 1);
+  const handlePlaylistCreated = async () => {
+    await fetchPlaylists();
   };
 
   return (
@@ -110,7 +103,7 @@ export function AppSidebar() {
           </button>
         </div>
 
-        {/* SEARCH */}
+      
         {!isCompact && (
           <div
             style={{
@@ -129,7 +122,6 @@ export function AppSidebar() {
                 borderRadius: 8,
                 border: `1px solid ${theme.border}`,
                 width: "100%",
-                boxSizing: "border-box",
               }}
             >
               <Search size={14} color={theme.muted} style={{ flexShrink: 0 }} />
@@ -152,7 +144,6 @@ export function AppSidebar() {
           </div>
         )}
 
-        {/* LISTA */}
         <div style={{ flex: 1, overflowY: "auto", padding: 6 }}>
           {playlists.map((item) => (
             <div
@@ -219,6 +210,7 @@ export function AppSidebar() {
         </div>
       </aside>
 
+      {/* Dialog */}
       <DialogCreatePlaylist
         open={openCreateDialog}
         onOpenChange={setOpenCreateDialog}
