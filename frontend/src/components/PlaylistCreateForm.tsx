@@ -102,7 +102,7 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
   return (
     <div className="flex flex-col gap-5 text-white">
       <div>
-        <h2 className="text-base font-semibold">Criar playlist</h2>
+        <h2 className="text-base font-semibold text-white">Criar playlist</h2>
         <p className="text-xs text-neutral-400">
           Configure os filtros da sua playlist
         </p>
@@ -151,14 +151,14 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
               {...params}
               sx={{
                 "& .MuiOutlinedInput-root": {
-                  backgroundColor: "#000", // fundo branco do field
-                  color: "#FFF", // texto digitado
+                  backgroundColor: "#000",
+                  color: "#FFF", 
                 },
                 "& .MuiInputBase-input": {
-                  color: "#ffffff", // texto interno
+                  color: "#ffffff",
                 },
                 "& .MuiInputLabel-root": {
-                  color: "#666", // label normal
+                  color: "#666", 
                 },
                 "& .MuiInputLabel-root.Mui-focused": {
                   color: "#000",
@@ -180,7 +180,7 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
           sx={{
             width: "100%",
 
-            // CHIPS
+            
             "& .MuiChip-root": {
               backgroundColor: "white",
               color: "black",
@@ -191,12 +191,10 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
               color: "#000",
             },
 
-            // INPUT BACKGROUND
             "& .MuiOutlinedInput-root": {
               backgroundColor: "#fff",
             },
 
-            // 🔽 ÍCONE DE ABRIR (seta)
             "& .MuiAutocomplete-popupIndicator": {
               color: "#fff",
             },
@@ -205,7 +203,6 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
               color: "#333",
             },
 
-            // ❌ ÍCONE DE LIMPAR (X)
             "& .MuiAutocomplete-clearIndicator": {
               color: "#fff",
             },

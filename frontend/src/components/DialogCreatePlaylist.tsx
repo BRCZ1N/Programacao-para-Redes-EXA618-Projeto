@@ -78,7 +78,7 @@ export function DialogCreatePlaylist({ open, onOpenChange, onCreated }: Props) {
         {mode === "select" ? (
           <>
             <DialogHeader className="space-y-1 border-b border-zinc-800 px-6 py-5">
-              <DialogTitle style={{ color: "red" }}>Criar playlist</DialogTitle>
+              <DialogTitle style={{ color: "white" }}>Criar playlist</DialogTitle>
 
               <DialogDescription className="text-sm text-zinc-400">
                 Escolha como deseja criar sua playlist.
