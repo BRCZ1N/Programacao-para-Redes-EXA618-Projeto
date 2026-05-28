@@ -404,7 +404,7 @@ export function PlaylistPage() {
         }}
       >
         <section style={{ width: "100%" }}>
-          <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 16 }}>
+          <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 16, color:"#fff"}}>
             Jogos da Playlist
           </h2>
 
