@@ -2,11 +2,9 @@ import { Outlet, Navigate } from "react-router-dom";
 import { useAuth } from "./AuthProvider";
 
 export function PrivateRoutes() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
 
-  if (!user) {
-    return <Navigate to="/" replace />;
-  }
+  if (loading) return null;
 
-  return <Outlet />;
+  return user ? <Outlet /> : <Navigate to="/" replace />;
 }

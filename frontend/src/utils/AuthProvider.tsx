@@ -1,4 +1,9 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { apiFetch } from "./Fetcher";
 
 type User = {
@@ -12,7 +17,7 @@ type AuthContextType = {
   user: User | null;
   loading: boolean;
   refreshUser: () => Promise<void>;
-  setUser: React.Dispatch<React.SetStateAction<User | null>>; 
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -23,18 +28,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const refreshUser = async () => {
     try {
-      const res = await apiFetch("https://programacao-para-redes-exa618-projeto.onrender.com/api/user/me/");
+      const res = await apiFetch(
+        "https://programacao-para-redes-exa618-projeto.onrender.com/api/user/me/"
+      );
 
-      if (res.ok) {
-        const data = await res.json();
-        setUser(data);
-      } else {
+      // 🔐 só desloga em 401 (não em qualquer erro)
+      if (res.status === 401) {
         setUser(null);
-        
+        return;
       }
+
+      // ❌ erro de rede ou erro genérico não derruba auth
+      if (!res.ok) return;
+
+      const data = await res.json();
+      setUser(data);
     } catch (err) {
       console.error("Erro ao buscar usuário:", err);
-      setUser(null);
+      // ❌ não desloga por erro de rede
     }
   };
 
@@ -42,8 +53,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     let mounted = true;
 
     (async () => {
-      await refreshUser();
-      if (mounted) setLoading(false);
+      try {
+        await refreshUser();
+      } finally {
+        if (mounted) setLoading(false);
+      }
     })();
 
     return () => {
@@ -67,6 +81,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 export function useAuth() {
   const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
+  if (!ctx) {
+    throw new Error("useAuth must be used within AuthProvider");
+  }
   return ctx;
 }
