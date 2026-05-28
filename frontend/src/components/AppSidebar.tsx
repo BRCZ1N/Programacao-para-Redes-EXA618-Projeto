@@ -92,12 +92,16 @@ export function AppSidebar() {
       <aside
         style={{
           height: "100%",
+          // 💡 DEFINA A LARGURA DA SIDEBAR AQUI PARA CONTROLAR O LAYOUT GERAL
+          width: isCompact ? "70px" : "280px", 
+          minWidth: isCompact ? "70px" : "280px",
           display: "flex",
           flexDirection: "column",
           background: theme.bg,
           color: theme.text,
           borderRight: `1px solid ${theme.border}`,
           overflow: "hidden",
+          boxSizing: "border-box",
         }}
       >
         <div
@@ -128,51 +132,44 @@ export function AppSidebar() {
           </button>
         </div>
 
-        {/* 🔥 SEARCH AJUSTADO (TESTE) */}
+        {/* 🔥 SEARCH AJUSTADO PARA NÃO MOVER O LAYOUT */}
         {!isCompact && (
           <div
             style={{
               padding: "0 12px 12px",
               display: "flex",
-              justifyContent: "center",
+              flexShrink: 0, // 💡 Garante que a barra de busca nunca encolha ou quebre
             }}
           >
             <div
               style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                background: theme.surface,
+                padding: "8px 10px",
+                borderRadius: 8,
+                border: `1px solid ${theme.border}`,
                 width: "100%",
-                maxWidth: 260, // 🔥 trava visual sem quebrar responsividade
+                boxSizing: "border-box",
               }}
             >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  background: theme.surface,
-                  padding: "8px 10px",
-                  borderRadius: 8,
-                  border: `1px solid ${theme.border}`,
-                  width: "100%",
-                  boxSizing: "border-box",
-                }}
-              >
-                <Search size={14} color={theme.muted} />
+              <Search size={14} color={theme.muted} style={{ flexShrink: 0 }} />
 
-                <input
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Buscar playlist..."
-                  style={{
-                    background: "transparent",
-                    border: "none",
-                    outline: "none",
-                    color: theme.text,
-                    width: "100%",
-                    fontSize: 13,
-                    minWidth: 0,
-                  }}
-                />
-              </div>
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Buscar playlist..."
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  outline: "none",
+                  color: theme.text,
+                  width: "100%",
+                  fontSize: 13,
+                  minWidth: 0, // 💡 Crucial para o Flexbox aceitar que o input diminua se necessário
+                }}
+              />
             </div>
           </div>
         )}
