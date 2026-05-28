@@ -79,7 +79,7 @@ export function DialogCreatePlaylist({
         {mode === "select" ? (
           <>
             <DialogHeader className="space-y-1 border-b border-zinc-800 px-6 py-5">
-              <DialogTitle className="text-lg font-semibold !text-white">
+              <DialogTitle className="text-lg font-semibold text-white !important">
                 Criar playlist
               </DialogTitle>
 
