@@ -84,6 +84,7 @@ export function PerfilData() {
         onEdit={() => setEditing("username")}
         onCancel={() => setEditing(null)}
         onSave={() => handleSave("username")}
+        canSave={form.username.trim().length > 0}
       >
         <Input
           value={form.username}
@@ -103,6 +104,7 @@ export function PerfilData() {
         onEdit={() => setEditing("first_name")}
         onCancel={() => setEditing(null)}
         onSave={() => handleSave("first_name")}
+        canSave={form.first_name.trim().length > 0}
       >
         <Input
           value={form.first_name}
@@ -122,6 +124,7 @@ export function PerfilData() {
         onEdit={() => setEditing("last_name")}
         onCancel={() => setEditing(null)}
         onSave={() => handleSave("last_name")}
+        canSave={form.last_name.trim().length > 0}
       >
         <Input
           value={form.last_name}
@@ -141,7 +144,7 @@ export function PerfilData() {
         onEdit={() => setEditing("password")}
         onCancel={() => setEditing(null)}
         onSave={() => handleSave("password")}
-        required
+        canSave={form.password.trim().length > 0}
       >
         <Input
           type="password"

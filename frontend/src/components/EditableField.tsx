@@ -9,10 +9,10 @@ export function EditableField({
   onSave,
   children,
   hideEdit = false,
+  canSave = true,
 }: any) {
   return (
     <div className="flex items-start justify-between group">
-
       <div className="flex-1">
         <p className="text-[11px] tracking-widest uppercase text-white/40">
           {label}
@@ -28,9 +28,12 @@ export function EditableField({
               <Button
                 size="sm"
                 onClick={onSave}
+                disabled={!canSave}
                 className="
                   bg-white text-black
                   hover:bg-white/90
+                  disabled:opacity-40
+                  disabled:cursor-not-allowed
                   transition
                   cursor-pointer
                   h-7 text-xs px-3
