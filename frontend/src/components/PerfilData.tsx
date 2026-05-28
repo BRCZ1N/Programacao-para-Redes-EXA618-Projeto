@@ -20,14 +20,24 @@ export function PerfilData() {
     password: "",
   });
 
+  const [draft, setDraft] = useState({
+    username: "",
+    first_name: "",
+    last_name: "",
+    password: "",
+  });
+
   useEffect(() => {
     if (user) {
-      setForm({
+      const data = {
         username: user.username,
         first_name: user.first_name,
         last_name: user.last_name,
         password: "",
-      });
+      };
+
+      setForm(data);
+      setDraft(data);
     }
   }, [user]);
 
@@ -35,12 +45,15 @@ export function PerfilData() {
 
   async function handleUpdateUser(data: Partial<typeof form>) {
     try {
-      const res = await fetch("https://programacao-para-redes-exa618-projeto.onrender.com/api/user/update/", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(data),
-      });
+      const res = await fetch(
+        "https://programacao-para-redes-exa618-projeto.onrender.com/api/user/update/",
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(data),
+        }
+      );
 
       if (res.ok) {
         const updated = await res.json();
@@ -51,10 +64,8 @@ export function PerfilData() {
                 ...prev,
                 ...updated,
               }
-            : prev,
+            : prev
         );
-
-        setEditing(null);
 
         refreshUser();
       }
@@ -64,16 +75,15 @@ export function PerfilData() {
   }
 
   function handleSave(field: keyof typeof form) {
-    handleUpdateUser({ [field]: form[field] });
+    handleUpdateUser({ [field]: draft[field] });
+
+    setForm((prev) => ({
+      ...prev,
+      [field]: draft[field],
+    }));
+
+    setEditing(null);
   }
-
-  const handleInputClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-  };
-
-  const handleInputKeyDown = (e: React.KeyboardEvent) => {
-    e.stopPropagation();
-  };
 
   return (
     <div className="space-y-6 text-white">
@@ -81,19 +91,29 @@ export function PerfilData() {
         label="Nome de usuário"
         value={form.username}
         editing={editing === "username"}
-        onEdit={() => setEditing("username")}
-        onCancel={() => setEditing(null)}
+        onEdit={() => {
+          setDraft((prev) => ({
+            ...prev,
+            username: form.username,
+          }));
+          setEditing("username");
+        }}
+        onCancel={() => {
+          setDraft((prev) => ({
+            ...prev,
+            username: form.username,
+          }));
+          setEditing(null);
+        }}
         onSave={() => handleSave("username")}
-        canSave={form.username.trim().length > 0}
+        canSave={draft.username.trim().length > 0}
       >
         <Input
-          value={form.username}
-          onChange={(e) => setForm({ ...form, username: e.target.value })}
+          value={draft.username}
+          onChange={(e) =>
+            setDraft({ ...draft, username: e.target.value })
+          }
           className={inputClass}
-          onClick={handleInputClick}
-          onKeyDown={handleInputKeyDown}
-          autoComplete="off"
-          data-form="false"
         />
       </EditableField>
 
@@ -101,19 +121,29 @@ export function PerfilData() {
         label="Primeiro nome"
         value={form.first_name}
         editing={editing === "first_name"}
-        onEdit={() => setEditing("first_name")}
-        onCancel={() => setEditing(null)}
+        onEdit={() => {
+          setDraft((prev) => ({
+            ...prev,
+            first_name: form.first_name,
+          }));
+          setEditing("first_name");
+        }}
+        onCancel={() => {
+          setDraft((prev) => ({
+            ...prev,
+            first_name: form.first_name,
+          }));
+          setEditing(null);
+        }}
         onSave={() => handleSave("first_name")}
-        canSave={form.first_name.trim().length > 0}
+        canSave={draft.first_name.trim().length > 0}
       >
         <Input
-          value={form.first_name}
-          onChange={(e) => setForm({ ...form, first_name: e.target.value })}
+          value={draft.first_name}
+          onChange={(e) =>
+            setDraft({ ...draft, first_name: e.target.value })
+          }
           className={inputClass}
-          onClick={handleInputClick}
-          onKeyDown={handleInputKeyDown}
-          autoComplete="off"
-          data-form="false"
         />
       </EditableField>
 
@@ -121,19 +151,29 @@ export function PerfilData() {
         label="Último nome"
         value={form.last_name}
         editing={editing === "last_name"}
-        onEdit={() => setEditing("last_name")}
-        onCancel={() => setEditing(null)}
+        onEdit={() => {
+          setDraft((prev) => ({
+            ...prev,
+            last_name: form.last_name,
+          }));
+          setEditing("last_name");
+        }}
+        onCancel={() => {
+          setDraft((prev) => ({
+            ...prev,
+            last_name: form.last_name,
+          }));
+          setEditing(null);
+        }}
         onSave={() => handleSave("last_name")}
-        canSave={form.last_name.trim().length > 0}
+        canSave={draft.last_name.trim().length > 0}
       >
         <Input
-          value={form.last_name}
-          onChange={(e) => setForm({ ...form, last_name: e.target.value })}
+          value={draft.last_name}
+          onChange={(e) =>
+            setDraft({ ...draft, last_name: e.target.value })
+          }
           className={inputClass}
-          onClick={handleInputClick}
-          onKeyDown={handleInputKeyDown}
-          autoComplete="off"
-          data-form="false"
         />
       </EditableField>
 
@@ -141,23 +181,31 @@ export function PerfilData() {
         label="Senha"
         value="************"
         editing={editing === "password"}
-        onEdit={() => setEditing("password")}
-        onCancel={() => setEditing(null)}
+        onEdit={() => {
+          setDraft((prev) => ({
+            ...prev,
+            password: "",
+          }));
+          setEditing("password");
+        }}
+        onCancel={() => {
+          setDraft((prev) => ({
+            ...prev,
+            password: "",
+          }));
+          setEditing(null);
+        }}
         onSave={() => handleSave("password")}
-        canSave={form.password.trim().length > 0}
+        canSave={draft.password.trim().length > 0}
       >
         <Input
           type="password"
           placeholder="Nova senha"
-          value={form.password}
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
+          value={draft.password}
+          onChange={(e) =>
+            setDraft({ ...draft, password: e.target.value })
+          }
           className={inputClass}
-          onClick={handleInputClick}
-          onKeyDown={handleInputKeyDown}
-          autoComplete="new-password"
-          data-form="false"
-          data-lpignore="true"
-          data-1p-ignore="true"
         />
       </EditableField>
 
