@@ -114,6 +114,8 @@ export function PerfilData() {
             setDraft({ ...draft, username: e.target.value })
           }
           className={inputClass}
+          autoComplete="off"
+          data-form="false"
         />
       </EditableField>
 
@@ -144,6 +146,8 @@ export function PerfilData() {
             setDraft({ ...draft, first_name: e.target.value })
           }
           className={inputClass}
+          autoComplete="off"
+          data-form="false"
         />
       </EditableField>
 
@@ -174,6 +178,8 @@ export function PerfilData() {
             setDraft({ ...draft, last_name: e.target.value })
           }
           className={inputClass}
+          autoComplete="off"
+          data-form="false"
         />
       </EditableField>
 
@@ -207,6 +213,7 @@ export function PerfilData() {
           }
           className={inputClass}
           autoComplete="off"
+          data-form="false"
         />
       </EditableField>
 
