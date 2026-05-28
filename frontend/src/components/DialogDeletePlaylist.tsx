@@ -51,7 +51,7 @@ export function DialogDeletePlaylist({
         "
       >
         <DialogHeader className="space-y-1 border-b border-zinc-800 px-6 py-5">
-          <DialogTitle className="text-lg font-semibold text-white flex items-center gap-2">
+          <DialogTitle className="text-lg font-semibold !text-white flex items-center gap-2">
             <Trash2 size={18} className="text-red-500" />
             Excluir playlist
           </DialogTitle>

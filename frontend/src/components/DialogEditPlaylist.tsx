@@ -93,7 +93,7 @@ export function DialogEditPlaylist({
           color: theme.text,
         }}
       >
-        <DialogTitle style={{ fontSize: 18, fontWeight: 800 }}>
+        <DialogTitle style={{ fontSize: 18, fontWeight: 800, color:"white" }}>
           Editar playlist
         </DialogTitle>
 
