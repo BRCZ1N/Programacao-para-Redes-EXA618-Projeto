@@ -146,20 +146,49 @@ export function PlaylistCreateForm({ onSuccess }: Props) {
           }}
           getOptionLabel={(option) => option.name}
           isOptionEqualToValue={(option, value) => option.name === value.name}
-          renderInput={(params) => <TextField {...params} />}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  backgroundColor: "#fff", // fundo branco do field
+                  color: "#000", // texto digitado
+                },
+                "& .MuiInputBase-input": {
+                  color: "#000", // texto interno
+                },
+                "& .MuiInputLabel-root": {
+                  color: "#666", // label normal
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#000",
+                },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#ccc",
+                },
+                "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
+                  {
+                    borderColor: "#999",
+                  },
+                "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                  {
+                    borderColor: "#000",
+                  },
+              }}
+            />
+          )}
           sx={{
             width: "100%",
 
             "& .MuiChip-root": {
               backgroundColor: "white",
-              color: "black", 
+              color: "black",
               fontWeight: 600,
             },
 
             "& .MuiChip-deleteIcon": {
               color: "#000000",
             },
-
           }}
         />
 
