@@ -26,15 +26,17 @@ export function AppSidebar() {
 
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
 
-  
-  const fetchPlaylists = async (searchValue = search) => {
+  // 🔥 FETCH centralizado
+  const fetchPlaylists = async (query = debouncedSearch) => {
     try {
       const url = new URL(API_URL);
 
-      if (searchValue.trim()) {
-        url.searchParams.append("search", searchValue.trim());
+      // ⚠️ backend usa "title", não "search"
+      if (query.trim()) {
+        url.searchParams.append("title", query.trim());
       }
 
       const res = await fetch(url.toString(), {
@@ -48,14 +50,23 @@ export function AppSidebar() {
     }
   };
 
-
+  // ⏱️ debounce (evita spam de request)
   useEffect(() => {
-    fetchPlaylists();
+    const timeout = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 400);
+
+    return () => clearTimeout(timeout);
   }, [search]);
 
+  // 🔁 busca quando debounce estabiliza
+  useEffect(() => {
+    fetchPlaylists(debouncedSearch);
+  }, [debouncedSearch]);
 
+  // ➕ atualiza lista após criação
   const handlePlaylistCreated = async () => {
-    await fetchPlaylists();
+    await fetchPlaylists(""); // força reload geral
   };
 
   return (
@@ -103,7 +114,7 @@ export function AppSidebar() {
           </button>
         </div>
 
-      
+        {/* SEARCH */}
         {!isCompact && (
           <div
             style={{
@@ -144,6 +155,7 @@ export function AppSidebar() {
           </div>
         )}
 
+        {/* LISTA */}
         <div style={{ flex: 1, overflowY: "auto", padding: 6 }}>
           {playlists.map((item) => (
             <div
@@ -210,7 +222,6 @@ export function AppSidebar() {
         </div>
       </aside>
 
-      {/* Dialog */}
       <DialogCreatePlaylist
         open={openCreateDialog}
         onOpenChange={setOpenCreateDialog}
