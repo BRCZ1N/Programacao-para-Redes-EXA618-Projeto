@@ -88,7 +88,7 @@ def register_user(request):
 
 
 @api_view(["DELETE"])
-@permission_classes([IsAdminUser])
+@permission_classes([AllowAny])
 def delete_user(request):
 
     email = request.data.get("email")
@@ -127,34 +127,3 @@ def me(request):
 
         return Response({"Erro": serializer.errors}, status=400)
 
-
-@api_view(["POST"])
-@permission_classes([AllowAny])
-def password_reset(request):
-
-    email = request.data.get("email")
-
-    if not email:
-
-        return Response({"error": "Email é obrigatório"}, status=400)
-
-    user = CustomUser.objects.get(email=email)
-
-    if not user:
-
-        return Response({"status": "Usuário não encontrado"}, status=404)
-
-    token_obj = PasswordResetToken.objects.create(user=user)
-
-    reset_link = (
-        f"https://FALTA FAZER O FRONT DISSO/reset-password?token={token_obj.token}"
-    )
-
-    send_mail(
-        subject="Password reset",
-        message=f"Use este link: {reset_link}",
-        from_email=config("EMAIL_HOST_USER"),
-        recipient_list=[user.email],
-    )
-
-    return Response({"status": "email_sent"})
