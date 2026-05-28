@@ -1,7 +1,7 @@
 from django.urls import path
 from playlists.views import playlist_detail, playlist
 from games.views import game_list,crawl_games, game_list_featured,search_games, tag_list
-from users.views import register_user,me,password_reset,delete_user, logout, update_user
+from users.views import register_user,me,delete_user, logout, update_user
 from users.cookies import CookieTokenObtainPairView, CookieTokenRefreshView
 
 urlpatterns = [
@@ -25,6 +25,5 @@ urlpatterns = [
     path('api/auth/refresh/', CookieTokenRefreshView.as_view()),
     path('api/auth/logout/', logout),
 
-  
-    path('api/password-reset/', password_reset),
+
 ]
