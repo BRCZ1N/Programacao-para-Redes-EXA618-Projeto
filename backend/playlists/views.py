@@ -16,23 +16,13 @@ def playlist(request):
 
     if request.method == "GET":
 
-        pk = request.query_params.get("id")
-
-        if pk:
-            playlist = get_object_or_404(
-                Playlist.objects.prefetch_related("games"),
-                id=pk,
-                user=request.user
-            )
-
-            serializer = PlaylistSerializer(playlist)
-            return Response(serializer.data, status=200)
-
+        query = request.query_params.get("title")
+        
         query = (
             Playlist.objects
             .filter(user=request.user)
             .prefetch_related("games")
-            .order_by("-id")  
+            .order_by("-updated_at")  
         )
 
         paginator = PageNumberPagination()
